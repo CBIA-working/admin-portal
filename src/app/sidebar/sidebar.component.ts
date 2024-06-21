@@ -1,11 +1,13 @@
 import { Component, ViewChild } from '@angular/core';
 import { Sidebar } from 'primeng/sidebar';
 import { ImportsModule } from '../imports';
+import { RouterLink } from '@angular/router';
+import { HomeComponent } from '../home/home.component';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [ImportsModule],
+  imports: [ImportsModule,RouterLink,HomeComponent],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
