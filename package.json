@@ -10,7 +10,6 @@
     "test": "ng test"
   },
   "dependencies": {
-    "primeng": "17.18.1",
     "@angular-devkit/build-angular": "^18.0.2",
     "@angular/animations": "^18.0.1",
     "@angular/cdk": "^18.0.1",
@@ -27,9 +26,13 @@
     "chart.js": "4.4.2",
     "primeflex": "^3.3.1",
     "primeicons": "^7.0.0",
+    "primeng": "17.18.1",
     "quill": "2.0.2",
     "rxjs": "~7.8.1",
     "tslib": "^2.5.0",
     "zone.js": "~0.14.0"
+  },
+  "devDependencies": {
+    "@types/jasmine": "^5.1.4"
   }
 }

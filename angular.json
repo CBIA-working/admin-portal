@@ -83,7 +83,6 @@
           "extract-i18n": {
             "builder": "@angular-devkit/build-angular:extract-i18n",
             "options": {
-              "browserTarget": "example-app:build"
             }
           },
           "test": {
@@ -104,15 +103,7 @@
                 "node_modules/primeng/resources/themes/lara-light-blue/theme.css",
                 "node_modules/primeng/resources/primeng.min.css"
               ],
-              "scripts": [],
-              "allowedCommonJsDependencies": [
-                "chart.js",
-                "xlsx",
-                "jspdf-autotable",
-                "file-saver",
-                "jspdf",
-                "quill"
-              ]
+              "scripts": []
             }
           }
         }
