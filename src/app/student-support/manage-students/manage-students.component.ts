@@ -11,23 +11,21 @@ import { Table, TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { CustomerService } from './service/customerservice';
 import { Customer, Representative,} from './domain/customer';
+import { AddStudentComponent } from './add-student/add-student.component';
 
 @Component({
   selector: 'app-manage-students',
   standalone:true,
   imports: [TableModule, RouterModule, 
     HttpClientModule, 
-    CommonModule, InputTextModule, TagModule, DropdownModule, MultiSelectModule, ProgressBarModule, ButtonModule ],
+    CommonModule, InputTextModule, TagModule, DropdownModule, MultiSelectModule, ProgressBarModule, ButtonModule,
+    AddStudentComponent ],
   providers: [CustomerService],
   templateUrl: './manage-students.component.html',
   styleUrl: './manage-students.component.scss'
 })
 export class ManageStudentsComponent implements OnInit {
     customers!: Customer[];
-
-    // representatives!: Representative[];
-
-    // statuses!: any[];
 
     loading: boolean = true;
 
@@ -43,52 +41,11 @@ export class ManageStudentsComponent implements OnInit {
             this.loading = false;
 
         });
-
-        // this.representatives = [
-        //     { name: 'Amy Elsner', image: 'amyelsner.png' },
-        //     { name: 'Anna Fali', image: 'annafali.png' },
-        //     { name: 'Asiya Javayant', image: 'asiyajavayant.png' },
-        //     { name: 'Bernardo Dominic', image: 'bernardodominic.png' },
-        //     { name: 'Elwin Sharvill', image: 'elwinsharvill.png' },
-        //     { name: 'Ioni Bowcher', image: 'ionibowcher.png' },
-        //     { name: 'Ivan Magalhaes', image: 'ivanmagalhaes.png' },
-        //     { name: 'Onyama Limba', image: 'onyamalimba.png' },
-        //     { name: 'Stephen Shaw', image: 'stephenshaw.png' },
-        //     { name: 'Xuxue Feng', image: 'xuxuefeng.png' }
-        // ];
-
-        // this.statuses = [
-        //     { label: 'Unqualified', value: 'unqualified' },
-        //     { label: 'Qualified', value: 'qualified' },
-        //     { label: 'New', value: 'new' },
-        //     { label: 'Negotiation', value: 'negotiation' },
-        //     { label: 'Renewal', value: 'renewal' },
-        //     { label: 'Proposal', value: 'proposal' }
-        // ];
     }
 
     clear(table: Table) {
         table.clear();
         this.searchValue = ''
-    }
-
-    getSeverity(status: string) {
-        switch (status.toLowerCase()) {
-            case 'unqualified':
-                return 'danger';
-
-            case 'qualified':
-                return 'success';
-
-            case 'new':
-                return 'info';
-
-            case 'negotiation':
-                return 'warning';
-
-            case 'renewal':
-                return null;
-        }
     }
 }
 
