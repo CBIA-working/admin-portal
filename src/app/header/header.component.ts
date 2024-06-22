@@ -36,15 +36,12 @@ export class HeaderComponent  {
     // Reset breadcrumbs
     this.items = [];
 
-    // Home breadcrumb is always present
-    this.items.push(this.home);
-
     // Add route-specific breadcrumbs
     if (url === '/managestudent') {
-      this.items.push({ label: 'Student Support/Manage Student', routerLink: '/managestudent' });
+      this.items.push({ label: 'Student Support > Manage Student', routerLink: '/managestudent' });
     } 
     if(url === '/studentservice') {
-      this.items.push({ label: 'Student Support/Student Service', routerLink: '/studentservice' });
+      this.items.push({ label: 'Student Support > Student Service', routerLink: '/studentservice' });
     } 
     else if (url === '/admin') {
       this.items.push({ label: 'Admin', routerLink: '/admin' });

@@ -7,6 +7,7 @@ import { StudentServicesComponent } from './student-support/student-services/stu
 
 
 export const routes: Routes = [
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
   { path: 'managestudent', component:ManageStudentsComponent},
   { path: 'studentservice', component:StudentServicesComponent},

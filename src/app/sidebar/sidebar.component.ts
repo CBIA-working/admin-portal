@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { Sidebar } from 'primeng/sidebar';
 import { ImportsModule } from '../imports';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { HomeComponent } from '../home/home.component';
 
 @Component({
@@ -12,12 +12,16 @@ import { HomeComponent } from '../home/home.component';
   styleUrl: './sidebar.component.scss'
 })
 export class SidebarComponent {
+  constructor(private router: Router) {}
 
       @ViewChild('sidebarRef') sidebarRef!: Sidebar;
   
       closeCallback(e): void {
           this.sidebarRef.close(e);
       }
-  
+
+      isActive(route: string): boolean {
+        return this.router.url === route;
+      }
       sidebarVisible: boolean = false;
   }
