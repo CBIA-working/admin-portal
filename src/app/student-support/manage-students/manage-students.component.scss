@@ -1,12 +1,18 @@
 
-:host ::ng-deep {
-    .p-progressbar {
-        height: .5rem;
-        background-color: #D8DADC;
+// :host ::ng-deep {
+//     .p-progressbar {
+//         height: .5rem;
+//         background-color: #D8DADC;
     
-        .p-progressbar-value {
-            background-color: #607D8B;
-        }
-    }
-}
+//         .p-progressbar-value {
+//             background-color: #607D8B;
+//         }
+//     }
+// }
 
+/* CSS to add a border around the p-columnFilter input field */
+.custom-column-filter input[type="text"] {
+    border: 1px solid #ccc;
+    padding: 4px;
+    width: calc(100% - 10px); /* Adjust width as necessary */
+}

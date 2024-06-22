@@ -1,18 +1,17 @@
-<div class="bg-white rounded-lg shadow-md p-3 mb-1border border-gray-300">
-    <div class="flex items-center mb-3">
+<div class="flex-auto bg-white p-3 -mr-1 w-full">
+    <div class="flex items-center">
         <div class="flex-shrink-0">
             <!-- Your app-sidebar component with its original styling -->
             <app-sidebar class="h-6 w-8"></app-sidebar>
         </div>
-        <div class="ml-2">
+        <div class="ml-4">
             <!-- Header text -->
-            <h2 class="text-base font-semibold text-gray-800">Admin Portal</h2>
+            <h2 class="text-xl font-bold text-blue-400">Admin Portal</h2>
         </div>
     </div>
     <!-- Other content inside the first container -->
-
 </div>
 
-<div class=" bg-white rounded-lg shadow-md p-2 mb-4 border border-gray-300 z-50">
-    <p-breadcrumb [model]="items" home="home"></p-breadcrumb>
+<div class="flex-auto bg-white p-2 mb-4 z-50 w-full">
+    <p-breadcrumb [model]="items" [home]="home"></p-breadcrumb>
 </div>
