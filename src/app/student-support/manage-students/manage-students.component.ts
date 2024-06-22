@@ -38,7 +38,7 @@ export class ManageStudentsComponent implements OnInit {
     constructor(private customerService: CustomerService) {}
 
     ngOnInit() {
-        this.customerService.getCustomersLarge().then((customers) => {
+        this.customerService.getCustomers().then((customers) => {
             this.customers = customers;
             this.loading = false;
 
