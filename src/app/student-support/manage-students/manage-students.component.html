@@ -1,6 +1,6 @@
 <div class="flex items-center mt-10 justify-center text-xl">
     
-    <div class="card flex mt-28 w-full mx-auto bg-white shadow-lg rounded-lg ">
+    <div class="card flex mt-28 w-full bg-white shadow-lg rounded-lg ">
         <p-table
             #dt1
             [value]="customers"
@@ -24,17 +24,23 @@
                 <tr>
                     <th style="min-width:15rem">
                         <div class="flex align-items-center">
-                            Name
-                            <p-columnFilter type="text" field="name" display="menu" />
+                            First Name
+                            <p-columnFilter type="text" field="fname" display="menu" />
                         </div>
                     </th>
                     <th style="min-width:15rem">
                         <div class="flex align-items-center">
-                            Country
-                            <p-columnFilter type="text" field="country.name" display="menu" />
+                            Last Name
+                            <p-columnFilter type="text" field="lname" display="menu" />
                         </div>
                     </th>
                     <th style="min-width:15rem">
+                        <div class="flex align-items-center">
+                            Email
+                            <p-columnFilter type="text" field="Email" display="menu" />
+                        </div>
+                    </th>
+                    <!-- <th style="min-width:15rem">
                         <div class="flex align-items-center">
                             Agent
                             <p-columnFilter field="representative" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false">
@@ -55,20 +61,56 @@
                                 </ng-template>
                             </p-columnFilter>
                         </div>
-                    </th>
+                    </th> -->
                     <th style="min-width:10rem">
                         <div class="flex align-items-center">
                             Date
-                            <p-columnFilter type="date" field="date" display="menu" />
+                            <p-columnFilter type="date" field="dob" display="menu" />
                         </div>
                     </th>
                     <th style="min-width:10rem">
                         <div class="flex align-items-center">
-                            Balance
-                            <p-columnFilter type="numeric" field="balance" display="menu" currency="USD" />
+                            Address
+                            <p-columnFilter type="numeric" field="address" display="menu"  />
                         </div>
                     </th>
                     <th style="min-width:10rem">
+                        <div class="flex align-items-center">
+                            Gender
+                            <p-columnFilter type="numeric" field="Gender" display="menu"  />
+                        </div>
+                    </th>
+                    <th style="min-width:10rem">
+                        <div class="flex align-items-center">
+                            Blood Group
+                            <p-columnFilter type="numeric" field="bloodGroup" display="menu"  />
+                        </div>
+                    </th>
+                    <th style="min-width:10rem">
+                        <div class="flex align-items-center">
+                            Dietary Preference
+                            <p-columnFilter type="numeric" field="dietaryPreference" display="menu"  />
+                        </div>
+                    </th>
+                    <th style="min-width:10rem">
+                        <div class="flex align-items-center">
+                            Emergency Contact Name
+                            <p-columnFilter type="numeric" field="emergencyContactName" display="menu"  />
+                        </div>
+                    </th>
+                    <th style="min-width:10rem">
+                        <div class="flex align-items-center">
+                            Emergency Contact Number
+                            <p-columnFilter type="numeric" field="emergencyContactNumber" display="menu"  />
+                        </div>
+                    </th>
+                    <th style="min-width:10rem">
+                        <div class="flex align-items-center">
+                            Emergency Contact Relation
+                            <p-columnFilter type="numeric" field="emergencyContactRelation" display="menu"  />
+                        </div>
+                    </th>
+                    <!-- <th style="min-width:10rem">
                         <div class="flex align-items-center">
                             Status
                             <p-columnFilter field="status" matchMode="equals" display="menu">
@@ -95,7 +137,7 @@
                                 </ng-template>
                             </p-columnFilter>
                         </div>
-                    </th>
+                    </th> -->
                     <th style="width: 3rem">
                         <div class="flex align-items-center">
                             Verified
@@ -107,27 +149,45 @@
             <ng-template pTemplate="body" let-customer>
                 <tr>
                     <td>
-                        {{ customer.name }}
+                        {{ customer.fname }}
                     </td>
                     <td>
+                        {{ customer.lname }}
+                    </td>
+                    <td>
+                        {{ customer.email }}
+                    </td>
+                    <!-- <td>
                         <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png" [class]="'flag flag-' + customer.country.code" style="width: 20px" />
                         <span class="ml-1 vertical-align-middle">{{ customer.country.name }}</span>
                     </td>
                     <td>
                         <img [alt]="customer.representative.name" src="https://primefaces.org/cdn/primeng/images/demo/avatar/{{ customer.representative.image }}" width="32" style="vertical-align: middle" />
                         <span class="ml-1 vertical-align-middle">{{ customer.representative.name }}</span>
+                    </td> -->
+                    <td>
+                        {{ customer.dob | date: 'dd-mm-yyyy' }}
                     </td>
                     <td>
-                        {{ customer.date | date: 'MM/dd/yyyy' }}
+                        {{ customer.address }}
                     </td>
                     <td>
-                        {{ customer.balance | currency: 'USD':'symbol' }}
+                        {{ customer.gender }}
                     </td>
                     <td>
-                        <p-tag [value]="customer.status" [severity]="getSeverity(customer.status)" />
+                        {{ customer.bloodGroup }}
                     </td>
                     <td>
-                        <p-progressBar [value]="customer.activity" [showValue]="false" />
+                        {{ customer.dietaryPreference }}
+                    </td>
+                    <td>
+                        {{ customer.emergencyContactName }}
+                    </td>
+                    <td>
+                        {{ customer.emergencyContactNumber }}
+                    </td>
+                    <td>
+                        {{ customer.emergencyContactRelation }}
                     </td>
                     <td class="text-center">
                         <i class="pi" [ngClass]="{ 'text-green-500 pi-check-circle': customer.verified, 'text-red-500 pi-times-circle': !customer.verified }"></i>
