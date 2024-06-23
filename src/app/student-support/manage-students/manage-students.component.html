@@ -1,5 +1,5 @@
 <div class="card" style="margin: 0 20px; overflow: hidden;">
-  <div class="mb-3">
+  <div class="mb-2 ml-auto z-0">
   <app-add-student></app-add-student>
   </div>
   <p-table 
@@ -23,10 +23,16 @@
       </ng-template>
       <ng-template pTemplate="header">
           <tr>
+            <th style="min-width: 12%">
+                <div class="flex align-items-center">
+                    ID
+                    <p-columnFilter type="text" field="id" display="menu" ></p-columnFilter>
+                </div>
+            </th>
               <th style="min-width: 12%">
                   <div class="flex align-items-center">
                       First Name
-                      <p-columnFilter type="text" field="fname" display="menu" class="custom-column-filter" ></p-columnFilter>
+                      <p-columnFilter type="text" field="fname" display="menu" ></p-columnFilter>
                   </div>
               </th>
               <th style="min-width: 12%">
@@ -99,6 +105,7 @@
       </ng-template>
       <ng-template pTemplate="body" let-customer>
           <tr>
+              <td>{{ customer.id }}</td>
               <td>{{ customer.fname }}</td>
               <td>{{ customer.lname }}</td>
               <td>{{ customer.email }}</td>

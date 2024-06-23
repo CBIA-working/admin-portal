@@ -8,83 +8,119 @@ import { InputIconModule } from 'primeng/inputicon';
 import { CommonModule } from '@angular/common';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ImportsModule } from 'src/app/imports';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-add-student',
   standalone: true,
   imports: [
-      StepperModule,
-      ButtonModule,
-      InputTextModule,
-      ToggleButtonModule,
-      IconFieldModule,
-      InputIconModule,
-      CommonModule,ImportsModule
-    ],
-    providers: [ConfirmationService, MessageService],
-    styles: [
-        `.p-stepper {
-            flex-basis: 40rem;
-        } 
-        `
-    ],
+    StepperModule,
+    ButtonModule,
+    InputTextModule,
+    ToggleButtonModule,
+    IconFieldModule,
+    InputIconModule,
+    CommonModule,
+    ImportsModule,
+    ConfirmDialogModule
+  ],
+  providers: [ConfirmationService, MessageService],
+  styles: [
+    `.p-stepper {
+      flex-basis: 40rem;
+    }`
+  ],
   templateUrl: './add-student.component.html',
-  styleUrl: './add-student.component.scss'
+  styleUrls: ['./add-student.component.scss']
 })
 export class AddStudentComponent {
-  selectedGender: any;
+  active = 0;
+  fname: string | undefined;
+  lname: string | undefined;
+  email: string | undefined;
+  password: string | undefined;
+  dob: string | undefined;
+  address: string | undefined;
+  selectedGender: string | undefined;
+  bloodGroup: string | undefined;
+  dietaryPreference: string | undefined;
+  emergencyContactName: string | undefined;
+  emergencyContactNumber: string | undefined;
+  emergencyContactRelation: string | undefined;
+
   genders: any[] = [
-    { label: 'Male', icon: 'pi pi-mars', value: 'male' },
-    { label: 'Female', icon: 'pi pi-venus', value: 'female' },
-    { label: 'Other', icon: 'pi pi-genderless', value: 'other' }
+    { label: 'Male', icon: 'pi pi-fw pi-mars',value: 'Male' },
+    { label: 'Female', icon: 'pi pi-fw pi-venus',value: 'Female' },
+    { label: 'Other', value: 'Other' }
   ];
-  
-  active: number | undefined = 0;
 
-  name: string | undefined = null;
+  constructor(
+    private http: HttpClient,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService,
+    private router: Router // Inject Router
+  ) {}
 
-  email: string | undefined = null;
+  submitForm() {
+    const formData = {
+      fname: this.fname,
+      lname: this.lname,
+      email: this.email,
+      password: this.password,
+      dob: this.dob,
+      address: this.address,
+      gender: this.selectedGender, // Use the dynamically selected gender
+      bloodGroup: this.bloodGroup,
+      dietaryPreference: this.dietaryPreference,
+      emergencyContactName: this.emergencyContactName,
+      emergencyContactNumber: this.emergencyContactNumber,
+      emergencyContactRelation: this.emergencyContactRelation
+    };
 
-  password: string | undefined = null;
+    console.log('Submitting form with data:', formData);
 
-  option1: boolean | undefined = false;
+    this.http.post('https://maui-portal.vercel.app/api/register', formData)
+      .subscribe(
+        (response: any) => {
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: response.message, life: 3000 });
+          this.resetForm(); // Reset form only on success
+          this.router.navigate(['/some-path']); // Navigate away on success
+        },
+        (error) => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to submit data', life: 3000 });
+          console.error('Error:', error);
+        }
+      );
+  }
 
-  option2: boolean | undefined = false;
+  resetForm() {
+    this.active = 0; // Reset stepper to first step
+    this.fname = undefined;
+    this.lname = undefined;
+    this.email = undefined;
+    this.password = undefined;
+    this.dob = undefined;
+    this.address = undefined;
+    this.selectedGender = undefined;
+    this.bloodGroup = undefined;
+    this.dietaryPreference = undefined;
+    this.emergencyContactName = undefined;
+    this.emergencyContactNumber = undefined;
+    this.emergencyContactRelation = undefined;
+  }
 
-  option3: boolean | undefined = false;
-
-  option4: boolean | undefined = false;
-
-  option5: boolean | undefined = false;
-
-  option6: boolean | undefined = false;
-
-  option7: boolean | undefined = false;
-
-  option8: boolean | undefined = false;
-
-  option9: boolean | undefined = false;
-
-  option10: boolean | undefined = false;
-
-  constructor(private confirmationService: ConfirmationService, private messageService: MessageService) {}
-
-  confirm(event: Event) {
-      this.confirmationService.confirm({
-          target: event.target as EventTarget,
-          message: 'Please confirm to proceed moving forward.',
-          icon: 'pi pi-exclamation-circle',
-          acceptIcon: 'pi pi-check mr-1',
-          rejectIcon: 'pi pi-times mr-1',
-          acceptLabel: 'Confirm',
-          rejectLabel: 'Cancel',
-          rejectButtonStyleClass: 'p-button-outlined p-button-sm',
-          acceptButtonStyleClass: 'p-button-sm',
-          accept: () => {
-              this.messageService.add({ severity: 'info', summary: 'Confirmed', detail: 'You have accepted', life: 3000 });
-          },
-          reject: () => {
-              this.messageService.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected', life: 3000 });
-          }
-      });
+  confirm() {
+    this.confirmationService.confirm({
+      header: 'Are you sure?',
+      message: 'Please confirm to proceed.',
+      accept: () => {
+        this.submitForm();
+      },
+      reject: () => {
+        this.messageService.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected', life: 3000 });
+      }
+    });
   }
 }
