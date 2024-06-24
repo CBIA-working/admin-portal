@@ -18,6 +18,7 @@ import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable'; 
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { BulkUploadComponent } from './bulk-upload/bulk-upload.component';
 
 @Component({
   selector: 'app-manage-students',
@@ -25,7 +26,7 @@ import { ToastModule } from 'primeng/toast';
   imports: [TableModule, RouterModule, 
     HttpClientModule, 
     CommonModule, InputTextModule, TagModule, DropdownModule, MultiSelectModule, ProgressBarModule, ButtonModule,
-    AddStudentComponent,DownloadComponent,ToastModule],
+    AddStudentComponent,DownloadComponent,ToastModule,BulkUploadComponent],
   providers: [CustomerService,MessageService],
   templateUrl: './manage-students.component.html',
   styleUrl: './manage-students.component.scss'

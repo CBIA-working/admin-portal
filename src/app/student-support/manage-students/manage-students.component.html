@@ -8,6 +8,7 @@
       
       <p-button label="Download Selected Students" icon="pi pi-download" [raised]="true" severity="secondary" (click)="downloadSelectedStudents()" *ngIf="downloadSelectedMode"></p-button>
       <p-button  icon="pi pi-times" severity="danger" [raised]="true" (click)="exitSelectionMode()" *ngIf="downloadSelectedMode"></p-button>
+    <app-bulk-upload></app-bulk-upload>
     </div>
   
     <p-table
