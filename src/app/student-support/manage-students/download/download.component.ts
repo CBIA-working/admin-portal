@@ -1,10 +1,13 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+// download.component.ts
+import { Component, EventEmitter, Output } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DialogService } from 'primeng/dynamicdialog';
+import { DropdownModule } from 'primeng/dropdown';
+import { CommonModule } from '@angular/common';
+import { ToggleButtonModule } from 'primeng/togglebutton';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
-import { ToggleButtonModule } from 'primeng/togglebutton';
 import { ImportsModule } from 'src/app/imports';
 
 @Component({
@@ -17,10 +20,35 @@ import { ImportsModule } from 'src/app/imports';
     InputIconModule,
     CommonModule,
     ImportsModule,
-    ConfirmDialogModule],
+    ConfirmDialogModule,
+    DropdownModule
+  ],
   templateUrl: './download.component.html',
-  styleUrl: './download.component.scss'
+  styleUrls: ['./download.component.scss'],
+  providers: [DialogService]
 })
 export class DownloadComponent {
+  visible: boolean = false;
+  selectedFormat: string = 'excel'; // Default format
 
+  @Output() downloadAllStudentsEvent = new EventEmitter<string>();
+  @Output() downloadSelectedStudentsEvent = new EventEmitter<string>();
+
+  showDialog() {
+    this.visible = true;
+  }
+
+  hideDialog() {
+    this.visible = false;
+  }
+
+  downloadAllStudents() {
+    this.downloadAllStudentsEvent.emit(this.selectedFormat);
+    this.hideDialog();
+  }
+
+  downloadSelectedStudents() {
+    this.downloadSelectedStudentsEvent.emit(this.selectedFormat);
+    this.hideDialog();
+  }
 }
