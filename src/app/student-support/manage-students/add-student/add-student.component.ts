@@ -36,7 +36,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./add-student.component.scss']
 })
 export class AddStudentComponent {
-  displayDialog: boolean = true; // Add this line to control dialog visibility
+  displayDialog: boolean = false; // Add this line to control dialog visibility
 
   active = 0;
   fname: string | undefined;
@@ -128,6 +128,6 @@ export class AddStudentComponent {
   }
 
 closeDialog() {
-    this.displayDialog = false;
+  this.confirmationService.close();
   }
 }
