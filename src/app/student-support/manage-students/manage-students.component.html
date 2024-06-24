@@ -1,135 +1,148 @@
-<!-- manage-students.component.html -->
+<p-toast></p-toast>
 <div class="card" style="margin: 0 20px; overflow: hidden;">
     <div class="mb-2 ml-auto z-0" style="display: flex; gap: 10px;">
-      <app-add-student></app-add-student>
-      <app-download></app-download>
+      <app-add-student *ngIf="!downloadSelectedMode"></app-add-student>
+      <!-- ManageStudentsComponent template -->
+<app-download [class.hidden]="downloadSelectedMode" (downloadSelectedStudentsEvent)="downloadSelectedStudents()"></app-download>
+
+      
+      <p-button label="Download Selected Students" icon="pi pi-download" [raised]="true" severity="secondary" (click)="downloadSelectedStudents()" *ngIf="downloadSelectedMode"></p-button>
+      <p-button  icon="pi pi-times" severity="danger" [raised]="true" (click)="exitSelectionMode()" *ngIf="downloadSelectedMode"></p-button>
     </div>
-    
-    <p-table 
-      #dt1 [value]="customers" 
-      dataKey="id" 
-      [rows]="10" 
+  
+    <p-table
+      #dt1
+      [value]="customers"
+      [selectionMode]="downloadSelectedMode ? 'checkbox' : null"
+      [(selection)]="selectedCustomers"
+      dataKey="id"
+      [rows]="10"
       [rowsPerPageOptions]="[10, 25, 50]"
-      [loading]="loading" 
+      [loading]="loading"
       [paginator]="true"
       [globalFilterFields]="['fname', 'lname', 'email', 'dob', 'address', 'gender', 'bloodGroup', 'dietaryPreference', 'emergencyContactName', 'emergencyContactNumber', 'emergencyContactRelation', 'verified']">
-        <ng-template pTemplate="caption">
-            <div class="flex">
-                <p-button label="Clear" [outlined]="true" icon="pi pi-filter-slash" (click)="clear(dt1)"></p-button>
-                <span class="p-input-icon-left ml-auto" style="border: 1px solid #ccc; border-radius: 4px; padding: 2px;">
-                  <i class="pi pi-search" style="margin-left: 8px;"></i>
-                  <input pInputText type="text" [(ngModel)]="searchValue" (input)="dt1.filterGlobal($event.target.value, 'contains')" placeholder="Search keyword"
-                      class="p-inputtext-sm" style="width: 15rem; padding-left: 3rem; border: none; outline: none; background: transparent; margin-left: 5px;"/>            
-              </span>            
+      <ng-template pTemplate="caption">
+        <div class="flex">
+          <p-button label="Clear" [outlined]="true" icon="pi pi-filter-slash" (click)="clear(dt1)"></p-button>
+          <span class="p-input-icon-left ml-auto" style="border: 1px solid #ccc; border-radius: 4px; padding: 2px;">
+            <i class="pi pi-search" style="margin-left: 8px;"></i>
+            <input pInputText type="text" [(ngModel)]="searchValue" (input)="dt1.filterGlobal($event.target.value, 'contains')" placeholder="Search keyword"
+              class="p-inputtext-sm" style="width: 15rem; padding-left: 3rem; border: none; outline: none; background: transparent; margin-left: 5px;"/>
+          </span>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+            <th *ngIf="downloadSelectedMode">
+                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+              </th>
+          <th style="min-width: 12%">
+            <div class="flex align-items-center">
+              ID
+              <p-columnFilter type="text" field="id" display="menu"></p-columnFilter>
             </div>
-        </ng-template>
-        <ng-template pTemplate="header">
-            <tr>
-                <th style="min-width: 12%">
-                    <div class="flex align-items-center">
-                        ID
-                        <p-columnFilter type="text" field="id" display="menu"></p-columnFilter>
-                    </div>
-                </th>
-                <th style="min-width: 12%">
-                    <div class="flex align-items-center">
-                        First Name
-                        <p-columnFilter type="text" field="fname" display="menu"></p-columnFilter>
-                    </div>
-                </th>
-                <th style="min-width: 12%">
-                    <div class="flex align-items-center">
-                        Last Name
-                        <p-columnFilter type="text" field="lname" display="menu"></p-columnFilter>
-                    </div>
-                </th>
-                <th style="min-width: 15%">
-                    <div class="flex align-items-center">
-                        Email
-                        <p-columnFilter type="text" field="email" display="menu"></p-columnFilter>
-                    </div>
-                </th>
-                <th style="min-width: 10%">
-                    <div class="flex align-items-center">
-                        Date of Birth
-                        <p-columnFilter type="date" field="dob" display="menu"></p-columnFilter>
-                    </div>
-                </th>
-                <th style="min-width: 15%">
-                    <div class="flex align-items-center">
-                        Address
-                        <p-columnFilter type="text" field="address" display="menu"></p-columnFilter>
-                    </div>
-                </th>
-                <th style="min-width: 8%">
-                    <div class="flex align-items-center">
-                        Gender
-                        <p-columnFilter type="text" field="gender" display="menu"></p-columnFilter>
-                    </div>
-                </th>
-                <th style="min-width: 8%">
-                    <div class="flex align-items-center">
-                        Blood Group
-                        <p-columnFilter type="text" field="bloodGroup" display="menu"></p-columnFilter>
-                    </div>
-                </th>
-                <th style="min-width: 10%">
-                    <div class="flex align-items-center">
-                        Dietary Preference
-                        <p-columnFilter type="text" field="dietaryPreference" display="menu"></p-columnFilter>
-                    </div>
-                </th>
-                <th style="min-width: 12%">
-                    <div class="flex align-items-center">
-                        Emergency Contact Name
-                        <p-columnFilter type="text" field="emergencyContactName" display="menu"></p-columnFilter>
-                    </div>
-                </th>
-                <th style="min-width: 10%">
-                    <div class="flex align-items-center">
-                        Emergency Contact Number
-                        <p-columnFilter type="text" field="emergencyContactNumber" display="menu"></p-columnFilter>
-                    </div>
-                </th>
-                <th style="min-width: 10%">
-                    <div class="flex align-items-center">
-                        Emergency Contact Relation
-                        <p-columnFilter type="text" field="emergencyContactRelation" display="menu"></p-columnFilter>
-                    </div>
-                </th>
-                <th style="min-width: 5%">
-                    <div class="flex align-items-center">
-                        Verified
-                        <p-columnFilter type="boolean" field="verified" display="menu"></p-columnFilter>
-                    </div>
-                </th>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-customer>
-            <tr>
-                <td>{{ customer.id }}</td>
-                <td>{{ customer.fname }}</td>
-                <td>{{ customer.lname }}</td>
-                <td>{{ customer.email }}</td>
-                <td>{{ customer.dob | date: 'dd-MM-yyyy' }}</td>
-                <td>{{ customer.address }}</td>
-                <td>{{ customer.gender }}</td>
-                <td>{{ customer.bloodGroup }}</td>
-                <td>{{ customer.dietaryPreference }}</td>
-                <td>{{ customer.emergencyContactName }}</td>
-                <td>{{ customer.emergencyContactNumber }}</td>
-                <td>{{ customer.emergencyContactRelation }}</td>
-                <td class="text-center">
-                    <i class="pi"
-                        [ngClass]="{ 'text-green-500 pi-check-circle': customer.verified, 'text-red-500 pi-times-circle': !customer.verified }"></i>
-                </td>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="emptymessage">
-            <tr>
-                <td colspan="12">No customers found.</td>
-            </tr>
-        </ng-template>
+          </th>
+          <th style="min-width: 12%">
+            <div class="flex align-items-center">
+              First Name
+              <p-columnFilter type="text" field="fname" display="menu"></p-columnFilter>
+            </div>
+          </th>
+          <th style="min-width: 12%">
+            <div class="flex align-items-center">
+              Last Name
+              <p-columnFilter type="text" field="lname" display="menu"></p-columnFilter>
+            </div>
+          </th>
+          <th style="min-width: 15%">
+            <div class="flex align-items-center">
+              Email
+              <p-columnFilter type="text" field="email" display="menu"></p-columnFilter>
+            </div>
+          </th>
+          <th style="min-width: 10%">
+            <div class="flex align-items-center">
+              Date of Birth
+              <p-columnFilter type="date" field="dob" display="menu"></p-columnFilter>
+            </div>
+          </th>
+          <th style="min-width: 15%">
+            <div class="flex align-items-center">
+              Address
+              <p-columnFilter type="text" field="address" display="menu"></p-columnFilter>
+            </div>
+          </th>
+          <th style="min-width: 8%">
+            <div class="flex align-items-center">
+              Gender
+              <p-columnFilter type="text" field="gender" display="menu"></p-columnFilter>
+            </div>
+          </th>
+          <th style="min-width: 8%">
+            <div class="flex align-items-center">
+              Blood Group
+              <p-columnFilter type="text" field="bloodGroup" display="menu"></p-columnFilter>
+            </div>
+          </th>
+          <th style="min-width: 10%">
+            <div class="flex align-items-center">
+              Dietary Preference
+              <p-columnFilter type="text" field="dietaryPreference" display="menu"></p-columnFilter>
+            </div>
+          </th>
+          <th style="min-width: 12%">
+            <div class="flex align-items-center">
+              Emergency Contact Name
+              <p-columnFilter type="text" field="emergencyContactName" display="menu"></p-columnFilter>
+            </div>
+          </th>
+          <th style="min-width: 10%">
+            <div class="flex align-items-center">
+              Emergency Contact Number
+              <p-columnFilter type="text" field="emergencyContactNumber" display="menu"></p-columnFilter>
+            </div>
+          </th>
+          <th style="min-width: 10%">
+            <div class="flex align-items-center">
+              Emergency Contact Relation
+              <p-columnFilter type="text" field="emergencyContactRelation" display="menu"></p-columnFilter>
+            </div>
+          </th>
+          <th style="min-width: 5%">
+            <div class="flex align-items-center">
+              Verified
+              <p-columnFilter type="boolean" field="verified" display="menu"></p-columnFilter>
+            </div>
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-customer>
+        <tr>
+            <td *ngIf="downloadSelectedMode">
+                <p-tableCheckbox [value]="customer"></p-tableCheckbox>
+              </td>
+          <td>{{ customer.id }}</td>
+          <td>{{ customer.fname }}</td>
+          <td>{{ customer.lname }}</td>
+          <td>{{ customer.email }}</td>
+          <td>{{ customer.dob | date: 'dd-MM-yyyy' }}</td>
+          <td>{{ customer.address }}</td>
+          <td>{{ customer.gender }}</td>
+          <td>{{ customer.bloodGroup }}</td>
+          <td>{{ customer.dietaryPreference }}</td>
+          <td>{{ customer.emergencyContactName }}</td>
+          <td>{{ customer.emergencyContactNumber }}</td>
+          <td>{{ customer.emergencyContactRelation }}</td>
+          <td class="text-center">
+            <i class="pi" [ngClass]="{ 'text-green-500 pi-check-circle': customer.verified, 'text-red-500 pi-times-circle': !customer.verified }"></i>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="13">No customers found.</td>
+        </tr>
+      </ng-template>
     </p-table>
   </div>
   

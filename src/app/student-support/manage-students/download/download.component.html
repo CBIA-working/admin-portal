@@ -1,32 +1,19 @@
-<!-- download.component.html -->
 <p-button label="Export" icon="pi pi-download" (click)="showDialog()"></p-button>
 
-<!-- Dialog for exporting students -->
 <p-dialog header="Export Students" [modal]="true" [(visible)]="visible" [style]="{ 'max-width': '600px' }">
   <div class="p-dialog-content">
-    <p>Choose what to export:</p>
+    <p>Choose format to export:</p>
     <div>
-      <p>Choose format:</p>
-      <div>
-        <p-radioButton 
-          name="format" 
-          value="excel" 
-          [(ngModel)]="selectedFormat" 
-          label="Excel" 
-          inputId="formatExcel">
-        </p-radioButton>
-        <p-radioButton 
-          name="format" 
-          value="pdf" 
-          [(ngModel)]="selectedFormat" 
-          label="PDF" 
-          inputId="formatPdf">
-        </p-radioButton>
-      </div>
+      <input type="radio" id="excel" name="format" value="excel" [(ngModel)]="format">
+      <label for="excel">Excel</label>
+    </div>
+    <div>
+      <input type="radio" id="pdf" name="format" value="pdf" [(ngModel)]="format">
+      <label for="pdf">PDF</label>
     </div>
   </div>
   <div class="p-dialog-footer">
-    <p-button label="Download All Students" icon="pi pi-download" styleClass="p-button-success" (click)="downloadAllStudents()"></p-button>
-    <p-button label="Download Selected Students" icon="pi pi-download" styleClass="p-button-success" (click)="downloadSelectedStudents()"></p-button>
+    <p-button label="Download All Students" icon="pi pi-download" [raised]="true" severity="secondary" (click)="downloadAllStudents()"></p-button>
+    <p-button label="Download Selected Students" icon="pi pi-download" [raised]="true" severity="secondary" (click)="downloadSelectedStudents()"></p-button>
   </div>
 </p-dialog>

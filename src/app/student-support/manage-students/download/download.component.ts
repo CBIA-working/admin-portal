@@ -29,7 +29,7 @@ import { ImportsModule } from 'src/app/imports';
 })
 export class DownloadComponent {
   visible: boolean = false;
-  selectedFormat: string = 'excel'; // Default format
+  format: string = 'excel';
 
   @Output() downloadAllStudentsEvent = new EventEmitter<string>();
   @Output() downloadSelectedStudentsEvent = new EventEmitter<string>();
@@ -43,12 +43,12 @@ export class DownloadComponent {
   }
 
   downloadAllStudents() {
-    this.downloadAllStudentsEvent.emit(this.selectedFormat);
+    this.downloadAllStudentsEvent.emit(this.format);
     this.hideDialog();
   }
 
   downloadSelectedStudents() {
-    this.downloadSelectedStudentsEvent.emit(this.selectedFormat);
+    this.downloadSelectedStudentsEvent.emit(this.format);
     this.hideDialog();
   }
 }
