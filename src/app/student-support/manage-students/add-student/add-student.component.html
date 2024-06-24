@@ -1,10 +1,19 @@
 <div class="card flex">
+
   <p-toast></p-toast>
-  <p-confirmDialog #cd>
+  <p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle" [visible]="displayDialog"
+  (accept)="submitForm()" (reject)="displayDialog=false">
+  
     <ng-template pTemplate="headless" let-message>
+      <div class="card flex justify-content-between mb-0">
+        <div class="text-left mt-3  text-xl font-semibold">Add students</div>
+        <button class="p-dialog-titlebar-icon p-link" (click)="closeDialog()">
+          <span class="pi pi-times"></span>
+        </button>
+        </div>
       <div class="card flex justify-content-center">
+        
         <p-stepper [(activeStep)]="active">
-          
           <!-- Step 1: Create Account -->
           <p-stepperPanel>
             <ng-template pTemplate="header" let-onClick="onClick" let-index="index">
@@ -18,7 +27,7 @@
             </ng-template>
             <ng-template pTemplate="content" let-nextCallback="nextCallback">
               <div class="text-center mt-3 mb-3 text-xl font-semibold">Account Setup</div>
-              <div class="flex flex-row gap-4 mx-auto my-auto" style="min-height: 3rem; max-width: 30rem">
+              <div class="flex flex-row gap-4 mx-auto my-auto" style="min-height: 6rem; max-width: 30rem">
                 <!-- Column 1 -->
                 <div class="flex flex-column gap-2" style="flex: 1;">
                   <div class="field p-fluid">
@@ -82,12 +91,7 @@
                 <!-- Content specific to Step 2 -->
                 <div class="flex flex-column gap-2" style="flex: 1;">
                   <div class="field p-fluid">
-                    <p-iconField>
-                      <p-inputIcon>
-                        <i class="pi pi-calendar"></i>
-                      </p-inputIcon>
                       <input [(ngModel)]="dob" pInputText id="inputDateOfBirth" type="date" placeholder="Date Of Birth" />
-                    </p-iconField>
                   </div>
                   <div class="field p-fluid">
                     <p-iconField>
@@ -113,9 +117,7 @@
                     </p-iconField>
                   </div>
                   <div class="field p-fluid">
-                    <p-iconField>
                       <textarea [(ngModel)]="address" pInputTextarea id="inputAddress" rows="1" placeholder="Enter your address"></textarea>
-                    </p-iconField>
                   </div>
                 </div>
               </div>
@@ -146,7 +148,7 @@
                   <div class="field p-fluid">
                     <p-iconField>
                       <p-inputIcon>
-                        <i class="pi pi-utensils"></i>
+                        <i class="pi pi-apple"></i>
                       </p-inputIcon>
                       <input [(ngModel)]="dietaryPreference" pInputText id="inputDietaryPreference" type="text"
                         placeholder="Dietary Preference" />
@@ -192,9 +194,10 @@
           </p-stepperPanel>
 
         </p-stepper>
+        
       </div>
     </ng-template>
   </p-confirmDialog>
-  <p-button (click)="confirm()" icon="pi pi-user-plus" label="Add Student"></p-button>
+  <p-button (click)="confirm()" icon="pi pi-user-plus"></p-button>
 </div>
               

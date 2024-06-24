@@ -1,6 +1,6 @@
 {
     "/api": {
-      "target": "https://maui-portal.vercel.app/api",
+      "target": "https://maui-portal.vercel.app",
       "secure": false,
       "changeOrigin": true
     }

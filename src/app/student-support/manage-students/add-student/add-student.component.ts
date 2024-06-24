@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { StepperModule } from 'primeng/stepper';
 import { InputTextModule } from 'primeng/inputtext';
@@ -36,6 +36,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./add-student.component.scss']
 })
 export class AddStudentComponent {
+  displayDialog: boolean = true; // Add this line to control dialog visibility
+
   active = 0;
   fname: string | undefined;
   lname: string | undefined;
@@ -51,8 +53,8 @@ export class AddStudentComponent {
   emergencyContactRelation: string | undefined;
 
   genders: any[] = [
-    { label: 'Male', icon: 'pi pi-fw pi-mars',value: 'Male' },
-    { label: 'Female', icon: 'pi pi-fw pi-venus',value: 'Female' },
+    { label: 'Male', icon: 'pi pi-fw pi-mars', value: 'Male' },
+    { label: 'Female', icon: 'pi pi-fw pi-venus', value: 'Female' },
     { label: 'Other', value: 'Other' }
   ];
 
@@ -86,7 +88,8 @@ export class AddStudentComponent {
         (response: any) => {
           this.messageService.add({ severity: 'success', summary: 'Success', detail: response.message, life: 3000 });
           this.resetForm(); // Reset form only on success
-          this.router.navigate(['/some-path']); // Navigate away on success
+          this.router.navigate(['/managestudent']); // Navigate away on success
+          this.closeDialog(); // Close the dialog on success
         },
         (error) => {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to submit data', life: 3000 });
@@ -122,5 +125,9 @@ export class AddStudentComponent {
         this.messageService.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected', life: 3000 });
       }
     });
+  }
+
+closeDialog() {
+    this.displayDialog = false;
   }
 }
