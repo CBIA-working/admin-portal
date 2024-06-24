@@ -2,202 +2,213 @@
 
   <p-toast></p-toast>
   <p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle" [visible]="displayDialog"
-  (accept)="submitForm()" (reject)="displayDialog=false">
-  
+    (accept)="submitForm()" (reject)="displayDialog=false">
+
     <ng-template pTemplate="headless" let-message>
-      <div class="card flex justify-content-between mb-0">
-        <div class="text-left mt-3  text-xl font-semibold">Add students</div>
-        <button class="p-dialog-titlebar-icon p-link" (click)="closeDialog()">
-          <span class="pi pi-times"></span>
-        </button>
+      <div class="card">
+        <div class="flex justify-between items-center w-full">
+          <div class="text-left mt-3  text-xl font-semibold">Add students</div>
+          <button class="p-dialog-titlebar-icon p-link" (click)="closeDialog()">
+            <span class="pi pi-times"></span>
+          </button>
         </div>
-      <div class="card flex justify-content-center">
-        
-        <p-stepper [(activeStep)]="active">
-          <!-- Step 1: Create Account -->
-          <p-stepperPanel>
-            <ng-template pTemplate="header" let-onClick="onClick" let-index="index">
-              <button class="bg-transparent border-none inline-flex flex-column gap-2" (click)="onClick.emit()">
-                <span
-                  class="border-round border-2 w-3rem h-3rem inline-flex align-items-center justify-content-center"
-                  [ngClass]="{'bg-primary border-primary': index <= active, 'surface-border': index > active}">
-                  <i class="pi pi-user"></i>
-                </span>
-              </button>
-            </ng-template>
-            <ng-template pTemplate="content" let-nextCallback="nextCallback">
-              <div class="text-center mt-3 mb-3 text-xl font-semibold">Account Setup</div>
-              <div class="flex flex-row gap-4 mx-auto my-auto" style="min-height: 6rem; max-width: 30rem">
-                <!-- Column 1 -->
-                <div class="flex flex-column gap-2" style="flex: 1;">
-                  <div class="field p-fluid">
-                    <p-iconField>
-                      <p-inputIcon>
-                        <i class="pi pi-user"></i>
-                      </p-inputIcon>
-                      <input [(ngModel)]="fname" pInputText id="inputFirstName" type="text" placeholder="First Name" />
-                    </p-iconField>
-                  </div>
-                  <div class="field p-fluid">
-                    <p-iconField>
-                      <p-inputIcon>
-                        <i class="pi pi-user"></i>
-                      </p-inputIcon>
-                      <input [(ngModel)]="lname" pInputText id="inputLastName" type="text" placeholder="Last Name" />
-                    </p-iconField>
-                  </div>
-                </div>
-                <!-- Column 2 -->
-                <div class="flex flex-column gap-2" style="flex: 1;">
-                  <div class="field p-fluid">
-                    <p-iconField>
-                      <p-inputIcon>
-                        <i class="pi pi-lock"></i>
-                      </p-inputIcon>
-                      <p-password [(ngModel)]="password" [toggleMask]="true" placeholder="Password"></p-password>
-                    </p-iconField>
-                  </div>
-                  <div class="field p-fluid">
-                    <p-iconField>
-                      <p-inputIcon>
-                        <i class="pi pi-envelope"></i>
-                      </p-inputIcon>
-                      <input [(ngModel)]="email" pInputText id="inputEmail" type="email" placeholder="Email" />
-                    </p-iconField>
-                  </div>
-                </div>
-              </div>
-              <!-- Next Button -->
-              <div class="flex justify-content-end mt-2">
-                <p-button (onClick)="nextCallback.emit()" label="Next" icon="pi pi-arrow-right" iconPos="right"></p-button>
-              </div>
-            </ng-template>
-          </p-stepperPanel>
+        <div class="card flex justify-content-center">
 
-          <!-- Step 2: Choose Interests -->
-          <p-stepperPanel>
-            <ng-template pTemplate="header" let-onClick="onClick" let-index="index">
-              <button class="bg-transparent border-none inline-flex flex-column gap-2" (click)="onClick.emit()">
-                <span
-                  class="border-round border-2 w-3rem h-3rem inline-flex align-items-center justify-content-center"
-                  [ngClass]="{'bg-primary border-primary': index <= active, 'surface-border': index > active}">
-                  <i class="pi pi-star"></i>
-                </span>
-              </button>
-            </ng-template>
-            <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback">
-              <div class="text-center mt-3 mb-3 text-xl font-semibold">Personal Information</div>
-              <div class="flex flex-row gap-4 mx-auto my-auto" style="min-height: 3rem; max-width: 30rem">
-                <!-- Content specific to Step 2 -->
-                <div class="flex flex-column gap-2" style="flex: 1;">
-                  <div class="field p-fluid">
-                      <input [(ngModel)]="dob" pInputText id="inputDateOfBirth" type="date" placeholder="Date Of Birth" />
+          <p-stepper [(activeStep)]="active">
+            <!-- Step 1: Create Account -->
+            <p-stepperPanel>
+              <ng-template pTemplate="header" let-onClick="onClick" let-index="index">
+                <button class="bg-transparent border-none inline-flex flex-column gap-2" (click)="onClick.emit()">
+                  <span
+                    class="border-round border-2 w-3rem h-3rem inline-flex align-items-center justify-content-center"
+                    [ngClass]="{'bg-primary border-primary': index <= active, 'surface-border': index > active}">
+                    <i class="pi pi-user"></i>
+                  </span>
+                </button>
+              </ng-template>
+              <ng-template pTemplate="content" let-nextCallback="nextCallback">
+                <div class="text-center mt-3 mb-3 text-xl font-semibold">Account Setup</div>
+                <div class="flex flex-row gap-4 mx-auto my-auto" style="min-height: 6rem; max-width: 30rem">
+                  <!-- Column 1 -->
+                  <div class="flex flex-column gap-2" style="flex: 1;">
+                    <div class="field p-fluid">
+                      <p-iconField>
+                        <p-inputIcon>
+                          <i class="pi pi-user"></i>
+                        </p-inputIcon>
+                        <input [(ngModel)]="fname" pInputText id="inputFirstName" type="text"
+                          placeholder="First Name" />
+                      </p-iconField>
+                    </div>
+                    <div class="field p-fluid">
+                      <p-iconField>
+                        <p-inputIcon>
+                          <i class="pi pi-user"></i>
+                        </p-inputIcon>
+                        <input [(ngModel)]="lname" pInputText id="inputLastName" type="text" placeholder="Last Name" />
+                      </p-iconField>
+                    </div>
                   </div>
-                  <div class="field p-fluid">
-                    <p-iconField>
-                      <p-inputIcon>
-                        <i class="pi pi-heart-fill"></i>
-                      </p-inputIcon>
-                      <input [(ngModel)]="bloodGroup" pInputText id="inputBloodGroup" type="text" placeholder="Blood Group" />
-                    </p-iconField>
+                  <!-- Column 2 -->
+                  <div class="flex flex-column gap-2" style="flex: 1;">
+                    <div class="field p-fluid">
+                      <p-iconField>
+                        <p-inputIcon>
+                          <i class="pi pi-lock"></i>
+                        </p-inputIcon>
+                        <p-password [(ngModel)]="password" [toggleMask]="true" placeholder="Password"></p-password>
+                      </p-iconField>
+                    </div>
+                    <div class="field p-fluid">
+                      <p-iconField>
+                        <p-inputIcon>
+                          <i class="pi pi-envelope"></i>
+                        </p-inputIcon>
+                        <input [(ngModel)]="email" pInputText id="inputEmail" type="email" placeholder="Email" />
+                      </p-iconField>
+                    </div>
                   </div>
                 </div>
-                <div class="flex flex-column gap-2" style="flex: 1;">
-                  <div class="field p-fluid">
-                    <p-iconField>
-                      <p-dropdown [options]="genders" [(ngModel)]="selectedGender" placeholder="Select Gender" id="inputGender"
-                        optionLabel="label" optionValue="value">
-                        <ng-template let-gender pTemplate="item">
-                          <div class="p-d-flex p-ai-center">
-                            <i [ngClass]="gender.icon" class="p-mr-2"></i>
-                            <span>{{gender.label}}</span>
-                          </div>
-                        </ng-template>
-                      </p-dropdown>
-                    </p-iconField>
-                  </div>
-                  <div class="field p-fluid">
-                      <textarea [(ngModel)]="address" pInputTextarea id="inputAddress" rows="1" placeholder="Enter your address"></textarea>
-                  </div>
+                <!-- Next Button -->
+                <div class="flex justify-content-end mt-2">
+                  <p-button (onClick)="nextCallback.emit()" label="Next" icon="pi pi-arrow-right"
+                    iconPos="right"></p-button>
                 </div>
-              </div>
-              <!-- Prev and Next Buttons -->
-              <div class="flex justify-content-between mt-2">
-                <p-button (onClick)="prevCallback.emit()" label="Prev" icon="pi pi-arrow-left" iconPos="left"></p-button>
-                <p-button (onClick)="nextCallback.emit()" label="Next" icon="pi pi-arrow-right" iconPos="right"></p-button>
-              </div>
-            </ng-template>
-          </p-stepperPanel>
+              </ng-template>
+            </p-stepperPanel>
 
-          <!-- Step 3: Account Created -->
-          <p-stepperPanel>
-            <ng-template pTemplate="header" let-onClick="onClick" let-index="index">
-              <button class="bg-transparent border-none inline-flex flex-column gap-2" (click)="onClick.emit()">
-                <span
-                  class="border-round border-2 w-3rem h-3rem inline-flex align-items-center justify-content-center"
-                  [ngClass]="{'bg-primary border-primary': index <= active, 'surface-border': index > active}">
-                  <i class="pi pi-id-card"></i>
-                </span>
-              </button>
-            </ng-template>
-            <ng-template pTemplate="content" let-prevCallback="prevCallback" let-confirmCallback="confirmCallback">
-              <div class="text-center mt-3 mb-3 text-xl font-semibold">Emergency Information</div>
-              <div class="flex flex-row gap-4 mx-auto my-auto" style="min-height: 3rem; max-width: 30rem">
-                <!-- Content specific to Step 3 -->
-                <div class="flex flex-column gap-2" style="flex: 1;">
-                  <div class="field p-fluid">
-                    <p-iconField>
-                      <p-inputIcon>
-                        <i class="pi pi-apple"></i>
-                      </p-inputIcon>
-                      <input [(ngModel)]="dietaryPreference" pInputText id="inputDietaryPreference" type="text"
-                        placeholder="Dietary Preference" />
-                    </p-iconField>
+            <!-- Step 2: Choose Interests -->
+            <p-stepperPanel>
+              <ng-template pTemplate="header" let-onClick="onClick" let-index="index">
+                <button class="bg-transparent border-none inline-flex flex-column gap-2" (click)="onClick.emit()">
+                  <span
+                    class="border-round border-2 w-3rem h-3rem inline-flex align-items-center justify-content-center"
+                    [ngClass]="{'bg-primary border-primary': index <= active, 'surface-border': index > active}">
+                    <i class="pi pi-star"></i>
+                  </span>
+                </button>
+              </ng-template>
+              <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback">
+                <div class="text-center mt-3 mb-3 text-xl font-semibold">Personal Information</div>
+                <div class="flex flex-row gap-4 mx-auto my-auto" style="min-height: 3rem; max-width: 30rem">
+                  <!-- Content specific to Step 2 -->
+                  <div class="flex flex-column gap-2" style="flex: 1;">
+                    <div class="field p-fluid">
+                      <input [(ngModel)]="dob" pInputText id="inputDateOfBirth" type="date"
+                        placeholder="Date Of Birth" />
+                    </div>
+                    <div class="field p-fluid">
+                      <p-iconField>
+                        <p-inputIcon>
+                          <i class="pi pi-heart-fill"></i>
+                        </p-inputIcon>
+                        <input [(ngModel)]="bloodGroup" pInputText id="inputBloodGroup" type="text"
+                          placeholder="Blood Group" />
+                      </p-iconField>
+                    </div>
                   </div>
-                  <div class="field p-fluid">
-                    <p-iconField>
-                      <p-inputIcon>
-                        <i class="pi pi-phone"></i>
-                      </p-inputIcon>
-                      <input [(ngModel)]="emergencyContactName" pInputText id="inputEmergencyContactName" type="text"
-                        placeholder="Emergency Contact Name" />
-                    </p-iconField>
-                  </div>
-                </div>
-                <div class="flex flex-column gap-2" style="flex: 1;">
-                  <div class="field p-fluid">
-                    <p-iconField>
-                      <p-inputIcon>
-                        <i class="pi pi-phone"></i>
-                      </p-inputIcon>
-                      <input [(ngModel)]="emergencyContactNumber" pInputText id="inputEmergencyContactNumber" type="text"
-                        placeholder="Emergency Contact Number" />
-                    </p-iconField>
-                  </div>
-                  <div class="field p-fluid">
-                    <p-iconField>
-                      <p-inputIcon>
-                        <i class="pi pi-users"></i>
-                      </p-inputIcon>
-                      <input [(ngModel)]="emergencyContactRelation" pInputText id="inputEmergencyContactRelation" type="text"
-                        placeholder="Emergency Contact Relation" />
-                    </p-iconField>
+                  <div class="flex flex-column gap-2" style="flex: 1;">
+                    <div class="field p-fluid">
+                      <p-iconField>
+                        <p-dropdown [options]="genders" [(ngModel)]="selectedGender" placeholder="Select Gender"
+                          id="inputGender" optionLabel="label" optionValue="value">
+                          <ng-template let-gender pTemplate="item">
+                            <div class="p-d-flex p-ai-center">
+                              <i [ngClass]="gender.icon" class="p-mr-2"></i>
+                              <span>{{gender.label}}</span>
+                            </div>
+                          </ng-template>
+                        </p-dropdown>
+                      </p-iconField>
+                    </div>
+                    <div class="field p-fluid">
+                      <textarea [(ngModel)]="address" pInputTextarea id="inputAddress" rows="1"
+                        placeholder="Enter your address"></textarea>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <!-- Prev and Confirm Buttons -->
-              <div class="flex justify-content-between mt-2">
-                <p-button (onClick)="prevCallback.emit()" label="Prev" icon="pi pi-arrow-left" iconPos="left"></p-button>
-                <p-button (click)="submitForm()" label="Submit" icon="pi pi-check" styleClass="p-button-success"></p-button>
-              </div>
-            </ng-template>
-          </p-stepperPanel>
+                <!-- Prev and Next Buttons -->
+                <div class="flex justify-content-between mt-2">
+                  <p-button (onClick)="prevCallback.emit()" label="Prev" icon="pi pi-arrow-left"
+                    iconPos="left"></p-button>
+                  <p-button (onClick)="nextCallback.emit()" label="Next" icon="pi pi-arrow-right"
+                    iconPos="right"></p-button>
+                </div>
+              </ng-template>
+            </p-stepperPanel>
 
-        </p-stepper>
-        
+            <!-- Step 3: Account Created -->
+            <p-stepperPanel>
+              <ng-template pTemplate="header" let-onClick="onClick" let-index="index">
+                <button class="bg-transparent border-none inline-flex flex-column gap-2" (click)="onClick.emit()">
+                  <span
+                    class="border-round border-2 w-3rem h-3rem inline-flex align-items-center justify-content-center"
+                    [ngClass]="{'bg-primary border-primary': index <= active, 'surface-border': index > active}">
+                    <i class="pi pi-id-card"></i>
+                  </span>
+                </button>
+              </ng-template>
+              <ng-template pTemplate="content" let-prevCallback="prevCallback" let-confirmCallback="confirmCallback">
+                <div class="text-center mt-3 mb-3 text-xl font-semibold">Emergency Information</div>
+                <div class="flex flex-row gap-4 mx-auto my-auto" style="min-height: 3rem; max-width: 30rem">
+                  <!-- Content specific to Step 3 -->
+                  <div class="flex flex-column gap-2" style="flex: 1;">
+                    <div class="field p-fluid">
+                      <p-iconField>
+                        <p-inputIcon>
+                          <i class="pi pi-apple"></i>
+                        </p-inputIcon>
+                        <input [(ngModel)]="dietaryPreference" pInputText id="inputDietaryPreference" type="text"
+                          placeholder="Dietary Preference" />
+                      </p-iconField>
+                    </div>
+                    <div class="field p-fluid">
+                      <p-iconField>
+                        <p-inputIcon>
+                          <i class="pi pi-phone"></i>
+                        </p-inputIcon>
+                        <input [(ngModel)]="emergencyContactName" pInputText id="inputEmergencyContactName" type="text"
+                          placeholder="Emergency Contact Name" />
+                      </p-iconField>
+                    </div>
+                  </div>
+                  <div class="flex flex-column gap-2" style="flex: 1;">
+                    <div class="field p-fluid">
+                      <p-iconField>
+                        <p-inputIcon>
+                          <i class="pi pi-phone"></i>
+                        </p-inputIcon>
+                        <input [(ngModel)]="emergencyContactNumber" pInputText id="inputEmergencyContactNumber"
+                          type="text" placeholder="Emergency Contact Number" />
+                      </p-iconField>
+                    </div>
+                    <div class="field p-fluid">
+                      <p-iconField>
+                        <p-inputIcon>
+                          <i class="pi pi-users"></i>
+                        </p-inputIcon>
+                        <input [(ngModel)]="emergencyContactRelation" pInputText id="inputEmergencyContactRelation"
+                          type="text" placeholder="Emergency Contact Relation" />
+                      </p-iconField>
+                    </div>
+                  </div>
+                </div>
+                <!-- Prev and Confirm Buttons -->
+                <div class="flex justify-content-between mt-2">
+                  <p-button (onClick)="prevCallback.emit()" label="Prev" icon="pi pi-arrow-left"
+                    iconPos="left"></p-button>
+                  <p-button (click)="submitForm()" label="Submit" icon="pi pi-check"
+                    styleClass="p-button-success"></p-button>
+                </div>
+              </ng-template>
+            </p-stepperPanel>
+
+          </p-stepper>
+
+        </div>
       </div>
+
     </ng-template>
   </p-confirmDialog>
   <p-button (click)="confirm()" icon="pi pi-user-plus"></p-button>
 </div>
-              
