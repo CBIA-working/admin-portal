@@ -12,6 +12,7 @@ import { TagModule } from 'primeng/tag';
 import { CustomerService } from './service/customerservice';
 import { Customer, Representative,} from './domain/customer';
 import { AddStudentComponent } from './add-student/add-student.component';
+import { DownloadComponent } from './download/download.component';
 
 @Component({
   selector: 'app-manage-students',
@@ -19,7 +20,7 @@ import { AddStudentComponent } from './add-student/add-student.component';
   imports: [TableModule, RouterModule, 
     HttpClientModule, 
     CommonModule, InputTextModule, TagModule, DropdownModule, MultiSelectModule, ProgressBarModule, ButtonModule,
-    AddStudentComponent ],
+    AddStudentComponent,DownloadComponent ],
   providers: [CustomerService],
   templateUrl: './manage-students.component.html',
   styleUrl: './manage-students.component.scss'

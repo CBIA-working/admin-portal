@@ -1,7 +1,9 @@
 <div class="card" style="margin: 0 20px; overflow: hidden;">
-  <div class="mb-2 ml-auto z-0">
-  <app-add-student></app-add-student>
-  </div>
+    <div class="mb-2 ml-auto z-0" style="display: flex; gap: 10px;">
+        <app-add-student></app-add-student>
+        <app-download></app-download>
+      </div>
+      
   <p-table 
     #dt1 [value]="customers" 
     dataKey="id" 
