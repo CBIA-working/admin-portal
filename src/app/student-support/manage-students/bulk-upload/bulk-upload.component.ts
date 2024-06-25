@@ -1,29 +1,56 @@
 import { Component } from '@angular/core';
 import { ImportsModule } from '../../../imports';
-import { MessageService, PrimeNGConfig} from 'primeng/api';
+import { MessageService, PrimeNGConfig } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
+import * as XLSX from 'xlsx'; // Import XLSX library for Excel manipulation
 import { Card } from 'primeng/card';
+
 @Component({
   selector: 'app-bulk-upload',
   standalone: true,
   imports: [ImportsModule],
-    providers: [MessageService,DialogService],
+  providers: [MessageService, DialogService],
   templateUrl: './bulk-upload.component.html',
-  styleUrl: './bulk-upload.component.scss'
+  styleUrls: ['./bulk-upload.component.scss']
 })
 export class BulkUploadComponent {
   visible: boolean = false;
-  
+  files = [];
+  totalSize: number = 0;
+  totalSizePercent: number = 0;
+
+  // Function to download the Excel template
+  downloadTemplate() {
+    const templateData = [
+      { value: 'fname', label: 'First Name' },
+      { value: 'lname', label: 'Last Name' },
+      { value: 'email', label: 'Email' },
+      { value: 'password', label: 'Password' },
+      { value: 'dob', label: 'Date of Birth' },
+      { value: 'address', label: 'Address' },
+      { value: 'gender', label: 'Gender' },
+      { value: 'bloodGroup', label: 'Blood Group' },
+      { value: 'dietaryPreference', label: 'Dietary Preference' },
+      { value: 'emergencyContactName', label: 'Emergency Contact Name' },
+      { value: 'emergencyContactNumber', label: 'Emergency Contact Number' },
+      { value: 'emergencyContactRelation', label: 'Emergency Contact Relation' }
+    ];
+
+    const headers = templateData.map(item => item.label);
+    const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet([headers]);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Template');
+    XLSX.writeFile(wb, 'bulk_upload_template.xlsx');
+  }
+
   showDialog() {
     this.visible = true;
+    this.downloadTemplate();
   }
 
   hideDialog() {
     this.visible = false;
   }
-  files = [];
-  totalSize: number = 0;
-  totalSizePercent: number = 0;
 
   constructor(
     private config: PrimeNGConfig,
@@ -49,6 +76,14 @@ export class BulkUploadComponent {
 
   onTemplatedUpload() {
     this.messageService.add({ severity: 'info', summary: 'Success', detail: 'File Uploaded', life: 3000 });
+
+    // Clear the file upload component state
+    this.files = [];
+    this.totalSize = 0;
+    this.totalSizePercent = 0;
+
+    // Close the dialog
+    this.hideDialog();
   }
 
   onSelectedFiles(event) {
@@ -84,10 +119,8 @@ export class BulkUploadComponent {
       contentStyle: { 'max-height': '500px', overflow: 'auto' }
     });
 
-    // Pass necessary data to the dialog component if required
     ref.onClose.subscribe((data) => {
       // Handle dialog close actions if needed
     });
   }
 }
-
