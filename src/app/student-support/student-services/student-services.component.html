@@ -1,3 +1,91 @@
-<div class="flex items-center h-screen justify-center text-xl">
-    Service
+
+   <p-toast></p-toast>
+<div class="card" style="margin: 0 20px; overflow: hidden;">
+  <div class="mb-2 ml-auto z-0" style="display: flex; gap: 10px;">
+    <app-add-student *ngIf="!downloadSelectedMode"></app-add-student>
+    <app-download [class.hidden]="downloadSelectedMode" (downloadSelectedStudentsEvent)="downloadSelectedStudents()"></app-download>
+    <p-button label="Download Selected Students" icon="pi pi-download" [raised]="true" severity="secondary" (click)="downloadSelectedStudents()" *ngIf="downloadSelectedMode"></p-button>
+    <p-button  icon="pi pi-times" severity="danger" [raised]="true" (click)="exitSelectionMode()" *ngIf="downloadSelectedMode"></p-button>
+  </div>
+
+  <p-table #dt1 [value]="customers" [selectionMode]="downloadSelectedMode ? 'checkbox' : null"
+  [(selection)]="selectedCustomers" dataKey="id" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]" [loading]="loading"
+  [paginator]="true" [globalFilterFields]="['id', 'name', 'eventName']">
+  <ng-template pTemplate="caption">
+    <div class="flex">
+      <p-button label="Clear" [outlined]="true" icon="pi pi-filter-slash" (click)="clear(dt1)"></p-button>
+      <span class="p-input-icon-left ml-auto"
+        style="border: 1px solid #ccc; border-radius: 4px; padding: 2px;">
+        <i class="pi pi-search" style="margin-left: 8px;"></i>
+        <input pInputText type="text" [(ngModel)]="searchValue" (input)="dt1.filterGlobal($event.target.value, 'contains')"
+          placeholder="Search keyword" class="p-inputtext-sm"
+          style="width: 15rem; padding-left: 3rem; border: none; outline: none; background: transparent; margin-left: 5px;" />
+      </span>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="header">
+    <tr>
+      <th *ngIf="downloadSelectedMode">
+        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+      </th>
+      <th style="min-width: 12%">
+        <div class="flex align-items-center">
+          ID
+          <p-columnFilter type="text" field="id" display="menu"></p-columnFilter>
+        </div>
+      </th>
+      <th style="min-width: 20%">
+        <div class="flex align-items-center">
+          Name
+          <p-columnFilter type="text" field="name" display="menu"></p-columnFilter>
+        </div>
+      </th>
+      <th style="min-width: 20%">
+        <div class="flex align-items-center">
+          Event Name
+          <p-columnFilter type="text" field="eventName" display="menu"></p-columnFilter>
+        </div>
+      </th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-customer>
+    <tr>
+        
+      <td *ngIf="downloadSelectedMode">
+        <p-tableCheckbox [value]="customer"></p-tableCheckbox>
+      </td>
+      <td>{{ customer.id }}</td>
+      <td>{{ customer.fname }} {{ customer.lname }}</td>
+      <td>
+        <ng-container *ngIf="customer.eventName">
+          <button (click)="customer.expanded = !customer.expanded" pButton type="button"
+            icon="{{ customer.expanded }}" label="{{ customer.eventName }}"
+            class="p-button-text p-button-plain"></button>
+          <ng-container *ngIf="customer.expanded">
+            <p-panel [header]="customer.eventName">
+              <div>
+                <p><strong>Event Name:</strong> {{ customer.eventName }}</p>
+                <p *ngIf="customer.eventDate"><strong>Date:</strong> {{ customer.eventDate | date: 'dd-MM-yyyy' }}</p>
+                <p *ngIf="customer.eventDescription"><strong>Description:</strong> {{ customer.eventDescription }}</p>
+                <p><strong>Signed Up:</strong> {{ customer.signedUp ? 'Yes' : 'No' }}</p>
+              </div>
+            </p-panel>
+          </ng-container>
+        </ng-container>
+        <ng-container *ngIf="!customer.eventName">
+          No cultural event data available.
+        </ng-container>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td colspan="4">No customers found.</td>
+    </tr>
+  </ng-template>
+</p-table>
+
+
+
+
 </div>
