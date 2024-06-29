@@ -25,8 +25,11 @@ import { BulkUploadComponent } from './bulk-upload/bulk-upload.component';
   standalone:true,
   imports: [TableModule, RouterModule, 
     HttpClientModule, 
-    CommonModule, InputTextModule, TagModule, DropdownModule, MultiSelectModule, ProgressBarModule, ButtonModule,
-    AddStudentComponent,DownloadComponent,ToastModule,BulkUploadComponent],
+    CommonModule, InputTextModule, 
+    TagModule, DropdownModule, MultiSelectModule, 
+    ProgressBarModule, ButtonModule,
+    AddStudentComponent,DownloadComponent,
+    ToastModule,BulkUploadComponent],
   providers: [CustomerService,MessageService],
   templateUrl: './manage-students.component.html',
   styleUrl: './manage-students.component.scss'
@@ -56,7 +59,9 @@ export class ManageStudentsComponent implements OnInit, AfterViewInit {
     emergencyContactRelation: 'Emergency Contact Relation'
   };
 
-  constructor(private customerService: CustomerService ,private messageService: MessageService) {}
+  constructor(
+    private customerService: CustomerService ,
+    private messageService: MessageService) {}
 
   ngOnInit() {
     this.customerService.getCustomers().then((customers) => {
