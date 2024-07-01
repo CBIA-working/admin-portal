@@ -15,4 +15,9 @@ export class CustomerService {
   getCulturalEvents(): Observable<any[]> {
     return this.http.get<any[]>('http://localhost:3000/api/CulturalEvent');
   }
+
+  getAccommodations(): Observable<any[]> {
+    return this.http.get<any[]>('http://localhost:3000/api/Accomodation');
+  }
 }
+

@@ -10,13 +10,14 @@ import { ProgressBarModule } from 'primeng/progressbar';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { CustomerService } from './service/customerservice';
-import { CulturalEvent, Customer } from './domain/customer';
+import { CulturalEvent, Customer,Accommodation } from './domain/customer';
 import { DownloadComponent } from '../manage-students/download/download.component';
 import * as XLSX from 'xlsx';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable'; 
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-student-services',
@@ -24,7 +25,7 @@ import { ToastModule } from 'primeng/toast';
   imports: [
     TableModule, RouterModule, HttpClientModule, CommonModule, 
     InputTextModule, TagModule, DropdownModule, MultiSelectModule, 
-    ProgressBarModule, ButtonModule, DownloadComponent, ToastModule
+    ProgressBarModule, ButtonModule, DownloadComponent, ToastModule,TooltipModule
   ],
   providers: [CustomerService, MessageService],
   templateUrl: './student-services.component.html',
@@ -39,6 +40,7 @@ export class StudentServicesComponent implements OnInit, AfterViewInit {
   searchValue: string | undefined;
   downloadSelectedMode = false;
   culturalEvents: CulturalEvent[] = [];
+  accommodations: Accommodation[] = []; // Add this
 
   exportHeaderMapping = {
     id: 'ID',
@@ -46,7 +48,13 @@ export class StudentServicesComponent implements OnInit, AfterViewInit {
     eventName: 'Event Name',
     date: 'Event Date',
     description: 'Event Description',
-    signedUp: 'Signed Up'
+    signedUp: 'Signed Up',
+    roomNumber: 'Room Number', // Add these mappings
+    buildingName: 'Building Name',
+    floor: 'Floor',
+    isSingleOccupancy: 'Single Occupancy',
+    numberOfRoommates: 'Number of Roommates',
+    roommateNames: 'Roommate Names'
   };
 
   constructor(
@@ -63,6 +71,7 @@ export class StudentServicesComponent implements OnInit, AfterViewInit {
     this.customerService.getCustomers().then((customers) => {
       this.customers = customers;
       this.loadCulturalEvents();
+      this.loadAccommodations(); // Add this
     }).catch(error => {
       console.error('Error fetching customers:', error);
       this.loading = false;
@@ -82,6 +91,21 @@ export class StudentServicesComponent implements OnInit, AfterViewInit {
       error => {
         console.error('Error fetching cultural events:', error);
         this.loading = false;
+      }
+    );
+  }
+
+  loadAccommodations() {
+    const customerIds = this.customers.map(c => c.id);
+    this.http.post<Accommodation[]>('http://localhost:3000/api/Accomodation', { userIds: customerIds }).subscribe(
+      accommodations => {
+        this.accommodations = accommodations;
+        this.customers.forEach(customer => {
+          customer.accommodations = accommodations.filter(a => a.userId === customer.id) || [];
+        });
+      },
+      error => {
+        console.error('Error fetching accommodations:', error);
       }
     );
   }
@@ -112,6 +136,13 @@ export class StudentServicesComponent implements OnInit, AfterViewInit {
     this.selectedCustomers = [];
   }
 
+  toggleEvent(event: any) {
+    event.expanded = !event.expanded;
+  }
+  toggleAccommodation(accommodation: any) {
+    accommodation.expanded = !accommodation.expanded;
+  }
+
   downloadAllStudents(format: string) {
     const data = this.customers.flatMap(customer => this.mapCustomerToExportFormat(customer));
     this.download(format, data, 'students');
@@ -136,26 +167,63 @@ export class StudentServicesComponent implements OnInit, AfterViewInit {
   }
 
   mapCustomerToExportFormat(customer: Customer) {
-    if (customer.events.length === 0) {
-      return [{
-        ID: customer.id,
-        Name: `${customer.fname} ${customer.lname}`,
-        'Event Name': 'N/A',
-        'Event Date': 'N/A',
-        'Event Description': 'N/A',
-        'Signed Up': 'N/A'
-      }];
-    } else {
-      return customer.events.map(event => ({
-        ID: customer.id,
-        Name: `${customer.fname} ${customer.lname}`,
-        'Event Name': event.eventName || 'N/A',
-        'Event Date': event.date || 'N/A',
-        'Event Description': event.description || 'N/A',
-        'Signed Up': event.signedUp || 'N/A'
-      }));
-    }
+    const eventsList = customer.events.length > 0 
+      ? customer.events.map(event => event.eventName || 'N/A').join(', ')
+      : 'N/A';
+
+    const eventDates = customer.events.length > 0
+      ? customer.events.map(event => event.date || 'N/A').join(',')
+      : 'N/A';
+
+    const eventDescriptions = customer.events.length > 0
+      ? customer.events.map(event => event.description || 'N/A').join(',')
+      : 'N/A';
+
+    const signedUps = customer.events.length > 0
+      ? customer.events.map(event => event.signedUp ? 'TRUE' : 'FALSE').join(',')
+      : 'N/A';
+
+    const accommodationsList = customer.accommodations.length > 0
+      ? customer.accommodations.map(accommodation => `${accommodation.roomNumber || 'N/A'}`).join(',')
+      : 'N/A';
+
+    const buildingNames = customer.accommodations.length > 0
+      ? customer.accommodations.map(accommodation => `${accommodation.buildingName || 'N/A'}`).join(',')
+      : 'N/A';
+
+    const floors = customer.accommodations.length > 0
+      ? customer.accommodations.map(accommodation => `${accommodation.floor || 'N/A'}`).join(',')
+      : 'N/A';
+
+    const singleOccupancies = customer.accommodations.length > 0
+      ? customer.accommodations.map(accommodation => accommodation.isSingleOccupancy ? 'Yes' : 'No').join(',')
+      : 'N/A';
+
+    const numberOfRoommates = customer.accommodations.length > 0
+      ? customer.accommodations.map(accommodation => `${accommodation.numberOfRoommates || 'N/A'}`).join(',')
+      : 'N/A';
+
+    const roommateNames = customer.accommodations.length > 0
+      ? customer.accommodations.map(accommodation => `${accommodation.roommateNames || 'N/A'}`).join(',')
+      : 'N/A';
+
+    return [{
+      ID: customer.id,
+      Name: `${customer.fname} ${customer.lname}`,
+      'Event Name': eventsList,
+      'Event Date': eventDates,
+      'Event Description': eventDescriptions,
+      'Signed Up': signedUps,
+      'Room Number': accommodationsList,
+      'Building Name': buildingNames,
+      'Floor': floors,
+      'Single Occupancy': singleOccupancies,
+      'Number of Roommates': numberOfRoommates,
+      'Roommate Names': roommateNames
+    }];
   }
+
+
 
   download(format: string, data: any[], filename: string) {
     if (data.length === 0) {
@@ -165,14 +233,53 @@ export class StudentServicesComponent implements OnInit, AfterViewInit {
         'Event Name': 'N/A',
         'Event Date': 'N/A',
         'Event Description': 'N/A',
-        'Signed Up': 'N/A'
+        'Signed Up': 'N/A',
+        'Room Number': 'N/A',
+        'Building Name': 'N/A',
+        'Floor': 'N/A',
+        'Single Occupancy': 'N/A',
+        'Number of Roommates': 'N/A',
+        'Roommate Names': 'N/A'
       }];
     }
-
+  
     const columns = Object.values(this.exportHeaderMapping);
-
+  
     if (format === 'excel') {
       const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
+  
+      // Apply styles to the headers
+      const range = XLSX.utils.decode_range(worksheet['!ref'] || 'A1');
+      for (let C = range.s.c; C <= range.e.c; ++C) {
+        const cellAddress = XLSX.utils.encode_cell({ r: 0, c: C });
+        if (!worksheet[cellAddress]) worksheet[cellAddress] = { t: '', v: columns[C] };
+        worksheet[cellAddress].s = {
+          font: { bold: true },
+          border: {
+            top: { style: 'thin' },
+            bottom: { style: 'thin' },
+            left: { style: 'thin' },
+            right: { style: 'thin' }
+          }
+        };
+      }
+  
+      // Apply borders to all cells
+      for (let R = range.s.r; R <= range.e.r; ++R) {
+        for (let C = range.s.c; C <= range.e.c; ++C) {
+          const cellAddress = XLSX.utils.encode_cell({ r: R, c: C });
+          if (worksheet[cellAddress]) {
+            worksheet[cellAddress].s = worksheet[cellAddress].s || {};
+            worksheet[cellAddress].s.border = {
+              top: { style: 'thick' },
+              bottom: { style: 'thick' },
+              left: { style: 'thick' },
+              right: { style: 'thick' }
+            };
+          }
+        }
+      }
+  
       const workbook: XLSX.WorkBook = {
         Sheets: { 'Students': worksheet },
         SheetNames: ['Students']
@@ -180,32 +287,10 @@ export class StudentServicesComponent implements OnInit, AfterViewInit {
       XLSX.writeFile(workbook, `${filename}.xlsx`);
     } else if (format === 'pdf') {
       const doc = new jsPDF();
-      doc.setProperties({
-        title: filename,
-        author: 'Your Name',
-        creator: 'Your App'
-      });
-
-      doc.setFont('helvetica');
-      const margin = { top: 20, left: 20, right: 20, bottom: 20 };
-      doc.text('Students List', margin.left, margin.top);
-
-      // Convert data to rows for autoTable
-      const rows = data.map(row => columns.map(col => row[col]));
-
       autoTable(doc, {
-        margin: { top: 30 },
-        headStyles: {
-          fillColor: [41, 128, 185],
-          textColor: 255,
-          fontStyle: 'bold'
-        },
-        bodyStyles: { textColor: 50 },
         head: [columns],
-        body: rows,
-        theme: 'striped'
+        body: data.map(item => Object.values(item))
       });
-
       doc.save(`${filename}.pdf`);
     }
   }

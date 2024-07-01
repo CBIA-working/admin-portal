@@ -1,11 +1,13 @@
 // customer.ts
 export interface Customer {
-    id: number;
-    fname: string;
-    lname: string;
-    events?: CulturalEvent[]; // Change this line
-    expanded?: boolean; // This property will track if row is expanded
-  }
+  id: number;
+  fname: string;
+  lname: string;
+  events?: CulturalEvent[];
+  accommodations?: Accommodation[]; // Add this line
+  expanded?: boolean;
+}
+
   
   export interface CulturalEvent {
     eventName: string;
@@ -14,5 +16,14 @@ export interface Customer {
     signedUp: boolean;
     userId: number
   }
-
+  export interface Accommodation {
+    roomNumber: number;
+    buildingName: string;
+    floor: string;
+    isSingleOccupancy: boolean;
+    numberOfRoommates: number;
+    roommateNames: string;
+    userId: number
+  }
+  
   
