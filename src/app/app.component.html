@@ -1,5 +1,5 @@
 <div class="flex flex-col h-screen">
-  <app-header></app-header>
+  <app-header *ngIf="isAuthenticated"></app-header>
   <div class="flex-1 overflow-y-auto">
     <router-outlet></router-outlet>
   </div>

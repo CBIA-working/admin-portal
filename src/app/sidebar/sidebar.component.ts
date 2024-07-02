@@ -4,6 +4,7 @@ import { ImportsModule } from '../imports';
 import { Router, RouterLink, NavigationEnd } from '@angular/router';
 import { HomeComponent } from '../home/home.component';
 import { filter } from 'rxjs/operators';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -16,7 +17,7 @@ export class SidebarComponent implements AfterViewInit {
   @ViewChild('sidebarRef') sidebarRef!: Sidebar;
   sidebarVisible: boolean = false;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   ngAfterViewInit() {
     this.router.events
@@ -34,5 +35,9 @@ export class SidebarComponent implements AfterViewInit {
 
   isActive(route: string): boolean {
     return this.router.url === route;
+  }
+  logout() {
+    this.authService.clearToken(); // Clear token using AuthService
+    this.router.navigate(['/login'], { replaceUrl: true });
   }
 }
