@@ -6,12 +6,14 @@ import { ManageStudentsComponent } from './student-support/manage-students/manag
 import { StudentServicesComponent } from './student-support/student-services/student-services.component';
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './auth.guard';
+import { SettingsComponent } from './settings/settings.component';
 
 
 export const routes: Routes = [
   { path: 'home', component: HomeComponent,canActivate: [AuthGuard] },
   { path: 'managestudent', component:ManageStudentsComponent,canActivate: [AuthGuard]},
   { path: 'studentservice', component:StudentServicesComponent,canActivate: [AuthGuard]},
+  { path: 'settings', component:SettingsComponent,canActivate: [AuthGuard]},
   { path: 'login', component:LoginComponent},
   { path: '**', redirectTo: '/login', pathMatch: 'full' } // Redirect any unknown route to auth
 ];

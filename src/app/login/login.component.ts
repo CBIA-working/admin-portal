@@ -58,7 +58,7 @@ export class LoginComponent implements OnInit{
     };
 
     try {
-      const response = await this.http.post<LoginResponse>('http://localhost:3000/api/login', credentials).toPromise();
+      const response = await this.http.post<LoginResponse>('https://maui-portal.vercel.app/api/login', credentials).toPromise();
       if (response && response.message === 'User found') {
         alert('Login successful');
         this.authService.setToken(response.token); // Save the token using AuthService
