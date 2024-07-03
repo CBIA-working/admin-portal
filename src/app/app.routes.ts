@@ -5,7 +5,7 @@ import { HomeComponent } from './home/home.component';
 import { ManageStudentsComponent } from './student-support/manage-students/manage-students.component';
 import { StudentServicesComponent } from './student-support/student-services/student-services.component';
 import { LoginComponent } from './login/login.component';
-import { AuthGuard } from './auth.guard';
+import { AuthGuard } from './authentication/auth.guard';
 import { SettingsComponent } from './settings/settings.component';
 
 

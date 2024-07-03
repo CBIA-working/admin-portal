@@ -9,7 +9,7 @@ import { PasswordModule } from 'primeng/password';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
-import { AuthService } from '../auth.service';
+import { AuthService } from '../authentication/auth.service';
 
 interface LoginResponse {
   message: string;

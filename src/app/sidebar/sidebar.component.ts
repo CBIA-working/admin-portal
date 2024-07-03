@@ -4,7 +4,7 @@ import { ImportsModule } from '../imports';
 import { Router, RouterLink, NavigationEnd } from '@angular/router';
 import { HomeComponent } from '../home/home.component';
 import { filter } from 'rxjs/operators';
-import { AuthService } from '../auth.service';
+import { AuthService } from '../authentication/auth.service';
 
 @Component({
   selector: 'app-sidebar',
