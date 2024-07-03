@@ -13,11 +13,11 @@ export class CustomerService {
   }
 
   getCulturalEvents(): Observable<any[]> {
-    return this.http.get<any[]>('http://localhost:3000/api/CulturalEvent');
+    return this.http.get<any[]>('http://192.168.56.1:3000/api/CulturalEvent');
   }
 
   getAccommodations(): Observable<any[]> {
-    return this.http.get<any[]>('http://localhost:3000/api/Accomodation');
+    return this.http.get<any[]>('http://192.168.56.1:3000/api/Accomodation');
   }
 }
 
