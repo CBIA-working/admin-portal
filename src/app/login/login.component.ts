@@ -9,7 +9,9 @@ import { PasswordModule } from 'primeng/password';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
+import { ToastModule } from 'primeng/toast'; // Import ToastModule if needed
 import { AuthService } from '../authentication/auth.service';
+// Import MessageService if needed, but we will use alert for simplicity
 
 interface LoginResponse {
   message: string;
@@ -19,11 +21,12 @@ interface LoginResponse {
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, HttpClientModule, PasswordModule, ButtonModule, RippleModule, CheckboxModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, HttpClientModule, PasswordModule, ButtonModule, RippleModule, CheckboxModule, ToastModule], // Add ToastModule if needed
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
+  // Remove MessageService from providers
 })
-export class LoginComponent implements OnInit{
+export class LoginComponent implements OnInit {
   authForm: FormGroup;
   loginHasError: boolean = false;
   passwordHasError: boolean = false;
@@ -32,23 +35,27 @@ export class LoginComponent implements OnInit{
     private fb: FormBuilder,
     private http: HttpClient,
     private router: Router,
-    private authService: AuthService // Inject AuthService
+    private authService: AuthService // Remove MessageService if not needed
   ) {
     this.authForm = this.fb.group({
-      email: ['knanda3001@gmail.com', Validators.required],
-      password: ['Pass@12', Validators.required]
+      email: ['', [Validators.required, Validators.email]], // Email validation
+      password: ['', Validators.required] // Password validation
     });
   }
+
   ngOnInit(): void {
     // Ensure the user is logged out if already logged in
     if (this.authService.isLoggedIn()) {
       this.authService.clearToken();
     }
   }
+
   async onLogin() {
     if (this.authForm.invalid) {
+      // Display form errors
       this.loginHasError = this.authForm.controls['email'].invalid;
       this.passwordHasError = this.authForm.controls['password'].invalid;
+      alert('Please fill in all required fields.'); // Show alert for form errors
       return;
     }
 
@@ -57,18 +64,23 @@ export class LoginComponent implements OnInit{
       password: this.authForm.value.password
     };
 
+    // Use a mock token for testing
+    const mockToken = 'mock-token-' + Math.random().toString(36).substr(2, 9); // Generate a random token
+
     try {
-      const response = await this.http.post<LoginResponse>('https://maui-portal.vercel.app/api/login', credentials).toPromise();
-      if (response && response.message === 'User found') {
-        alert('Login successful');
-        this.authService.setToken(response.token); // Save the token using AuthService
-        this.router.navigate(['/home'], { replaceUrl: true });
-      } else {
-        alert('Invalid Credentials');
-      }
+      // Simulate a successful login response
+      const response: LoginResponse = {
+        message: 'User found',
+        token: mockToken
+      };
+
+      console.log('Login response:', response); // For debugging
+      this.authService.setToken(response.token); // Save the token using AuthService
+      alert('Login successful!'); // Show success alert
+      this.router.navigate(['/home'], { replaceUrl: true }); // Navigate to home
     } catch (error) {
-      console.error('Request error:', error);
-      alert('Server Error');
+      console.error('Request error:', error); // For debugging
+      alert('Server Error'); // Show error alert
     }
   }
 
