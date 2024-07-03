@@ -38,8 +38,8 @@ export class LoginComponent implements OnInit {
     private authService: AuthService // Remove MessageService if not needed
   ) {
     this.authForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
+      email: ['knanda3001@gmail.com', [Validators.required, Validators.email]],
+      password: ['Pass@12', Validators.required],
       rememberme: [false]  // Default value set to false
     });
     
