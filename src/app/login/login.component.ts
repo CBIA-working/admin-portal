@@ -38,9 +38,11 @@ export class LoginComponent implements OnInit {
     private authService: AuthService // Remove MessageService if not needed
   ) {
     this.authForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]], // Email validation
-      password: ['', Validators.required] // Password validation
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', Validators.required],
+      rememberme: [false]  // Default value set to false
     });
+    
   }
 
   ngOnInit(): void {
@@ -52,37 +54,34 @@ export class LoginComponent implements OnInit {
 
   async onLogin() {
     if (this.authForm.invalid) {
-      // Display form errors
       this.loginHasError = this.authForm.controls['email'].invalid;
       this.passwordHasError = this.authForm.controls['password'].invalid;
-      alert('Please fill in all required fields.'); // Show alert for form errors
+      alert('Please fill in all required fields.');
       return;
     }
-
+  
     const credentials = {
       email: this.authForm.value.email,
-      password: this.authForm.value.password
+      password: this.authForm.value.password,
+      rememberMe: this.authForm.value.rememberme // Ensuring the correct value is passed
     };
-
-    // Use a mock token for testing
-    const mockToken = 'mock-token-' + Math.random().toString(36).substr(2, 9); // Generate a random token
-
+  
+    const mockToken = 'mock-token-' + Math.random().toString(36).substr(2, 9);
+  
     try {
-      // Simulate a successful login response
       const response: LoginResponse = {
         message: 'User found',
         token: mockToken
       };
-
-      console.log('Login response:', response); // For debugging
-      this.authService.setToken(response.token); // Save the token using AuthService
-      alert('Login successful!'); // Show success alert
-      this.router.navigate(['/home'], { replaceUrl: true }); // Navigate to home
+  
+      this.authService.setToken(response.token, credentials.rememberMe); // Pass the checkbox value
+      alert('Login successful!');
+      this.router.navigate(['/home'], { replaceUrl: true });
     } catch (error) {
-      console.error('Request error:', error); // For debugging
-      alert('Server Error'); // Show error alert
+      console.error('Request error:', error);
+      alert('Server Error');
     }
-  }
+  }  
 
   onForgotPassword() {
     this.router.navigate(['/forgot']);

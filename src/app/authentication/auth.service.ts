@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 })
 export class AuthService {
   private tokenKey = 'token';
+  private rememberMeKey = 'rememberMe';
   private logoutTimer: any;
   private readonly AUTO_LOGOUT_TIME = 30 * 60 * 1000; // 30 minutes
 
@@ -16,22 +17,28 @@ export class AuthService {
   }
 
   getToken(): string | null {
-    const token = localStorage.getItem(this.tokenKey);
-    console.log('Retrieved token:', token); // For debugging
-    return token;
+    return localStorage.getItem(this.tokenKey);
   }
 
-  setToken(token: string): void {
+  setToken(token: string, rememberMe: boolean): void {
     localStorage.setItem(this.tokenKey, token);
-    console.log('Token set:', token); // For debugging
-    this.resetLogoutTimer();
+    localStorage.setItem(this.rememberMeKey, JSON.stringify(rememberMe));
+    this.manageLogoutTimer(!rememberMe); // Adjust timer based on the rememberMe value
   }
 
   clearToken(): void {
     localStorage.removeItem(this.tokenKey);
-    console.log('Token cleared'); // For debugging
+    localStorage.removeItem(this.rememberMeKey);
     this.stopLogoutTimer();
     this.router.navigate(['/login']);
+  }
+
+  private manageLogoutTimer(activateTimer: boolean): void {
+    if (activateTimer) {
+      this.startLogoutTimer();
+    } else {
+      this.stopLogoutTimer();
+    }
   }
 
   private startLogoutTimer(): void {
@@ -48,7 +55,12 @@ export class AuthService {
   }
 
   public resetLogoutTimer(): void {
-    this.startLogoutTimer();
+    const rememberMe = JSON.parse(localStorage.getItem(this.rememberMeKey) || 'false');
+    if (!rememberMe) {
+      this.startLogoutTimer();
+    } else {
+      this.stopLogoutTimer();
+    }
   }
 
   private logout(): void {
