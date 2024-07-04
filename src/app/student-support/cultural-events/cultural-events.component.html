@@ -1,92 +1,85 @@
 <p-toast></p-toast>
 <div class="card" style="margin: 0 20px; overflow: hidden;">
-    <div class="mb-2 ml-auto z-0" style="display: flex; gap: 10px;">
-      <app-add-student *ngIf="!downloadSelectedMode"></app-add-student>
-      <!-- ManageStudentsComponent template -->
-<app-download [class.hidden]="downloadSelectedMode" (downloadSelectedStudentsEvent)="downloadSelectedStudents()"></app-download>
-
-      
-      <p-button label="Download Selected Students" icon="pi pi-download" [raised]="true" severity="secondary" (click)="downloadSelectedStudents()" *ngIf="downloadSelectedMode"></p-button>
-      <p-button  icon="pi pi-times" severity="danger" [raised]="true" (click)="exitSelectionMode()" *ngIf="downloadSelectedMode"></p-button>
-    </div>
-  
-    <p-table
-      #dt1
-      [value]="culturalEvents"
-      [selectionMode]="downloadSelectedMode ? 'checkbox' : null"
-      [(selection)]="selectedCulturalEvent"
-      dataKey="id"
-      [rows]="10"
-      [rowsPerPageOptions]="[10, 25, 50]"
-      [loading]="loading"
-      [paginator]="true"
-      [globalFilterFields]="['fname', 'lname', 'email', 'dob', 'address', 'gender', 'bloodGroup', 'dietaryPreference', 'emergencyContactName', 'emergencyContactNumber', 'emergencyContactRelation', 'verified']">
-      <ng-template pTemplate="caption">
-        <div class="flex">
-          <p-button label="Clear" [outlined]="true" icon="pi pi-filter-slash" (click)="clear(dt1)"></p-button>
-          <span class="p-input-icon-left ml-auto" style="border: 1px solid #ccc; border-radius: 4px; padding: 2px;">
-            <i class="pi pi-search" style="margin-left: 8px;"></i>
-            <input pInputText type="text" [(ngModel)]="searchValue" (input)="dt1.filterGlobal($event.target.value, 'contains')" placeholder="Search keyword"
-              class="p-inputtext-sm" style="width: 15rem; padding-left: 3rem; border: none; outline: none; background: transparent; margin-left: 5px;"/>
-          </span>
-        </div>
-      </ng-template>
-      <ng-template pTemplate="header">
-        <tr>
-            <th *ngIf="downloadSelectedMode">
-                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-              </th>
-          <th style="min-width: 12%">
-            <div class="flex align-items-center">
-              ID
-              <p-columnFilter type="text" field="id" display="menu"></p-columnFilter>
-            </div>
-          </th>
-          <th style="min-width: 12%">
-            <div class="flex align-items-center">
-              Event Name
-              <p-columnFilter type="text" field="eventName" display="menu"></p-columnFilter>
-            </div>
-          </th>
-          <th style="min-width: 10%">
-            <div class="flex align-items-center">
-              Date
-              <p-columnFilter type="date" field="date" display="menu"></p-columnFilter>
-            </div>
-          </th>
-          <th style="min-width: 15%">
-            <div class="flex align-items-center">
-              Description
-              <p-columnFilter type="text" field="description" display="menu"></p-columnFilter>
-            </div>
-          </th>
-
-          <th style="min-width: 15%">
-            <div class="flex align-items-center">
-              Signed Up
-              <p-columnFilter type="text" field="signedUp" display="menu"></p-columnFilter>
-            </div>
-          </th>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-culturalEvents>
-        <tr>
-            <td *ngIf="downloadSelectedMode">
-                <p-tableCheckbox [value]="culturalEvents"></p-tableCheckbox>
-              </td>
-          <td>{{ culturalEvents.id }}</td>
-          <td>{{ culturalEvents.eventName }}</td>
-          <td>{{ culturalEvents.date | date: 'dd-MM-yyyy' }}</td>
-          <td>{{ culturalEvents.description }}</td>
-          <td>{{ culturalEvents.signedUp }}</td>
-
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="emptymessage">
-        <tr>
-          <td colspan="13">No Cultural Events found.</td>
-        </tr>
-      </ng-template>
-    </p-table>
+  <div class="mb-2 ml-auto z-0" style="display: flex; gap: 10px;">
+    <app-download [class.hidden]="downloadSelectedMode" (downloadSelectedStudentsEvent)="downloadSelectedStudents()"></app-download>
+    <p-button label="Download Selected Students" icon="pi pi-download" [raised]="true" severity="secondary" (click)="downloadSelectedStudents()" *ngIf="downloadSelectedMode"></p-button>
+    <p-button icon="pi pi-times" severity="danger" [raised]="true" (click)="exitSelectionMode()" *ngIf="downloadSelectedMode"></p-button>
   </div>
-  
+
+  <p-table
+    #dt1
+    [value]="culturalEvents"
+    [selectionMode]="downloadSelectedMode ? 'checkbox' : null"
+    [(selection)]="selectedCulturalEvent"
+    dataKey="id"
+    [rows]="10"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [loading]="loading"
+    [paginator]="true"
+    [globalFilterFields]="['id','eventName','description','signedUp']">
+    <ng-template pTemplate="caption">
+      <div class="flex">
+        <p-button label="Clear" [outlined]="true" icon="pi pi-filter-slash" (click)="clear(dt1)"></p-button>
+        <span class="p-input-icon-left ml-auto" style="border: 1px solid #ccc; border-radius: 4px; padding: 2px;">
+          <i class="pi pi-search" style="margin-left: 8px;"></i>
+          <input pInputText type="text" [(ngModel)]="searchValue" (input)="filterTable($event.target.value)" placeholder="Search keyword"
+            class="p-inputtext-sm" style="width: 15rem; padding-left: 3rem; border: none; outline: none; background: transparent; margin-left: 5px;"/>
+        </span>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th *ngIf="downloadSelectedMode">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
+        <th style="min-width: 12%">
+          <div class="flex align-items-center">
+            ID
+            <p-columnFilter type="text" field="id" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th style="min-width: 12%">
+          <div class="flex align-items-center">
+            Event Name
+            <p-columnFilter type="text" field="eventName" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th style="min-width: 10%">
+          <div class="flex align-items-center">
+            Date
+            <p-columnFilter type="date" field="date" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th style="min-width: 15%">
+          <div class="flex align-items-center">
+            Description
+            <p-columnFilter type="text" field="description" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th style="min-width: 15%">
+          <div class="flex align-items-center">
+            Signed Up
+            <p-columnFilter type="text" field="signedUp" display="menu"></p-columnFilter>
+          </div>
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-culturalEvent>
+      <tr>
+        <td *ngIf="downloadSelectedMode">
+          <p-tableCheckbox [value]="culturalEvent"></p-tableCheckbox>
+        </td>
+        <td>{{ culturalEvent.id }}</td>
+        <td>{{ culturalEvent.eventName }}</td>
+        <td>{{ culturalEvent.date | date: 'dd-MM-yyyy' }}</td>
+        <td>{{ culturalEvent.description }}</td>
+        <td>{{ culturalEvent.signedUp }}</td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="13">No Cultural Events found.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

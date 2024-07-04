@@ -23,20 +23,20 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { ChipsModule } from 'primeng/chips';
+import { NavigationService } from '../service/navigation.service'; // Import the service
 
 @Component({
   selector: 'app-manage-students',
-  standalone:true,
-  imports: [TableModule, RouterModule, 
-    HttpClientModule, 
-    CommonModule, InputTextModule, 
-    TagModule, DropdownModule, MultiSelectModule, 
-    ProgressBarModule, ButtonModule,
-    AddStudentComponent,DownloadComponent,
-    ToastModule,BulkUploadComponent,OverlayPanelModule, InputGroupModule, InputGroupAddonModule,ChipsModule],
-  providers: [Service,MessageService],
+  standalone: true,
+  imports: [
+    TableModule, RouterModule, HttpClientModule, CommonModule, InputTextModule,
+    TagModule, DropdownModule, MultiSelectModule, ProgressBarModule, ButtonModule,
+    AddStudentComponent, DownloadComponent, ToastModule, BulkUploadComponent, 
+    OverlayPanelModule, InputGroupModule, InputGroupAddonModule, ChipsModule
+  ],
+  providers: [Service, MessageService],
   templateUrl: './manage-students.component.html',
-  styleUrl: './manage-students.component.scss'
+  styleUrls: ['./manage-students.component.scss']
 })
 export class ManageStudentsComponent implements OnInit, AfterViewInit {
   @ViewChild(DownloadComponent) downloadComponent!: DownloadComponent;
@@ -65,7 +65,9 @@ export class ManageStudentsComponent implements OnInit, AfterViewInit {
   constructor(
     private service: Service,
     private messageService: MessageService,
-    private router: Router) {}
+    private router: Router,
+    private navigationService: NavigationService // Inject the service
+  ) {}
 
   options = [
     { name: 'Cultural Events', key: 'culturalevents' },
@@ -73,7 +75,8 @@ export class ManageStudentsComponent implements OnInit, AfterViewInit {
     { name: 'Courses', key: 'courses' }
   ];
 
-  navigateToMemberPage(option: { name: string, key: string }) {
+  navigateToMemberPage(option: { name: string, key: string }, studentId: string) {
+    this.navigationService.setSelectedId(studentId);
     this.router.navigate([`/${option.key}`]);
   }
 
@@ -91,7 +94,6 @@ export class ManageStudentsComponent implements OnInit, AfterViewInit {
       });
       this.downloadComponent.downloadSelectedStudentsEvent.subscribe((format: string) => {
         this.enterSelectionMode();
-        // Optionally, you can call this.downloadSelectedStudents() here if the event is expected to directly trigger download.
       });
     }
   }

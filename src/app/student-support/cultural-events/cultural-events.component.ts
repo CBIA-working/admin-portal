@@ -17,25 +17,24 @@ import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable'; 
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
-
-
+import { NavigationService } from '../service/navigation.service';// Import the service
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-cultural-events',
   standalone: true,
-  imports: [TableModule, RouterModule, 
-    HttpClientModule, 
-    CommonModule, InputTextModule, 
-    TagModule, DropdownModule, MultiSelectModule, 
-    ProgressBarModule, ButtonModule
-    ,DownloadComponent,
-    ToastModule],
-  providers: [Service,MessageService],
+  imports: [
+    TableModule, RouterModule, HttpClientModule, CommonModule, InputTextModule,
+    TagModule, DropdownModule, MultiSelectModule, ProgressBarModule, ButtonModule,
+    DownloadComponent, ToastModule,FormsModule
+  ],
+  providers: [Service, MessageService],
   templateUrl: './cultural-events.component.html',
-  styleUrl: './cultural-events.component.scss'
+  styleUrls: ['./cultural-events.component.scss']
 })
 export class CulturalEventsComponent implements OnInit, AfterViewInit {
   @ViewChild(DownloadComponent) downloadComponent!: DownloadComponent;
+  @ViewChild('dt1') table!: Table;
 
   culturalEvents!: CulturalEvent[];
   selectedCulturalEvent: CulturalEvent[] = [];
@@ -45,20 +44,28 @@ export class CulturalEventsComponent implements OnInit, AfterViewInit {
 
   exportHeaderMapping = {
     id: 'ID',
-    eventName:'Event Name',
+    eventName: 'Event Name',
     date: 'Date',
     description: 'Description',
-    signedUp: 'Signed Up',
+    signedUp: 'Signed Up'
   };
 
   constructor(
-    private service:Service ,
-    private messageService: MessageService) {}
+    private service: Service,
+    private messageService: MessageService,
+    private navigationService: NavigationService // Inject the service
+  ) {}
 
   ngOnInit() {
     this.service.getCultural().then((culturalEvents) => {
       this.culturalEvents = culturalEvents;
       this.loading = false;
+
+      const studentId = this.navigationService.getSelectedId();
+      if (studentId) {
+        this.searchValue = studentId;
+        this.filterTable(studentId);
+      }
     });
   }
 
@@ -69,9 +76,8 @@ export class CulturalEventsComponent implements OnInit, AfterViewInit {
       });
       this.downloadComponent.downloadSelectedStudentsEvent.subscribe((format: string) => {
         this.enterSelectionMode();
-        // Optionally, you can call this.downloadSelectedStudents() here if the event is expected to directly trigger download.
       });
-      }
+    }
   }
 
   clear(table: Table) {
@@ -87,8 +93,6 @@ export class CulturalEventsComponent implements OnInit, AfterViewInit {
     this.downloadSelectedMode = false;
     this.selectedCulturalEvent = [];
   }
-  
-
 
   downloadAllStudents(format: string) {
     const data = this.culturalEvents.map(culturalEvent => this.mapCustomerToExportFormat(culturalEvent));
@@ -112,8 +116,6 @@ export class CulturalEventsComponent implements OnInit, AfterViewInit {
       console.warn('Download selected culturalEvents called but not in selection mode.');
     }
   }
-  
-
 
   mapCustomerToExportFormat(culturalEvent: CulturalEvent) {
     return {
@@ -121,7 +123,7 @@ export class CulturalEventsComponent implements OnInit, AfterViewInit {
       'Event Name': culturalEvent.eventName,
       'Date': culturalEvent.date,
       'Description': culturalEvent.description,
-      'Signed Up': culturalEvent.signedUp,
+      'Signed Up': culturalEvent.signedUp
     };
   }
 
@@ -145,33 +147,34 @@ export class CulturalEventsComponent implements OnInit, AfterViewInit {
 
       doc.setFont('helvetica');
 
-    // Set margins
-    const margin = {
-      top: 20,
-      left: 20,
-      right: 20,
-      bottom: 20
-    };
+      // Set margins
+      const margin = {
+        top: 20,
+        left: 20,
+        right: 20,
+        bottom: 20
+      };
 
-    doc.text('Students List', margin.left, margin.top);
-    const columns = Object.values(this.exportHeaderMapping);
-    const rows = this.culturalEvents.map(culturalEvent => Object.keys(this.exportHeaderMapping).map(key => culturalEvent[key]));
+      doc.text('Students List', margin.left, margin.top);
+      const columns = Object.values(this.exportHeaderMapping);
+      const rows = this.culturalEvents.map(culturalEvent => Object.keys(this.exportHeaderMapping).map(key => culturalEvent[key]));
 
-    autoTable(doc, {
-      margin: { top: 30 },
-      headStyles: {
-        fillColor: [41, 128, 185],
-        textColor: 255,
-        fontStyle: 'bold'
-      },
-      bodyStyles: { textColor: 50 },
-      head: [columns],
-      body: rows
-    });
+      autoTable(doc, {
+        margin: { top: 30 },
+        headStyles: {
+          fillColor: [41, 128, 185],
+          textColor: 255,
+          fontStyle: 'bold'
+        },
+        bodyStyles: { textColor: 50 },
+        head: [columns],
+        body: rows
+      });
 
       doc.save(`${filename}.pdf`);
     }
   }
+
   download2(format: string, data: any[], filename: string) {
     if (format === 'excel') {
       const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
@@ -192,30 +195,37 @@ export class CulturalEventsComponent implements OnInit, AfterViewInit {
 
       doc.setFont('helvetica');
 
-    // Set margins
-    const margin = {
-      top: 20,
-      left: 20,
-      right: 20,
-      bottom: 20
-    };
+      // Set margins
+      const margin = {
+        top: 20,
+        left: 20,
+        right: 20,
+        bottom: 20
+      };
 
-    doc.text('Students List', margin.left, margin.top);
-    const columns = Object.values(this.exportHeaderMapping);
-    const rows = this.selectedCulturalEvent.map(culturalEvent => Object.keys(this.exportHeaderMapping).map(key => culturalEvent[key]));
-    autoTable(doc, {
-      margin: { top: 30 },
-      headStyles: {
-        fillColor: [41, 128, 185],
-        textColor: 255,
-        fontStyle: 'bold'
-      },
-      bodyStyles: { textColor: 50 },
-      head: [columns],
-      body: rows
-    });
+      doc.text('Students List', margin.left, margin.top);
+      const columns = Object.values(this.exportHeaderMapping);
+      const rows = this.selectedCulturalEvent.map(culturalEvent => Object.keys(this.exportHeaderMapping).map(key => culturalEvent[key]));
+
+      autoTable(doc, {
+        margin: { top: 30 },
+        headStyles: {
+          fillColor: [41, 128, 185],
+          textColor: 255,
+          fontStyle: 'bold'
+        },
+        bodyStyles: { textColor: 50 },
+        head: [columns],
+        body: rows
+      });
 
       doc.save(`${filename}.pdf`);
+    }
+  }
+
+  filterTable(searchValue: string) {
+    if (this.table) {
+      this.table.filterGlobal(searchValue, 'contains');
     }
   }
 }
