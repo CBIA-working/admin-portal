@@ -16,17 +16,18 @@
     [rowsPerPageOptions]="[10, 25, 50]"
     [loading]="loading"
     [paginator]="true"
-    [globalFilterFields]="['id','eventName','description','signedUp']">
+    [globalFilterFields]="['id', 'eventName', 'date', 'description', 'signedUp', 'userId']">
     <ng-template pTemplate="caption">
       <div class="flex">
         <p-button label="Clear" [outlined]="true" icon="pi pi-filter-slash" (click)="clear(dt1)"></p-button>
         <span class="p-input-icon-left ml-auto" style="border: 1px solid #ccc; border-radius: 4px; padding: 2px;">
           <i class="pi pi-search" style="margin-left: 8px;"></i>
-          <input pInputText type="text" [(ngModel)]="searchValue" (input)="filterTable($event.target.value)" placeholder="Search keyword"
-            class="p-inputtext-sm" style="width: 15rem; padding-left: 3rem; border: none; outline: none; background: transparent; margin-left: 5px;"/>
+          <input pInputText type="text" [(ngModel)]="searchValue" (input)="dt1.filterGlobal($event.target.value, 'contains')" placeholder="Search keyword"
+            class="p-inputtext-sm" style="width: 15rem; padding-left: 3rem; border: none; outline: none; background: transparent; margin-left: 5px;">
         </span>
       </div>
     </ng-template>
+
     <ng-template pTemplate="header">
       <tr>
         <th *ngIf="downloadSelectedMode">

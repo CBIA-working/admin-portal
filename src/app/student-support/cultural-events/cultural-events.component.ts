@@ -17,7 +17,7 @@ import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable'; 
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
-import { NavigationService } from '../service/navigation.service';// Import the service
+import { NavigationService } from '../service/navigation.service'; // Import the service
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -47,7 +47,8 @@ export class CulturalEventsComponent implements OnInit, AfterViewInit {
     eventName: 'Event Name',
     date: 'Date',
     description: 'Description',
-    signedUp: 'Signed Up'
+    signedUp: 'Signed Up',
+    userId: 'User ID'
   };
 
   constructor(
@@ -61,10 +62,13 @@ export class CulturalEventsComponent implements OnInit, AfterViewInit {
       this.culturalEvents = culturalEvents;
       this.loading = false;
 
-      const studentId = this.navigationService.getSelectedId();
-      if (studentId) {
-        this.searchValue = studentId;
-        this.filterTable(studentId);
+      if (this.navigationService.shouldApplyFilter()) {
+        const userId = this.navigationService.getSelectedId();
+        if (userId) {
+          this.searchValue = userId;
+          this.filterTable(userId);
+        }
+        this.navigationService.clearFilter();
       }
     });
   }
@@ -123,7 +127,8 @@ export class CulturalEventsComponent implements OnInit, AfterViewInit {
       'Event Name': culturalEvent.eventName,
       'Date': culturalEvent.date,
       'Description': culturalEvent.description,
-      'Signed Up': culturalEvent.signedUp
+      'Signed Up': culturalEvent.signedUp,
+      'User ID': culturalEvent.userId
     };
   }
 
