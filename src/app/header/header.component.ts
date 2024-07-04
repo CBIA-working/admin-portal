@@ -38,15 +38,15 @@ export class HeaderComponent implements OnInit {
     // Add route-specific breadcrumbs
     if (url === '/managestudent') {
       this.items.push({ 
-        label: 'Student Support  <i class="pi pi-angle-right"></i> Manage Student', 
+        label: 'Manage Student', 
           escape: false,
            routerLink: '/managestudent' 
           });
-    } else if (url === '/studentservice') {
+    } else if (url === '/culturalevents') {
       this.items.push({ 
-          label: 'Student Support <i class="pi pi-angle-right"></i> Student Service', 
+          label: 'Cultural Events', 
           escape: false, 
-          routerLink: '/studentservice' 
+          routerLink: '/culturalevents' 
       });
   }
    else if (url === '/admin') {

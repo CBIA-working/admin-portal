@@ -20,9 +20,10 @@ import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { BulkUploadComponent } from './bulk-upload/bulk-upload.component';
 
+
 @Component({
-  selector: 'app-manage-students',
-  standalone:true,
+  selector: 'app-cultural-events',
+  standalone: true,
   imports: [TableModule, RouterModule, 
     HttpClientModule, 
     CommonModule, InputTextModule, 
@@ -31,11 +32,10 @@ import { BulkUploadComponent } from './bulk-upload/bulk-upload.component';
     AddStudentComponent,DownloadComponent,
     ToastModule,BulkUploadComponent],
   providers: [StudentService,MessageService],
-  templateUrl: './manage-students.component.html',
-  styleUrl: './manage-students.component.scss'
+  templateUrl: './cultural-events.component.html',
+  styleUrl: './cultural-events.component.scss'
 })
-
-export class ManageStudentsComponent implements OnInit, AfterViewInit {
+export class CulturalEventsComponent implements OnInit, AfterViewInit {
   @ViewChild(DownloadComponent) downloadComponent!: DownloadComponent;
 
   students!: Student[];
