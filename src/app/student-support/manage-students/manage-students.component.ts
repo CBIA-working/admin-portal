@@ -9,8 +9,8 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { Table, TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
-import { StudentService } from './service/studentservice';
-import { Student} from './domain/customer';
+import { Service } from '../service/service';
+import { Student } from '../domain/schema';
 import { AddStudentComponent } from './add-student/add-student.component';
 import { DownloadComponent } from '../download/download.component';
 import * as XLSX from 'xlsx';
@@ -30,7 +30,7 @@ import { BulkUploadComponent } from './bulk-upload/bulk-upload.component';
     ProgressBarModule, ButtonModule,
     AddStudentComponent,DownloadComponent,
     ToastModule,BulkUploadComponent],
-  providers: [StudentService,MessageService],
+  providers: [Service,MessageService],
   templateUrl: './manage-students.component.html',
   styleUrl: './manage-students.component.scss'
 })
@@ -60,11 +60,11 @@ export class ManageStudentsComponent implements OnInit, AfterViewInit {
   };
 
   constructor(
-    private studentService:StudentService ,
+    private service:Service ,
     private messageService: MessageService) {}
 
   ngOnInit() {
-    this.studentService.getStudents().then((students) => {
+    this.service.getStudents().then((students) => {
       this.students = students;
       this.loading = false;
     });
@@ -99,7 +99,7 @@ export class ManageStudentsComponent implements OnInit, AfterViewInit {
 
 
   downloadAllStudents(format: string) {
-    const data = this.students.map(customer => this.mapCustomerToExportFormat(customer));
+    const data = this.students.map(student => this.mapCustomerToExportFormat(student));
     this.download1(format, data, 'students');
   }
 
@@ -109,10 +109,10 @@ export class ManageStudentsComponent implements OnInit, AfterViewInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: 'Please select at least one customer.'
+          detail: 'Please select at least one student.'
         });
       } else {
-        const data = this.selectedStudents.map(customer => this.mapCustomerToExportFormat(customer));
+        const data = this.selectedStudents.map(student => this.mapCustomerToExportFormat(student));
         this.download2(this.downloadComponent.format, data, 'selected_students');
         this.exitSelectionMode();
       }
@@ -123,20 +123,20 @@ export class ManageStudentsComponent implements OnInit, AfterViewInit {
   
 
 
-  mapCustomerToExportFormat(customer: Student) {
+  mapCustomerToExportFormat(student: Student) {
     return {
-      ID: customer.id,
-      'First Name': customer.fname,
-      'Last Name': customer.lname,
-      Email: customer.email,
-      'Date of Birth': customer.dob,
-      Address: customer.address,
-      Gender: customer.gender,
-      'Blood Group': customer.bloodGroup,
-      'Dietary Preference': customer.dietaryPreference,
-      'Emergency Contact Name': customer.emergencyContactName,
-      'Emergency Contact Number': customer.emergencyContactNumber,
-      'Emergency Contact Relation': customer.emergencyContactRelation
+      ID: student.id,
+      'First Name': student.fname,
+      'Last Name': student.lname,
+      Email: student.email,
+      'Date of Birth': student.dob,
+      Address: student.address,
+      Gender: student.gender,
+      'Blood Group': student.bloodGroup,
+      'Dietary Preference': student.dietaryPreference,
+      'Emergency Contact Name': student.emergencyContactName,
+      'Emergency Contact Number': student.emergencyContactNumber,
+      'Emergency Contact Relation': student.emergencyContactRelation
     };
   }
 
@@ -170,7 +170,7 @@ export class ManageStudentsComponent implements OnInit, AfterViewInit {
 
     doc.text('Students List', margin.left, margin.top);
     const columns = Object.values(this.exportHeaderMapping);
-    const rows = this.students.map(customer => Object.keys(this.exportHeaderMapping).map(key => customer[key]));
+    const rows = this.students.map(student => Object.keys(this.exportHeaderMapping).map(key => student[key]));
 
     autoTable(doc, {
       margin: { top: 30 },
@@ -217,7 +217,7 @@ export class ManageStudentsComponent implements OnInit, AfterViewInit {
 
     doc.text('Students List', margin.left, margin.top);
     const columns = Object.values(this.exportHeaderMapping);
-    const rows = this.selectedStudents.map(customer => Object.keys(this.exportHeaderMapping).map(key => customer[key]));
+    const rows = this.selectedStudents.map(student => Object.keys(this.exportHeaderMapping).map(key => student[key]));
     autoTable(doc, {
       margin: { top: 30 },
       headStyles: {

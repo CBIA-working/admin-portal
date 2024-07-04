@@ -12,9 +12,9 @@
   
     <p-table
       #dt1
-      [value]="students"
+      [value]="culturalEvents"
       [selectionMode]="downloadSelectedMode ? 'checkbox' : null"
-      [(selection)]="selectedStudents"
+      [(selection)]="selectedCulturalEvent"
       dataKey="id"
       [rows]="10"
       [rowsPerPageOptions]="[10, 25, 50]"
@@ -44,103 +44,47 @@
           </th>
           <th style="min-width: 12%">
             <div class="flex align-items-center">
-              First Name
-              <p-columnFilter type="text" field="fname" display="menu"></p-columnFilter>
+              Event Name
+              <p-columnFilter type="text" field="eventName" display="menu"></p-columnFilter>
             </div>
           </th>
-          <th style="min-width: 12%">
+          <th style="min-width: 10%">
             <div class="flex align-items-center">
-              Last Name
-              <p-columnFilter type="text" field="lname" display="menu"></p-columnFilter>
+              Date
+              <p-columnFilter type="date" field="date" display="menu"></p-columnFilter>
             </div>
           </th>
           <th style="min-width: 15%">
             <div class="flex align-items-center">
-              Email
-              <p-columnFilter type="text" field="email" display="menu"></p-columnFilter>
+              Description
+              <p-columnFilter type="text" field="description" display="menu"></p-columnFilter>
             </div>
           </th>
-          <th style="min-width: 10%">
-            <div class="flex align-items-center">
-              Date of Birth
-              <p-columnFilter type="date" field="dob" display="menu"></p-columnFilter>
-            </div>
-          </th>
+
           <th style="min-width: 15%">
             <div class="flex align-items-center">
-              Address
-              <p-columnFilter type="text" field="address" display="menu"></p-columnFilter>
-            </div>
-          </th>
-          <th style="min-width: 8%">
-            <div class="flex align-items-center">
-              Gender
-              <p-columnFilter type="text" field="gender" display="menu"></p-columnFilter>
-            </div>
-          </th>
-          <th style="min-width: 8%">
-            <div class="flex align-items-center">
-              Blood Group
-              <p-columnFilter type="text" field="bloodGroup" display="menu"></p-columnFilter>
-            </div>
-          </th>
-          <th style="min-width: 10%">
-            <div class="flex align-items-center">
-              Dietary Preference
-              <p-columnFilter type="text" field="dietaryPreference" display="menu"></p-columnFilter>
-            </div>
-          </th>
-          <th style="min-width: 12%">
-            <div class="flex align-items-center">
-              Emergency Contact Name
-              <p-columnFilter type="text" field="emergencyContactName" display="menu"></p-columnFilter>
-            </div>
-          </th>
-          <th style="min-width: 10%">
-            <div class="flex align-items-center">
-              Emergency Contact Number
-              <p-columnFilter type="text" field="emergencyContactNumber" display="menu"></p-columnFilter>
-            </div>
-          </th>
-          <th style="min-width: 10%">
-            <div class="flex align-items-center">
-              Emergency Contact Relation
-              <p-columnFilter type="text" field="emergencyContactRelation" display="menu"></p-columnFilter>
-            </div>
-          </th>
-          <th style="min-width: 5%">
-            <div class="flex align-items-center">
-              Verified
-              <p-columnFilter type="boolean" field="verified" display="menu"></p-columnFilter>
+              Signed Up
+              <p-columnFilter type="text" field="signedUp" display="menu"></p-columnFilter>
             </div>
           </th>
         </tr>
       </ng-template>
-      <ng-template pTemplate="body" let-customer>
+      <ng-template pTemplate="body" let-culturalEvents>
         <tr>
             <td *ngIf="downloadSelectedMode">
-                <p-tableCheckbox [value]="customer"></p-tableCheckbox>
+                <p-tableCheckbox [value]="culturalEvents"></p-tableCheckbox>
               </td>
-          <td>{{ customer.id }}</td>
-          <td>{{ customer.fname }}</td>
-          <td>{{ customer.lname }}</td>
-          <td>{{ customer.email }}</td>
-          <td>{{ customer.dob | date: 'dd-MM-yyyy' }}</td>
-          <td>{{ customer.address }}</td>
-          <td>{{ customer.gender }}</td>
-          <td>{{ customer.bloodGroup }}</td>
-          <td>{{ customer.dietaryPreference }}</td>
-          <td>{{ customer.emergencyContactName }}</td>
-          <td>{{ customer.emergencyContactNumber }}</td>
-          <td>{{ customer.emergencyContactRelation }}</td>
-          <td class="text-center">
-            <i class="pi" [ngClass]="{ 'text-green-500 pi-check-circle': customer.verified, 'text-red-500 pi-times-circle': !customer.verified }"></i>
-          </td>
+          <td>{{ culturalEvents.id }}</td>
+          <td>{{ culturalEvents.eventName }}</td>
+          <td>{{ culturalEvents.date | date: 'dd-MM-yyyy' }}</td>
+          <td>{{ culturalEvents.description }}</td>
+          <td>{{ culturalEvents.signedUp }}</td>
+
         </tr>
       </ng-template>
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="13">No customers found.</td>
+          <td colspan="13">No Cultural Events found.</td>
         </tr>
       </ng-template>
     </p-table>

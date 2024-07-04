@@ -9,16 +9,15 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { Table, TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
-import { StudentService } from './service/studentservice';
-import { Student} from './domain/customer';
-import { AddStudentComponent } from './add-student/add-student.component';
+import { Service } from '../service/service';
+import { CulturalEvent } from '../domain/schema';
 import { DownloadComponent } from '../download/download.component';
 import * as XLSX from 'xlsx';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable'; 
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
-import { BulkUploadComponent } from './bulk-upload/bulk-upload.component';
+
 
 
 @Component({
@@ -28,44 +27,37 @@ import { BulkUploadComponent } from './bulk-upload/bulk-upload.component';
     HttpClientModule, 
     CommonModule, InputTextModule, 
     TagModule, DropdownModule, MultiSelectModule, 
-    ProgressBarModule, ButtonModule,
-    AddStudentComponent,DownloadComponent,
-    ToastModule,BulkUploadComponent],
-  providers: [StudentService,MessageService],
+    ProgressBarModule, ButtonModule
+    ,DownloadComponent,
+    ToastModule],
+  providers: [Service,MessageService],
   templateUrl: './cultural-events.component.html',
   styleUrl: './cultural-events.component.scss'
 })
 export class CulturalEventsComponent implements OnInit, AfterViewInit {
   @ViewChild(DownloadComponent) downloadComponent!: DownloadComponent;
 
-  students!: Student[];
-  selectedStudents: Student[] = [];
+  culturalEvents!: CulturalEvent[];
+  selectedCulturalEvent: CulturalEvent[] = [];
   loading: boolean = true;
   searchValue: string | undefined;
   downloadSelectedMode: boolean = false;
 
   exportHeaderMapping = {
     id: 'ID',
-    fname: 'First Name',
-    lname: 'Last Name',
-    email: 'Email',
-    dob: 'Date of Birth',
-    address: 'Address',
-    gender: 'Gender',
-    bloodGroup: 'Blood Group',
-    dietaryPreference: 'Dietary Preference',
-    emergencyContactName: 'Emergency Contact Name',
-    emergencyContactNumber: 'Emergency Contact Number',
-    emergencyContactRelation: 'Emergency Contact Relation'
+    eventName:'Event Name',
+    date: 'Date',
+    description: 'Description',
+    signedUp: 'Signed Up',
   };
 
   constructor(
-    private studentService:StudentService ,
+    private service:Service ,
     private messageService: MessageService) {}
 
   ngOnInit() {
-    this.studentService.getStudents().then((students) => {
-      this.students = students;
+    this.service.getCultural().then((culturalEvents) => {
+      this.culturalEvents = culturalEvents;
       this.loading = false;
     });
   }
@@ -93,50 +85,43 @@ export class CulturalEventsComponent implements OnInit, AfterViewInit {
   
   exitSelectionMode() {
     this.downloadSelectedMode = false;
-    this.selectedStudents = [];
+    this.selectedCulturalEvent = [];
   }
   
 
 
   downloadAllStudents(format: string) {
-    const data = this.students.map(customer => this.mapCustomerToExportFormat(customer));
-    this.download1(format, data, 'students');
+    const data = this.culturalEvents.map(culturalEvent => this.mapCustomerToExportFormat(culturalEvent));
+    this.download1(format, data, 'culturalEvents');
   }
 
   downloadSelectedStudents() {
     if (this.downloadSelectedMode) {
-      if (this.selectedStudents.length === 0) {
+      if (this.selectedCulturalEvent.length === 0) {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: 'Please select at least one customer.'
+          detail: 'Please select at least one culturalEvent.'
         });
       } else {
-        const data = this.selectedStudents.map(customer => this.mapCustomerToExportFormat(customer));
-        this.download2(this.downloadComponent.format, data, 'selected_students');
+        const data = this.selectedCulturalEvent.map(culturalEvent => this.mapCustomerToExportFormat(culturalEvent));
+        this.download2(this.downloadComponent.format, data, 'selected_culturalEvents');
         this.exitSelectionMode();
       }
     } else {
-      console.warn('Download selected students called but not in selection mode.');
+      console.warn('Download selected culturalEvents called but not in selection mode.');
     }
   }
   
 
 
-  mapCustomerToExportFormat(customer: Student) {
+  mapCustomerToExportFormat(culturalEvent: CulturalEvent) {
     return {
-      ID: customer.id,
-      'First Name': customer.fname,
-      'Last Name': customer.lname,
-      Email: customer.email,
-      'Date of Birth': customer.dob,
-      Address: customer.address,
-      Gender: customer.gender,
-      'Blood Group': customer.bloodGroup,
-      'Dietary Preference': customer.dietaryPreference,
-      'Emergency Contact Name': customer.emergencyContactName,
-      'Emergency Contact Number': customer.emergencyContactNumber,
-      'Emergency Contact Relation': customer.emergencyContactRelation
+      ID: culturalEvent.id,
+      'Event Name': culturalEvent.eventName,
+      'Date': culturalEvent.date,
+      'Description': culturalEvent.description,
+      'Signed Up': culturalEvent.signedUp,
     };
   }
 
@@ -170,7 +155,7 @@ export class CulturalEventsComponent implements OnInit, AfterViewInit {
 
     doc.text('Students List', margin.left, margin.top);
     const columns = Object.values(this.exportHeaderMapping);
-    const rows = this.students.map(customer => Object.keys(this.exportHeaderMapping).map(key => customer[key]));
+    const rows = this.culturalEvents.map(culturalEvent => Object.keys(this.exportHeaderMapping).map(key => culturalEvent[key]));
 
     autoTable(doc, {
       margin: { top: 30 },
@@ -217,7 +202,7 @@ export class CulturalEventsComponent implements OnInit, AfterViewInit {
 
     doc.text('Students List', margin.left, margin.top);
     const columns = Object.values(this.exportHeaderMapping);
-    const rows = this.selectedStudents.map(customer => Object.keys(this.exportHeaderMapping).map(key => customer[key]));
+    const rows = this.selectedCulturalEvent.map(culturalEvent => Object.keys(this.exportHeaderMapping).map(key => culturalEvent[key]));
     autoTable(doc, {
       margin: { top: 30 },
       headStyles: {

@@ -15,3 +15,11 @@ export interface Student {
     emergencyContactNumber?: string;
     emergencyContactRelation?: string;
 }
+export interface CulturalEvent {
+    id: number;
+    eventName: string;
+    date: string;
+    description: string;
+    signedUp: boolean;
+    userId: number;
+}
