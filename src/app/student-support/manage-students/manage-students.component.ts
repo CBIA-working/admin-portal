@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
@@ -19,6 +19,10 @@ import autoTable from 'jspdf-autotable';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { BulkUploadComponent } from './bulk-upload/bulk-upload.component';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { ChipsModule } from 'primeng/chips';
 
 @Component({
   selector: 'app-manage-students',
@@ -29,12 +33,11 @@ import { BulkUploadComponent } from './bulk-upload/bulk-upload.component';
     TagModule, DropdownModule, MultiSelectModule, 
     ProgressBarModule, ButtonModule,
     AddStudentComponent,DownloadComponent,
-    ToastModule,BulkUploadComponent],
+    ToastModule,BulkUploadComponent,OverlayPanelModule, InputGroupModule, InputGroupAddonModule,ChipsModule],
   providers: [Service,MessageService],
   templateUrl: './manage-students.component.html',
   styleUrl: './manage-students.component.scss'
 })
-
 export class ManageStudentsComponent implements OnInit, AfterViewInit {
   @ViewChild(DownloadComponent) downloadComponent!: DownloadComponent;
 
@@ -60,8 +63,19 @@ export class ManageStudentsComponent implements OnInit, AfterViewInit {
   };
 
   constructor(
-    private service:Service ,
-    private messageService: MessageService) {}
+    private service: Service,
+    private messageService: MessageService,
+    private router: Router) {}
+
+  options = [
+    { name: 'Cultural Events', key: 'culturalevents' },
+    { name: 'Accommodation', key: 'accommodation' },
+    { name: 'Courses', key: 'courses' }
+  ];
+
+  navigateToMemberPage(option: { name: string, key: string }) {
+    this.router.navigate([`/${option.key}`]);
+  }
 
   ngOnInit() {
     this.service.getStudents().then((students) => {
@@ -79,7 +93,7 @@ export class ManageStudentsComponent implements OnInit, AfterViewInit {
         this.enterSelectionMode();
         // Optionally, you can call this.downloadSelectedStudents() here if the event is expected to directly trigger download.
       });
-      }
+    }
   }
 
   clear(table: Table) {
@@ -96,8 +110,6 @@ export class ManageStudentsComponent implements OnInit, AfterViewInit {
     this.selectedStudents = [];
   }
   
-
-
   downloadAllStudents(format: string) {
     const data = this.students.map(student => this.mapCustomerToExportFormat(student));
     this.download1(format, data, 'students');
@@ -120,8 +132,6 @@ export class ManageStudentsComponent implements OnInit, AfterViewInit {
       console.warn('Download selected students called but not in selection mode.');
     }
   }
-  
-
 
   mapCustomerToExportFormat(student: Student) {
     return {
@@ -160,33 +170,34 @@ export class ManageStudentsComponent implements OnInit, AfterViewInit {
 
       doc.setFont('helvetica');
 
-    // Set margins
-    const margin = {
-      top: 20,
-      left: 20,
-      right: 20,
-      bottom: 20
-    };
+      // Set margins
+      const margin = {
+        top: 20,
+        left: 20,
+        right: 20,
+        bottom: 20
+      };
 
-    doc.text('Students List', margin.left, margin.top);
-    const columns = Object.values(this.exportHeaderMapping);
-    const rows = this.students.map(student => Object.keys(this.exportHeaderMapping).map(key => student[key]));
+      doc.text('Students List', margin.left, margin.top);
+      const columns = Object.values(this.exportHeaderMapping);
+      const rows = this.students.map(student => Object.keys(this.exportHeaderMapping).map(key => student[key]));
 
-    autoTable(doc, {
-      margin: { top: 30 },
-      headStyles: {
-        fillColor: [41, 128, 185],
-        textColor: 255,
-        fontStyle: 'bold'
-      },
-      bodyStyles: { textColor: 50 },
-      head: [columns],
-      body: rows
-    });
+      autoTable(doc, {
+        margin: { top: 30 },
+        headStyles: {
+          fillColor: [41, 128, 185],
+          textColor: 255,
+          fontStyle: 'bold'
+        },
+        bodyStyles: { textColor: 50 },
+        head: [columns],
+        body: rows
+      });
 
       doc.save(`${filename}.pdf`);
     }
   }
+
   download2(format: string, data: any[], filename: string) {
     if (format === 'excel') {
       const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
@@ -207,28 +218,29 @@ export class ManageStudentsComponent implements OnInit, AfterViewInit {
 
       doc.setFont('helvetica');
 
-    // Set margins
-    const margin = {
-      top: 20,
-      left: 20,
-      right: 20,
-      bottom: 20
-    };
+      // Set margins
+      const margin = {
+        top: 20,
+        left: 20,
+        right: 20,
+        bottom: 20
+      };
 
-    doc.text('Students List', margin.left, margin.top);
-    const columns = Object.values(this.exportHeaderMapping);
-    const rows = this.selectedStudents.map(student => Object.keys(this.exportHeaderMapping).map(key => student[key]));
-    autoTable(doc, {
-      margin: { top: 30 },
-      headStyles: {
-        fillColor: [41, 128, 185],
-        textColor: 255,
-        fontStyle: 'bold'
-      },
-      bodyStyles: { textColor: 50 },
-      head: [columns],
-      body: rows
-    });
+      doc.text('Students List', margin.left, margin.top);
+      const columns = Object.values(this.exportHeaderMapping);
+      const rows = this.selectedStudents.map(student => Object.keys(this.exportHeaderMapping).map(key => student[key]));
+
+      autoTable(doc, {
+        margin: { top: 30 },
+        headStyles: {
+          fillColor: [41, 128, 185],
+          textColor: 255,
+          fontStyle: 'bold'
+        },
+        bodyStyles: { textColor: 50 },
+        head: [columns],
+        body: rows
+      });
 
       doc.save(`${filename}.pdf`);
     }
