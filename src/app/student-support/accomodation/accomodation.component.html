@@ -125,10 +125,12 @@
             <p-overlayPanel #op>
               <div>
                 <ul class="list-none p-0 m-0 flex flex-column gap-3">
-                  <li *ngFor="let option of options" class="flex align-items-center gap-2" (click)="navigateToMemberPage(option, accomodation.id)">
+                  <li *ngFor="let option of options" class="flex align-items-center gap-2" 
+                  (click)="navigateToMemberPage(option, accomodation.id)"
+                  style="cursor: pointer; transition: background-color 0.3s, transform 0.3s;">
 
-                    <div>
-                      <span class="font-medium">{{ option.name }}</span>
+                    <div style="cursor: pointer; transition: background-color 0.3s, transform 0.3s;">
+                      <span class="font-medium" >{{ option.name }}</span>
                     </div>
                   </li>
                 </ul>
