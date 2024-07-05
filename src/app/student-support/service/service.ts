@@ -8,7 +8,7 @@ export class Service {
     
 
     getStudents(params?: any) {
-        return this.http.get<any>('https://localhost:3000/api/getUsers', { params: params }).toPromise();
+        return this.http.get<any>('http://localhost:3000/api/getUsers', { params: params }).toPromise();
     }
     getCultural(params?: any) {
         return this.http.post<any>('http://localhost:3000/api/CulturalEvent', { params: params }).toPromise();
@@ -18,6 +18,9 @@ export class Service {
     }
     getStudentEvents(data: { Id: number, type: string }): Promise<any> {
         return this.http.post('http://localhost:3000/api/StudentEvents', data).toPromise();
+    }
+    getStudentAccomodation(data: { Id: number, type: string }): Promise<any> {
+        return this.http.post('http://localhost:3000/api/StudentAccomodation', data).toPromise();
     }
   
 };

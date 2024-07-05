@@ -70,43 +70,42 @@ export class AccomodationComponent implements OnInit, AfterViewInit {
     { name: 'Students', key: 'managestudent' },
 
   ];
-  navigateToMemberPage(option: { name: string, key: string }, userId: string) {
-    this.navigationService.setSelectedId(userId);
-
-    // Set a flag in local storage to indicate that the previous page should be refreshed
+  navigateToMemberPage(option: { name: string, key: string }, id: string) {
+    this.navigationService.setSelectedId(id);
     localStorage.setItem('refreshPage', 'true');
-    
-    this.router.navigate([`/${option.key}`], { queryParams: { Student_Id: userId } });
+    this.router.navigate([`/${option.key}`], { queryParams: { eventId: id } });
   }
 
-
   ngOnInit(): void {
-
-     // Check if the page should be refreshed
-     if (localStorage.getItem('refreshPage') === 'true') {
-      localStorage.removeItem('refreshPage');
-      location.reload();
+    const studentId = this.route.snapshot.queryParamMap.get('Student_Id');
+    if (studentId) {
+      this.fetchStudentAccomodations(Number(studentId));
+    } else {
+      this.fetchAllAccomodation();
     }
-
+  }
+  
+  fetchStudentAccomodations(studentId: number) {
+    this.loading = true;
+    this.service.getStudentAccomodation({ Id: studentId, type: 'student' }).then((response) => {
+      console.log('Fetched Data:', response); // Check the structure of response here
+      this.accomodations = response.map(item => item.accomodationDetails);
+      this.loading = false;
+    }).catch(error => {
+      console.error('Error fetching student events', error);
+      this.loading = false;
+    });
+  }
+  
+  fetchAllAccomodation() {
+    this.loading = true;
     this.service.getAccomodation().then((accomodations) => {
+      console.log('Fetched All Accomodations:', accomodations); // Check the structure of accomodations here
       this.accomodations = accomodations;
       this.loading = false;
-  
-      // Get query parameters from the route
-      this.route.queryParamMap.subscribe(params => {
-        const Student_Id = params.get('Student_Id');
-        if (Student_Id) {
-          this.searchValue = Student_Id;
-          this.filterByUserId(Student_Id);
-        } else if (this.navigationService.shouldApplyFilter()) {
-          const userId = this.navigationService.getSelectedId();
-          if (userId) {
-            this.searchValue = userId;
-            this.filterByUserId(userId);
-          }
-          this.navigationService.clearFilter();
-        }
-      });
+    }).catch(error => {
+      console.error('Error fetching all students', error);
+      this.loading = false;
     });
   }
   
