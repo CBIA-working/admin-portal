@@ -23,3 +23,14 @@ export interface CulturalEvent {
     signedUp: boolean;
     userId: number;
 }
+
+export interface Accomodation {
+    id :number;     
+    roomNumber:number;
+    buildingName:String;
+    floor:String;
+    isSingleOccupancy:Boolean;
+    numberOfRoommates:number;
+    roommateNames:String;
+    userId:number;
+}

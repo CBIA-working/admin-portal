@@ -45,13 +45,23 @@ export class HeaderComponent implements OnInit {
         escape: false,
         routerLink: '/managestudent' 
       });
-    } else if (path === '/culturalevents') {
+    }
+     else if (path === '/culturalevents') {
       this.items.push({ 
         label: 'Cultural Events', 
         escape: false, 
         routerLink: '/culturalevents' 
       });
-    } else if (path === '/admin') {
+      
+    } 
+    else if (path === '/accomodations') {
+      this.items.push({ 
+        label: 'Accomodations', 
+        escape: false, 
+        routerLink: '/accomodations' 
+      });
+    }
+    else if (path === '/admin') {
       this.items.push({ label: 'Admin', routerLink: '/admin' });
     }
     // Add more conditions for additional routes as needed

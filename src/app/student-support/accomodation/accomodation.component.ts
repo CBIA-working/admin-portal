@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
@@ -10,87 +10,81 @@ import { ProgressBarModule } from 'primeng/progressbar';
 import { Table, TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { Service } from '../service/service';
-import { Student } from '../domain/schema';
-import { AddStudentComponent } from './add-student/add-student.component';
+import { Accomodation } from '../domain/schema';
 import { DownloadComponent } from '../download/download.component';
 import * as XLSX from 'xlsx';
 import { jsPDF } from 'jspdf';
-import autoTable from 'jspdf-autotable'; 
+import autoTable from 'jspdf-autotable';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
-import { BulkUploadComponent } from './bulk-upload/bulk-upload.component';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
-import { InputGroupModule } from 'primeng/inputgroup';
-import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
-import { ChipsModule } from 'primeng/chips';
-import { NavigationService } from '../service/navigation.service'; // Import the service
+import { NavigationService } from '../service/navigation.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-manage-students',
+  selector: 'app-accomodation',
   standalone: true,
   imports: [
     TableModule, RouterModule, HttpClientModule, CommonModule, InputTextModule,
     TagModule, DropdownModule, MultiSelectModule, ProgressBarModule, ButtonModule,
-    AddStudentComponent, DownloadComponent, ToastModule, BulkUploadComponent, 
-    OverlayPanelModule, InputGroupModule, InputGroupAddonModule, ChipsModule
+    DownloadComponent, ToastModule, FormsModule
   ],
   providers: [Service, MessageService],
-  templateUrl: './manage-students.component.html',
-  styleUrls: ['./manage-students.component.scss']
+  templateUrl: './accomodation.component.html',
+  styleUrl: './accomodation.component.scss'
 })
-export class ManageStudentsComponent implements OnInit, AfterViewInit {
+export class AccomodationComponent implements OnInit, AfterViewInit {
   @ViewChild(DownloadComponent) downloadComponent!: DownloadComponent;
+  @ViewChild('dt1') table!: Table;
 
-  students!: Student[];
-  selectedStudents: Student[] = [];
+  accomodations: Accomodation[] = [];
+  selectedAccomodation: Accomodation[] = [];
   loading: boolean = true;
   searchValue: string | undefined;
   downloadSelectedMode: boolean = false;
 
   exportHeaderMapping = {
     id: 'ID',
-    fname: 'First Name',
-    lname: 'Last Name',
-    email: 'Email',
-    dob: 'Date of Birth',
-    address: 'Address',
-    gender: 'Gender',
-    bloodGroup: 'Blood Group',
-    dietaryPreference: 'Dietary Preference',
-    emergencyContactName: 'Emergency Contact Name',
-    emergencyContactNumber: 'Emergency Contact Number',
-    emergencyContactRelation: 'Emergency Contact Relation'
+    roomNumber:'Room Number',
+    buildingName:'Building Name',
+    floor:'Floor',
+    isSingleOccupancy:'Is Single Occupancy',
+    numberOfRoommates:'Number Of Roommates',
+    roommateNames:'Roommate Names',
+    userId:'User Id',
   };
 
   constructor(
+    private route: ActivatedRoute,
     private service: Service,
     private messageService: MessageService,
-    private router: Router,
-    private navigationService: NavigationService // Inject the service
+    private navigationService: NavigationService
   ) {}
 
-  options = [
-    { name: 'Cultural Events', key: 'culturalevents' },
-    { name: 'Accommodation', key: 'accomodations' },
-    { name: 'Courses', key: 'courses' }
-  ];
-
-  // navigateToMemberPage(option: { name: string, key: string }, studentId: string) {
-  //   this.navigationService.setSelectedId(studentId);
-  //   this.router.navigate([`/${option.key}/${studentId}`]);
-  // }
-
-  navigateToMemberPage(option: { name: string, key: string }, studentId: string) {
-    this.navigationService.setSelectedId(studentId);
-    this.router.navigate([`/${option.key}`], { queryParams: { Student_Id: studentId } });
-  }
-
-  ngOnInit() {
-    this.service.getStudents().then((students) => {
-      this.students = students;
+  ngOnInit(): void {
+    this.service.getAccomodation().then((accomodations) => {
+      this.accomodations = accomodations;
       this.loading = false;
+  
+      // Get query parameters from the route
+      this.route.queryParamMap.subscribe(params => {
+        const Student_Id = params.get('Student_Id');
+        if (Student_Id) {
+          this.searchValue = Student_Id;
+          this.filterByUserId(Student_Id);
+        } else if (this.navigationService.shouldApplyFilter()) {
+          const userId = this.navigationService.getSelectedId();
+          if (userId) {
+            this.searchValue = userId;
+            this.filterByUserId(userId);
+          }
+          this.navigationService.clearFilter();
+        }
+      });
     });
   }
+  
+  
+  
 
   ngAfterViewInit() {
     if (this.downloadComponent) {
@@ -114,46 +108,41 @@ export class ManageStudentsComponent implements OnInit, AfterViewInit {
   
   exitSelectionMode() {
     this.downloadSelectedMode = false;
-    this.selectedStudents = [];
+    this.selectedAccomodation = [];
   }
-  
+
   downloadAllStudents(format: string) {
-    const data = this.students.map(student => this.mapCustomerToExportFormat(student));
-    this.download1(format, data, 'students');
+    const data = this.accomodations.map(culturalEvent => this.mapCustomerToExportFormat(culturalEvent));
+    this.download1(format, data, 'accomodations');
   }
 
   downloadSelectedStudents() {
     if (this.downloadSelectedMode) {
-      if (this.selectedStudents.length === 0) {
+      if (this.selectedAccomodation.length === 0) {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: 'Please select at least one student.'
+          detail: 'Please select at least one culturalEvent.'
         });
       } else {
-        const data = this.selectedStudents.map(student => this.mapCustomerToExportFormat(student));
-        this.download2(this.downloadComponent.format, data, 'selected_students');
+        const data = this.selectedAccomodation.map(culturalEvent => this.mapCustomerToExportFormat(culturalEvent));
+        this.download2(this.downloadComponent.format, data, 'selected_accomodations');
         this.exitSelectionMode();
       }
     } else {
-      console.warn('Download selected students called but not in selection mode.');
+      console.warn('Download selected accomodations called but not in selection mode.');
     }
   }
 
-  mapCustomerToExportFormat(student: Student) {
+  mapCustomerToExportFormat(accomodation: Accomodation) {
     return {
-      ID: student.id,
-      'First Name': student.fname,
-      'Last Name': student.lname,
-      Email: student.email,
-      'Date of Birth': student.dob,
-      Address: student.address,
-      Gender: student.gender,
-      'Blood Group': student.bloodGroup,
-      'Dietary Preference': student.dietaryPreference,
-      'Emergency Contact Name': student.emergencyContactName,
-      'Emergency Contact Number': student.emergencyContactNumber,
-      'Emergency Contact Relation': student.emergencyContactRelation
+      ID: accomodation.id,
+      'Room Number': accomodation.roomNumber,
+      'Building Name': accomodation.buildingName,
+      'Floor': accomodation.floor,
+      'Is Single Occupancy': accomodation.roommateNames ? 'No' : 'Yes',
+      'Number Of Roommates': accomodation.numberOfRoommates,
+      'Roommate Names': accomodation.roommateNames || 'N/A'
     };
   }
 
@@ -187,7 +176,7 @@ export class ManageStudentsComponent implements OnInit, AfterViewInit {
 
       doc.text('Students List', margin.left, margin.top);
       const columns = Object.values(this.exportHeaderMapping);
-      const rows = this.students.map(student => Object.keys(this.exportHeaderMapping).map(key => student[key]));
+      const rows = this.accomodations.map(culturalEvent => Object.keys(this.exportHeaderMapping).map(key => culturalEvent[key]));
 
       autoTable(doc, {
         margin: { top: 30 },
@@ -235,7 +224,7 @@ export class ManageStudentsComponent implements OnInit, AfterViewInit {
 
       doc.text('Students List', margin.left, margin.top);
       const columns = Object.values(this.exportHeaderMapping);
-      const rows = this.selectedStudents.map(student => Object.keys(this.exportHeaderMapping).map(key => student[key]));
+      const rows = this.selectedAccomodation.map(culturalEvent => Object.keys(this.exportHeaderMapping).map(key => culturalEvent[key]));
 
       autoTable(doc, {
         margin: { top: 30 },
@@ -252,4 +241,17 @@ export class ManageStudentsComponent implements OnInit, AfterViewInit {
       doc.save(`${filename}.pdf`);
     }
   }
+  filterByUserId(userId: string) {
+    // Convert search parameter to number
+    const userIdNumber = Number(userId);
+  
+    // Check if the conversion was successful and filter the events
+    if (!isNaN(userIdNumber)) {
+      this.accomodations = this.accomodations.filter(event => event.userId === userIdNumber);
+    } else {
+      console.warn('The provided userId is not a valid number.');
+      // Optionally, you could handle the case where userId is not valid, like showing an error message or resetting the data.
+    }
+  }  
+  
 }

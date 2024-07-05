@@ -21,15 +21,15 @@
 
   <p-table
     #dt1
-    [value]="culturalEvents"
+    [value]="accomodations"
     [selectionMode]="downloadSelectedMode ? 'checkbox' : null"
-    [(selection)]="selectedCulturalEvent"
+    [(selection)]="selectedAccomodation"
     dataKey="id"
     [rows]="10"
     [rowsPerPageOptions]="[10, 25, 50]"
     [loading]="loading"
     [paginator]="true"
-    [globalFilterFields]="['id', 'eventName', 'date', 'description', 'signedUp']">
+    [globalFilterFields]="['id', 'roomNumber', 'buildingName', 'floor', 'isSingleOccupancy', 'numberOfRoommates','roommateNames']">
     
 
     <ng-template pTemplate="caption">
@@ -66,42 +66,58 @@
         </th>
         <th style="min-width: 12%">
           <div class="flex align-items-center">
-            Event Name
-            <p-columnFilter type="text" field="eventName" display="menu"></p-columnFilter>
-          </div>
-        </th>
-        <th style="min-width: 10%">
-          <div class="flex align-items-center">
-            Date
-            <p-columnFilter type="date" field="date" display="menu"></p-columnFilter>
+            Room Number
+            <p-columnFilter type="text" field="roomNumber" display="menu"></p-columnFilter>
           </div>
         </th>
         <th style="min-width: 15%">
           <div class="flex align-items-center">
-            Description
-            <p-columnFilter type="text" field="description" display="menu"></p-columnFilter>
+            Building Name
+            <p-columnFilter type="text" field="buildingName" display="menu"></p-columnFilter>
           </div>
         </th>
         <th style="min-width: 15%">
+            <div class="flex align-items-center">
+              Floor
+              <p-columnFilter type="text" field="floor" display="menu"></p-columnFilter>
+            </div>
+          </th>
+          <th style="min-width: 15%">
+            <div class="flex align-items-center">
+                Single Occupancy
+              <p-columnFilter type="text" field="isSingleOccupancy" display="menu"></p-columnFilter>
+            </div>
+          </th>
+          <th style="min-width: 15%">
+            <div class="flex align-items-center">
+                Number Of Roommates
+              <p-columnFilter type="text" field="numberOfRoommates" display="menu"></p-columnFilter>
+            </div>
+          </th>
+        <th style="min-width: 15%">
           <div class="flex align-items-center">
-            Signed Up
-            <p-columnFilter type="text" field="signedUp" display="menu"></p-columnFilter>
+            Roommate Names
+            <p-columnFilter type="text" field="roommateNames" display="menu"></p-columnFilter>
           </div>
         </th>
       </tr>
     </ng-template>
 
-    <ng-template pTemplate="body" let-culturalEvent>
+    <ng-template pTemplate="body" let-accomodation>
       <tr>
         <td *ngIf="downloadSelectedMode">
-          <p-tableCheckbox [value]="culturalEvent"></p-tableCheckbox>
+          <p-tableCheckbox [value]="accomodation"></p-tableCheckbox>
         </td>
-        <td>{{ culturalEvent.id }}</td>
-        <td>{{ culturalEvent.eventName }}</td>
-        <td>{{ culturalEvent.date | date: 'dd-MM-yyyy' }}</td>
-        <td>{{ culturalEvent.description }}</td>
-        <td>{{ culturalEvent.signedUp }}</td>
-      </tr>
+        <td>{{ accomodation.id }}</td>
+        <td>{{ accomodation.roomNumber }}</td>
+        <td>{{ accomodation.buildingName }}</td>
+        <td>{{ accomodation.floor }}</td>
+        <td>{{ accomodation.isSingleOccupancy }}</td>
+        <td>{{ accomodation.numberOfRoommates}}</td>
+        <td>
+            <!-- Show "It is Single Occupancy" if roommateNames is empty -->
+            {{ accomodation.roommateNames ? accomodation.roommateNames : 'It is Single Occupancy' }}
+          </td>
     </ng-template>
 
     <ng-template pTemplate="emptymessage">
