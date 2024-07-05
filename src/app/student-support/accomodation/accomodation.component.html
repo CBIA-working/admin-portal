@@ -22,7 +22,7 @@
   <p-table
     #dt1
     [value]="accomodations"
-    [selectionMode]="downloadSelectedMode ? 'checkbox' : null"
+     [selectionMode]="downloadSelectedMode ? 'checkbox' : null"
     [(selection)]="selectedAccomodation"
     dataKey="id"
     [rows]="10"
@@ -100,6 +100,7 @@
             <p-columnFilter type="text" field="roommateNames" display="menu"></p-columnFilter>
           </div>
         </th>
+        <th style="min-width: 5%">Actions</th>
       </tr>
     </ng-template>
 
@@ -118,11 +119,27 @@
             <!-- Show "It is Single Occupancy" if roommateNames is empty -->
             {{ accomodation.roommateNames ? accomodation.roommateNames : 'It is Single Occupancy' }}
           </td>
+        <td>
+          <p-button (click)="op.toggle($event)" icon="pi pi-ellipsis-v"  [text]="true" [plain]="true"></p-button>
+
+            <p-overlayPanel #op>
+              <div>
+                <ul class="list-none p-0 m-0 flex flex-column gap-3">
+                  <li *ngFor="let option of options" class="flex align-items-center gap-2" (click)="navigateToMemberPage(option, accomodation.userId)">
+
+                    <div>
+                      <span class="font-medium">{{ option.name }}</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </p-overlayPanel>
+        </td>
     </ng-template>
 
     <ng-template pTemplate="emptymessage">
       <tr>
-        <td colspan="13">No Cultural Events found.</td>
+        <td colspan="8">No Cultural Events found.</td>
       </tr>
     </ng-template>
   </p-table>

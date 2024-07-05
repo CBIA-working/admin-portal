@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
@@ -19,6 +19,10 @@ import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { NavigationService } from '../service/navigation.service';
 import { FormsModule } from '@angular/forms';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { ChipsModule } from 'primeng/chips';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 @Component({
   selector: 'app-accomodation',
@@ -26,7 +30,8 @@ import { FormsModule } from '@angular/forms';
   imports: [
     TableModule, RouterModule, HttpClientModule, CommonModule, InputTextModule,
     TagModule, DropdownModule, MultiSelectModule, ProgressBarModule, ButtonModule,
-    DownloadComponent, ToastModule, FormsModule
+    DownloadComponent, ToastModule, FormsModule,OverlayPanelModule, InputGroupModule, 
+    InputGroupAddonModule, ChipsModule
   ],
   providers: [Service, MessageService],
   templateUrl: './accomodation.component.html',
@@ -50,17 +55,39 @@ export class AccomodationComponent implements OnInit, AfterViewInit {
     isSingleOccupancy:'Is Single Occupancy',
     numberOfRoommates:'Number Of Roommates',
     roommateNames:'Roommate Names',
-    userId:'User Id',
+    userId:'User ID',
   };
 
   constructor(
     private route: ActivatedRoute,
     private service: Service,
     private messageService: MessageService,
-    private navigationService: NavigationService
+    private navigationService: NavigationService,
+    private router: Router
   ) {}
 
+  options = [
+    { name: 'Students', key: 'managestudent' },
+
+  ];
+  navigateToMemberPage(option: { name: string, key: string }, userId: string) {
+    this.navigationService.setSelectedId(userId);
+
+    // Set a flag in local storage to indicate that the previous page should be refreshed
+    localStorage.setItem('refreshPage', 'true');
+    
+    this.router.navigate([`/${option.key}`], { queryParams: { Student_Id: userId } });
+  }
+
+
   ngOnInit(): void {
+
+     // Check if the page should be refreshed
+     if (localStorage.getItem('refreshPage') === 'true') {
+      localStorage.removeItem('refreshPage');
+      location.reload();
+    }
+
     this.service.getAccomodation().then((accomodations) => {
       this.accomodations = accomodations;
       this.loading = false;

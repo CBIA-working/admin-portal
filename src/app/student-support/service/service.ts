@@ -14,6 +14,6 @@ export class Service {
         return this.http.post<any>('http://192.168.1.6:3000/api/CulturalEvent', { params: params }).toPromise();
     }
     getAccomodation(params?: any) {
-        return this.http.post<any>('http://localhost:3000/api/AccomodationAdmin', { params: params }).toPromise();
+        return this.http.post<any>('http://192.168.1.6:3000/api/AccomodationAdmin', { params: params }).toPromise();
     }
 };

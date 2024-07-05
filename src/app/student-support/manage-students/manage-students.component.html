@@ -127,8 +127,7 @@
         <td>{{ student.emergencyContactNumber }}</td>
         <td>{{ student.emergencyContactRelation }}</td>
         <td>
-          <div class="card flex justify-content-center">
-            <p-button (click)="op.toggle($event)" icon="pi pi-ellipsis-v"></p-button>
+            <p-button (click)="op.toggle($event)" icon="pi pi-ellipsis-v"  [text]="true" [plain]="true"></p-button>
             <p-overlayPanel #op>
               <div>
                 <ul class="list-none p-0 m-0 flex flex-column gap-3">
@@ -140,7 +139,6 @@
                 </ul>
               </div>
             </p-overlayPanel>
-          </div>
         </td>
       </tr>
     </ng-template>

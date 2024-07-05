@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
@@ -40,6 +40,7 @@ import { NavigationService } from '../service/navigation.service'; // Import the
 })
 export class ManageStudentsComponent implements OnInit, AfterViewInit {
   @ViewChild(DownloadComponent) downloadComponent!: DownloadComponent;
+  @ViewChild('dt1') table!: Table;
 
   students!: Student[];
   selectedStudents: Student[] = [];
@@ -66,7 +67,8 @@ export class ManageStudentsComponent implements OnInit, AfterViewInit {
     private service: Service,
     private messageService: MessageService,
     private router: Router,
-    private navigationService: NavigationService // Inject the service
+    private navigationService: NavigationService,
+    private route: ActivatedRoute,
   ) {}
 
   options = [
@@ -82,15 +84,36 @@ export class ManageStudentsComponent implements OnInit, AfterViewInit {
 
   navigateToMemberPage(option: { name: string, key: string }, studentId: string) {
     this.navigationService.setSelectedId(studentId);
+    localStorage.setItem('refreshPage', 'true');
     this.router.navigate([`/${option.key}`], { queryParams: { Student_Id: studentId } });
   }
 
   ngOnInit() {
+    if (localStorage.getItem('refreshPage') === 'true') {
+      localStorage.removeItem('refreshPage');
+      location.reload();
+    }
     this.service.getStudents().then((students) => {
       this.students = students;
       this.loading = false;
+
+      this.route.queryParamMap.subscribe(params => {
+        const Student_Id = params.get('Student_Id');
+        if (Student_Id) {
+          this.searchValue = Student_Id;
+          this.filterByUserId(Student_Id);
+        } else if (this.navigationService.shouldApplyFilter()) {
+          const userId = this.navigationService.getSelectedId();
+          if (userId) {
+            this.searchValue = userId;
+            this.filterByUserId(userId);
+          }
+          this.navigationService.clearFilter();
+        }
+      });
     });
   }
+
 
   ngAfterViewInit() {
     if (this.downloadComponent) {
@@ -252,4 +275,14 @@ export class ManageStudentsComponent implements OnInit, AfterViewInit {
       doc.save(`${filename}.pdf`);
     }
   }
+
+filterByUserId(id: string) {
+  const userIdNumber = Number(id);
+  if (!isNaN(userIdNumber)) {
+    this.students = this.students.filter(student => student.id === userIdNumber);
+  } else {
+    console.warn('The provided userId is not a valid number.');
+  }
 }
+}
+

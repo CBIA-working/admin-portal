@@ -7,7 +7,7 @@ export class NavigationService {
   private selectedId: string | null = null;
   private applyFilter: boolean = false;
 
-  setSelectedId(id: string): void {
+  setSelectedId(id: string) {
     this.selectedId = id;
     this.applyFilter = true;
   }
@@ -20,8 +20,7 @@ export class NavigationService {
     return this.applyFilter;
   }
 
-  clearFilter(): void {
+  clearFilter() {
     this.applyFilter = false;
-    this.selectedId = null;
   }
 }
