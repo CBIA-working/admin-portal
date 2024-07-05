@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
@@ -14,10 +14,10 @@ import { CulturalEvent } from '../domain/schema';
 import { DownloadComponent } from '../download/download.component';
 import * as XLSX from 'xlsx';
 import { jsPDF } from 'jspdf';
-import autoTable from 'jspdf-autotable'; 
+import autoTable from 'jspdf-autotable';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
-import { NavigationService } from '../service/navigation.service'; // Import the service
+import { NavigationService } from '../service/navigation.service';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -26,7 +26,7 @@ import { FormsModule } from '@angular/forms';
   imports: [
     TableModule, RouterModule, HttpClientModule, CommonModule, InputTextModule,
     TagModule, DropdownModule, MultiSelectModule, ProgressBarModule, ButtonModule,
-    DownloadComponent, ToastModule,FormsModule
+    DownloadComponent, ToastModule, FormsModule
   ],
   providers: [Service, MessageService],
   templateUrl: './cultural-events.component.html',
@@ -36,7 +36,7 @@ export class CulturalEventsComponent implements OnInit, AfterViewInit {
   @ViewChild(DownloadComponent) downloadComponent!: DownloadComponent;
   @ViewChild('dt1') table!: Table;
 
-  culturalEvents!: CulturalEvent[];
+  culturalEvents: CulturalEvent[] = [];
   selectedCulturalEvent: CulturalEvent[] = [];
   loading: boolean = true;
   searchValue: string | undefined;
@@ -52,26 +52,37 @@ export class CulturalEventsComponent implements OnInit, AfterViewInit {
   };
 
   constructor(
+    private route: ActivatedRoute,
     private service: Service,
     private messageService: MessageService,
-    private navigationService: NavigationService // Inject the service
+    private navigationService: NavigationService
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.service.getCultural().then((culturalEvents) => {
       this.culturalEvents = culturalEvents;
       this.loading = false;
-
-      if (this.navigationService.shouldApplyFilter()) {
-        const userId = this.navigationService.getSelectedId();
-        if (userId) {
-          this.searchValue = userId;
-          this.filterTable(userId);
+  
+      // Get query parameters from the route
+      this.route.queryParamMap.subscribe(params => {
+        const Student_Id = params.get('Student_Id');
+        if (Student_Id) {
+          this.searchValue = Student_Id;
+          this.filterByUserId(Student_Id);
+        } else if (this.navigationService.shouldApplyFilter()) {
+          const userId = this.navigationService.getSelectedId();
+          if (userId) {
+            this.searchValue = userId;
+            this.filterByUserId(userId);
+          }
+          this.navigationService.clearFilter();
         }
-        this.navigationService.clearFilter();
-      }
+      });
     });
   }
+  
+  
+  
 
   ngAfterViewInit() {
     if (this.downloadComponent) {
@@ -227,10 +238,17 @@ export class CulturalEventsComponent implements OnInit, AfterViewInit {
       doc.save(`${filename}.pdf`);
     }
   }
-
-  filterTable(searchValue: string) {
-    if (this.table) {
-      this.table.filterGlobal(searchValue, 'contains');
+  filterByUserId(userId: string) {
+    // Convert search parameter to number
+    const userIdNumber = Number(userId);
+  
+    // Check if the conversion was successful and filter the events
+    if (!isNaN(userIdNumber)) {
+      this.culturalEvents = this.culturalEvents.filter(event => event.userId === userIdNumber);
+    } else {
+      console.warn('The provided userId is not a valid number.');
+      // Optionally, you could handle the case where userId is not valid, like showing an error message or resetting the data.
     }
-  }
+  }  
+  
 }

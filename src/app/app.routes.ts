@@ -14,6 +14,7 @@ export const routes: Routes = [
   { path: 'home', component: HomeComponent,canActivate: [AuthGuard] },
   { path: 'managestudent', component:ManageStudentsComponent,canActivate: [AuthGuard]},
   { path: 'culturalevents', component:CulturalEventsComponent,canActivate: [AuthGuard]},
+  { path: 'culturalevents/:id', component:CulturalEventsComponent,canActivate: [AuthGuard]},
   // { path: 'studentservice', component:StudentServicesComponent,canActivate: [AuthGuard]},
   { path: 'settings', component:SettingsComponent,canActivate: [AuthGuard]},
   { path: 'login', component:LoginComponent},

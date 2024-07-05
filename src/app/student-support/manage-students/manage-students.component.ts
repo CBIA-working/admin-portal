@@ -75,9 +75,14 @@ export class ManageStudentsComponent implements OnInit, AfterViewInit {
     { name: 'Courses', key: 'courses' }
   ];
 
+  // navigateToMemberPage(option: { name: string, key: string }, studentId: string) {
+  //   this.navigationService.setSelectedId(studentId);
+  //   this.router.navigate([`/${option.key}/${studentId}`]);
+  // }
+
   navigateToMemberPage(option: { name: string, key: string }, studentId: string) {
     this.navigationService.setSelectedId(studentId);
-    this.router.navigate([`/${option.key}`]);
+    this.router.navigate([`/${option.key}`], { queryParams: { Student_Id: studentId } });
   }
 
   ngOnInit() {

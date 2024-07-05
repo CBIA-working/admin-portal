@@ -2,8 +2,21 @@
 <div class="card" style="margin: 0 20px; overflow: hidden;">
   <div class="mb-2 ml-auto z-0" style="display: flex; gap: 10px;">
     <app-download [class.hidden]="downloadSelectedMode" (downloadSelectedStudentsEvent)="downloadSelectedStudents()"></app-download>
-    <p-button label="Download Selected Students" icon="pi pi-download" [raised]="true" severity="secondary" (click)="downloadSelectedStudents()" *ngIf="downloadSelectedMode"></p-button>
-    <p-button icon="pi pi-times" severity="danger" [raised]="true" (click)="exitSelectionMode()" *ngIf="downloadSelectedMode"></p-button>
+    <p-button 
+      label="Download Selected Students" 
+      icon="pi pi-download" 
+      [raised]="true" 
+      severity="secondary" 
+      (click)="downloadSelectedStudents()" 
+      *ngIf="downloadSelectedMode">
+    </p-button>
+    <p-button 
+      icon="pi pi-times" 
+      severity="danger" 
+      [raised]="true" 
+      (click)="exitSelectionMode()" 
+      *ngIf="downloadSelectedMode">
+    </p-button>
   </div>
 
   <p-table
@@ -17,13 +30,25 @@
     [loading]="loading"
     [paginator]="true"
     [globalFilterFields]="['id', 'eventName', 'date', 'description', 'signedUp', 'userId']">
+    
+
     <ng-template pTemplate="caption">
       <div class="flex">
-        <p-button label="Clear" [outlined]="true" icon="pi pi-filter-slash" (click)="clear(dt1)"></p-button>
+        <p-button 
+          label="Clear" 
+          [outlined]="true" 
+          icon="pi pi-filter-slash" 
+          (click)="clear(dt1)">
+        </p-button>
         <span class="p-input-icon-left ml-auto" style="border: 1px solid #ccc; border-radius: 4px; padding: 2px;">
           <i class="pi pi-search" style="margin-left: 8px;"></i>
-          <input pInputText type="text" [(ngModel)]="searchValue" (input)="dt1.filterGlobal($event.target.value, 'contains')" placeholder="Search keyword"
-            class="p-inputtext-sm" style="width: 15rem; padding-left: 3rem; border: none; outline: none; background: transparent; margin-left: 5px;">
+          <input 
+            pInputText 
+            type="text" 
+            (input)="dt1.filterGlobal($event.target.value, 'contains')" 
+            placeholder="Search keyword"
+            class="p-inputtext-sm" 
+            style="width: 15rem; padding-left: 3rem; border: none; outline: none; background: transparent; margin-left: 5px;">
         </span>
       </div>
     </ng-template>
@@ -65,6 +90,7 @@
         </th>
       </tr>
     </ng-template>
+
     <ng-template pTemplate="body" let-culturalEvent>
       <tr>
         <td *ngIf="downloadSelectedMode">
@@ -77,6 +103,7 @@
         <td>{{ culturalEvent.signedUp }}</td>
       </tr>
     </ng-template>
+
     <ng-template pTemplate="emptymessage">
       <tr>
         <td colspan="13">No Cultural Events found.</td>

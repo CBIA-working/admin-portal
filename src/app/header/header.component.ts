@@ -2,9 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { SidebarComponent } from '../sidebar/sidebar.component';
-
 import { MenuItem } from 'primeng/api';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-header',
@@ -26,7 +26,7 @@ export class HeaderComponent implements OnInit {
     // Update breadcrumb items dynamically on route change
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        this.updateBreadcrumbs(event.url);
+        this.updateBreadcrumbs(event.urlAfterRedirects);
       }
     });
   }
@@ -35,21 +35,23 @@ export class HeaderComponent implements OnInit {
     // Reset breadcrumbs
     this.items = [];
 
+    // Extract the path part of the URL
+    const path = url.split('?')[0]; // Remove query parameters
+
     // Add route-specific breadcrumbs
-    if (url === '/managestudent') {
+    if (path === '/managestudent') {
       this.items.push({ 
         label: 'Manage Student', 
-          escape: false,
-           routerLink: '/managestudent' 
-          });
-    } else if (url === '/culturalevents') {
-      this.items.push({ 
-          label: 'Cultural Events', 
-          escape: false, 
-          routerLink: '/culturalevents' 
+        escape: false,
+        routerLink: '/managestudent' 
       });
-  }
-   else if (url === '/admin') {
+    } else if (path === '/culturalevents') {
+      this.items.push({ 
+        label: 'Cultural Events', 
+        escape: false, 
+        routerLink: '/culturalevents' 
+      });
+    } else if (path === '/admin') {
       this.items.push({ label: 'Admin', routerLink: '/admin' });
     }
     // Add more conditions for additional routes as needed
