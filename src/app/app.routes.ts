@@ -12,6 +12,7 @@ import { AccomodationComponent } from './student-support/accomodation/accomodati
 
 
 export const routes: Routes = [
+  { path: 'login', component:LoginComponent},
   { path: 'home', component: HomeComponent,canActivate: [AuthGuard] },
   { path: 'managestudent', component:ManageStudentsComponent,canActivate: [AuthGuard]},
   { path: 'culturalevents', component:CulturalEventsComponent,canActivate: [AuthGuard]},
@@ -19,7 +20,6 @@ export const routes: Routes = [
   // { path: 'culturalevents/:id', component:CulturalEventsComponent,canActivate: [AuthGuard]},
   // { path: 'studentservice', component:StudentServicesComponent,canActivate: [AuthGuard]},
   { path: 'settings', component:SettingsComponent,canActivate: [AuthGuard]},
-  { path: 'login', component:LoginComponent},
   { path: '**', redirectTo: '/login', pathMatch: 'full' } // Redirect any unknown route to auth
 ];
 

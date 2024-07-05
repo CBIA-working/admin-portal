@@ -9,22 +9,18 @@ import { PasswordModule } from 'primeng/password';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
-import { ToastModule } from 'primeng/toast'; // Import ToastModule if needed
-import { AuthService } from '../authentication/auth.service';
-// Import MessageService if needed, but we will use alert for simplicity
+import { ToastModule,  } from 'primeng/toast'; 
 
-interface LoginResponse {
-  message: string;
-  token: string;
-}
+import { AuthService } from '../authentication/auth.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, HttpClientModule, PasswordModule, ButtonModule, RippleModule, CheckboxModule, ToastModule], // Add ToastModule if needed
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, HttpClientModule, PasswordModule, ButtonModule, RippleModule, CheckboxModule, ToastModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
-  // Remove MessageService from providers
+  providers: [MessageService]  // Add MessageService to providers
 })
 export class LoginComponent implements OnInit {
   authForm: FormGroup;
@@ -35,18 +31,17 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder,
     private http: HttpClient,
     private router: Router,
-    private authService: AuthService // Remove MessageService if not needed
+    private authService: AuthService,
+    private messageService: MessageService  // Inject MessageService
   ) {
     this.authForm = this.fb.group({
       email: ['knanda3001@gmail.com', [Validators.required, Validators.email]],
       password: ['Pass@12', Validators.required],
-      rememberme: [false]  // Default value set to false
+      rememberme: [false]
     });
-    
   }
 
   ngOnInit(): void {
-    // Ensure the user is logged out if already logged in
     if (this.authService.isLoggedIn()) {
       this.authService.clearToken();
     }
@@ -54,41 +49,44 @@ export class LoginComponent implements OnInit {
 
   async onLogin() {
     if (this.authForm.invalid) {
-      this.loginHasError = this.authForm.controls['email'].invalid;
-      this.passwordHasError = this.authForm.controls['password'].invalid;
-      alert('Please fill in all required fields.');
+      this.messageService.add({severity:'error', summary:'Error', detail:'Please fill in all required fields.'});
       return;
     }
   
     const credentials = {
       email: this.authForm.value.email,
       password: this.authForm.value.password,
-      rememberMe: this.authForm.value.rememberme // Ensuring the correct value is passed
+      rememberMe: this.authForm.value.rememberme
     };
   
-    const mockToken = 'mock-token-' + Math.random().toString(36).substr(2, 9);
-  
     try {
-      const response: LoginResponse = {
+      const mockToken = 'mock-token-' + Math.random().toString(36).substr(2, 9);
+      const response = {
         message: 'User found',
         token: mockToken
       };
   
-      this.authService.setToken(response.token, credentials.rememberMe); // Pass the checkbox value
-      alert('Login successful!');
-      this.router.navigate(['/home'], { replaceUrl: true });
+      this.authService.setToken(response.token, credentials.rememberMe);
+      this.messageService.add({severity:'success', summary:'Login Success', detail:'You have successfully logged in!'});
+  
+      // Delaying navigation only slightly, or not at all if the toast duration is longer
+      setTimeout(() => {
+        this.router.navigate(['/home'], { replaceUrl: true });
+      }, 1000);  // Short delay to start navigation after toast appears
     } catch (error) {
-      console.error('Request error:', error);
-      alert('Server Error');
+      this.messageService.add({severity:'error', summary:'Server Error', detail:'Could not process login.'});
     }
-  }  
+  }
+  
+  
+  
 
   onForgotPassword() {
     this.router.navigate(['/forgot']);
   }
 
   logout() {
-    this.authService.clearToken(); // Clear token using AuthService
+    this.authService.clearToken();
     this.router.navigate(['/login'], { replaceUrl: true });
   }
 
