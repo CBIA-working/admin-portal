@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpClient } from '@angular/common/http'; // Import HttpClient
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
@@ -69,6 +69,7 @@ export class ManageStudentsComponent implements OnInit, AfterViewInit {
     private router: Router,
     private navigationService: NavigationService,
     private route: ActivatedRoute,
+    private http: HttpClient, // Inject HttpClient
   ) {}
 
   options = [
@@ -77,16 +78,21 @@ export class ManageStudentsComponent implements OnInit, AfterViewInit {
     { name: 'Courses', key: 'courses' }
   ];
 
-  // navigateToMemberPage(option: { name: string, key: string }, studentId: string) {
-  //   this.navigationService.setSelectedId(studentId);
-  //   this.router.navigate([`/${option.key}/${studentId}`]);
-  // }
-
   navigateToMemberPage(option: { name: string, key: string }, studentId: string) {
     this.navigationService.setSelectedId(studentId);
     localStorage.setItem('refreshPage', 'true');
-    this.router.navigate([`/${option.key}`], { queryParams: { Student_Id: studentId } });
+  
+    // Prepare the payload
+    const payload = { Id: Number(studentId), type: 'student' };
+  
+    // Call the API to get event details
+    this.http.post('http://192.168.1.6:3000/api/StudentEvents', payload).subscribe((response: any) => {
+      const eventDetails = response.map((item: any) => item.eventDetails);
+      // Navigate to cultural events page with event details
+      this.router.navigate([`/${option.key}`], { queryParams: { Student_Id: studentId, events: JSON.stringify(eventDetails) } });
+    });
   }
+  
 
   ngOnInit() {
     if (localStorage.getItem('refreshPage') === 'true') {
@@ -113,7 +119,6 @@ export class ManageStudentsComponent implements OnInit, AfterViewInit {
       });
     });
   }
-
 
   ngAfterViewInit() {
     if (this.downloadComponent) {
@@ -276,13 +281,12 @@ export class ManageStudentsComponent implements OnInit, AfterViewInit {
     }
   }
 
-filterByUserId(id: string) {
-  const userIdNumber = Number(id);
-  if (!isNaN(userIdNumber)) {
-    this.students = this.students.filter(student => student.id === userIdNumber);
-  } else {
-    console.warn('The provided userId is not a valid number.');
+  filterByUserId(id: string) {
+    const userIdNumber = Number(id);
+    if (!isNaN(userIdNumber)) {
+      this.students = this.students.filter(student => student.id === userIdNumber);
+    } else {
+      console.warn('The provided userId is not a valid number.');
+    }
   }
 }
-}
-

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
@@ -52,8 +52,7 @@ export class CulturalEventsComponent implements OnInit, AfterViewInit {
     eventName: 'Event Name',
     date: 'Date',
     description: 'Description',
-    signedUp: 'Signed Up',
-    userId: 'User ID'
+    signedUp: 'Signed Up'
   };
 
   constructor(
@@ -65,48 +64,35 @@ export class CulturalEventsComponent implements OnInit, AfterViewInit {
   ) {}
 
   options = [
-    { name: 'Students', key: 'managestudent' },
-
+    { name: 'Students', key: 'managestudent' }
   ];
+
   navigateToMemberPage(option: { name: string, key: string }, userId: string) {
     this.navigationService.setSelectedId(userId);
     console.log("Navigating with userId:", userId);
-    // Set a flag in local storage to indicate that the previous page should be refreshed
     localStorage.setItem('refreshPage', 'true');
-    
     this.router.navigate([`/${option.key}`], { queryParams: { Student_Id: userId } });
   }
 
   ngOnInit(): void {
-    // Check if the page should be refreshed
     if (localStorage.getItem('refreshPage') === 'true') {
       localStorage.removeItem('refreshPage');
       location.reload();
     }
 
-    this.service.getCultural().then((culturalEvents) => {
-      this.culturalEvents = culturalEvents;
-      this.loading = false;
-  
-      // Get query parameters from the route
-      this.route.queryParamMap.subscribe(params => {
-        const Student_Id = params.get('Student_Id');
-        if (Student_Id) {
-          this.searchValue = Student_Id;
-          this.filterByUserId(Student_Id);
-        } else if (this.navigationService.shouldApplyFilter()) {
-          const userId = this.navigationService.getSelectedId();
-          if (userId) {
-            this.searchValue = userId;
-            this.filterByUserId(userId);
-          }
-          this.navigationService.clearFilter();
-        }
-      });
+    this.route.queryParamMap.subscribe(params => {
+      const eventDetails = params.get('events');
+      if (eventDetails) {
+        this.culturalEvents = JSON.parse(eventDetails);
+        this.loading = false;
+      } else {
+        this.service.getCultural().then((culturalEvents) => {
+          this.culturalEvents = culturalEvents;
+          this.loading = false;
+        });
+      }
     });
   }
-
-  
 
   ngAfterViewInit() {
     if (this.downloadComponent) {
@@ -162,7 +148,7 @@ export class CulturalEventsComponent implements OnInit, AfterViewInit {
       'Event Name': culturalEvent.eventName,
       'Date': culturalEvent.date,
       'Description': culturalEvent.description,
-      'Signed Up': culturalEvent.signedUp,
+      'Signed Up': culturalEvent.signedUp
     };
   }
 
@@ -261,16 +247,4 @@ export class CulturalEventsComponent implements OnInit, AfterViewInit {
       doc.save(`${filename}.pdf`);
     }
   }
-  filterByUserId(userId: string) {
-    // Convert search parameter to number
-    const userIdNumber = Number(userId);
-  
-    // Check if the conversion was successful and filter the events
-    if (!isNaN(userIdNumber)) {
-      this.culturalEvents = this.culturalEvents.filter(event => event.userId === userIdNumber);
-    } else {
-      console.warn('The provided userId is not a valid number.');
-      // Optionally, you could handle the case where userId is not valid, like showing an error message or resetting the data.
-    }
-  }  
 }
