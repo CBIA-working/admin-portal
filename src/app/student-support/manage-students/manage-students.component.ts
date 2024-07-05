@@ -94,30 +94,40 @@ navigateToMemberPage(option: { name: string, key: string }, studentId: string) {
 
 
 ngOnInit(): void {
-  const id = this.route.snapshot.queryParamMap.get('eventId');
-  if (id) {
-    this.fetchStudentEvents(Number(id));
+  const eventid = this.route.snapshot.queryParamMap.get('eventId');
+  const accomodationid = this.route.snapshot.queryParamMap.get('accomodationId');
+
+  if (eventid) {
+    this.fetchStudentEvents(Number(eventid));
+  } else if (accomodationid){
+    this.fetchStudentAccomodations(Number(accomodationid));
   } else {
-    this.fetchAllEvents();
+    this.fetchAllData();
+  }
+}
+
+private async fetchData(apiCall: () => Promise<any>, type: string) {
+  this.loading = true;
+  try {
+    const response = await apiCall();
+    console.log(`Fetched Data (${type}):`, response); // Log the response
+    this.students = response.map(item => item.studentDetails);
+  } catch (error) {
+    console.error(`Error fetching ${type}`, error);
+  } finally {
+    this.loading = false;
   }
 }
 
 fetchStudentEvents(id: number) {
-  this.loading = true;
-  this.service.getStudentEvents({ Id: id, type: 'event' }).then((response) => {
-    console.log('Fetched Data:', response); // Log the response
-    this.students = response.map(item => item.studentDetails);
-    this.loading = false;
-  }).catch(error => {
-    console.error('Error fetching student events', error);
-    this.loading = false;
-  });
+  this.fetchData(() => this.service.getStudentEvents({ Id: id, type: 'event' }), 'student events');
 }
 
+fetchStudentAccomodations(id: number) {
+  this.fetchData(() => this.service.getStudentAccomodation({ Id: id, type: 'accomodation' }), 'student accommodations');
+}
 
-
-
-fetchAllEvents() {
+fetchAllData() {
   this.loading = true;
   this.service.getStudents().then((students) => {
     this.students = students;
