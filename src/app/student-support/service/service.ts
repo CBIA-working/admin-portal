@@ -11,9 +11,13 @@ export class Service {
         return this.http.get<any>('https://maui-portal.vercel.app/api/getUsers', { params: params }).toPromise();
     }
     getCultural(params?: any) {
-        return this.http.post<any>('http://192.168.1.6:3000/api/CulturalEvent', { params: params }).toPromise();
+        return this.http.post<any>('http://localhost:3000/api/CulturalEvent', { params: params }).toPromise();
     }
     getAccomodation(params?: any) {
-        return this.http.post<any>('http://192.168.1.6:3000/api/AccomodationAdmin', { params: params }).toPromise();
+        return this.http.post<any>('http://localhost:3000/api/AccomodationAdmin', { params: params }).toPromise();
     }
+    getStudentEvents(data: { Id: number, type: string }): Promise<any> {
+        return this.http.post('http://localhost:3000/api/StudentEvents', data).toPromise();
+    }
+  
 };
