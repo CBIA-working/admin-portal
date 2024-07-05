@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
@@ -61,21 +61,20 @@ export class CulturalEventsComponent implements OnInit, AfterViewInit {
     private service: Service,
     private messageService: MessageService,
     private navigationService: NavigationService,
-    private router: Router
+    private router: Router,
+    private http: HttpClient
   ) {}
 
   options = [
     { name: 'Students', key: 'managestudent' },
 
   ];
-  navigateToMemberPage(option: { name: string, key: string }, userId: string) {
-    this.navigationService.setSelectedId(userId);
-    console.log("Navigating with userId:", userId);
-    // Set a flag in local storage to indicate that the previous page should be refreshed
+  navigateToMemberPage(option: { name: string, key: string }, id: string) {
+    this.navigationService.setSelectedId(id);
     localStorage.setItem('refreshPage', 'true');
-    
-    this.router.navigate([`/${option.key}`], { queryParams: { Student_Id: userId } });
+    this.router.navigate([`/${option.key}`], { queryParams: { eventId: id } });
   }
+
   ngOnInit(): void {
     const studentId = this.route.snapshot.queryParamMap.get('Student_Id');
     if (studentId) {

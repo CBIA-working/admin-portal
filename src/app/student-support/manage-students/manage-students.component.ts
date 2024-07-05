@@ -93,31 +93,40 @@ navigateToMemberPage(option: { name: string, key: string }, studentId: string) {
 }
 
 
-  ngOnInit() {
-    if (localStorage.getItem('refreshPage') === 'true') {
-      localStorage.removeItem('refreshPage');
-      location.reload();
-    }
-    this.service.getStudents().then((students) => {
-      this.students = students;
-      this.loading = false;
-
-      this.route.queryParamMap.subscribe(params => {
-        const Student_Id = params.get('Student_Id');
-        if (Student_Id) {
-          this.searchValue = Student_Id;
-          this.filterByUserId(Student_Id);
-        } else if (this.navigationService.shouldApplyFilter()) {
-          const userId = this.navigationService.getSelectedId();
-          if (userId) {
-            this.searchValue = userId;
-            this.filterByUserId(userId);
-          }
-          this.navigationService.clearFilter();
-        }
-      });
-    });
+ngOnInit(): void {
+  const id = this.route.snapshot.queryParamMap.get('eventId');
+  if (id) {
+    this.fetchStudentEvents(Number(id));
+  } else {
+    this.fetchAllEvents();
   }
+}
+
+fetchStudentEvents(id: number) {
+  this.loading = true;
+  this.service.getStudentEvents({ Id: id, type: 'event' }).then((response) => {
+    console.log('Fetched Data:', response); // Log the response
+    this.students = response.map(item => item.studentDetails);
+    this.loading = false;
+  }).catch(error => {
+    console.error('Error fetching student events', error);
+    this.loading = false;
+  });
+}
+
+
+
+
+fetchAllEvents() {
+  this.loading = true;
+  this.service.getStudents().then((students) => {
+    this.students = students;
+    this.loading = false;
+  }).catch(error => {
+    console.error('Error fetching all students', error);
+    this.loading = false;
+  });
+}
 
 
   ngAfterViewInit() {
