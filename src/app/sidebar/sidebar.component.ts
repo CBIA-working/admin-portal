@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, OnInit } from '@angular/core';
 import { Sidebar } from 'primeng/sidebar';
 import { ImportsModule } from '../imports';
 import { Router, RouterLink, NavigationEnd } from '@angular/router';
@@ -13,12 +13,15 @@ import { AuthService } from '../authentication/auth.service';
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
-export class SidebarComponent implements AfterViewInit {
+export class SidebarComponent implements AfterViewInit,OnInit {
   @ViewChild('sidebarRef') sidebarRef!: Sidebar;
   sidebarVisible: boolean = false;
+  user: any;
 
   constructor(private router: Router, private authService: AuthService) {}
-
+  ngOnInit(): void {
+    this.user = JSON.parse(sessionStorage.getItem('user')!);
+  }
   ngAfterViewInit() {
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))

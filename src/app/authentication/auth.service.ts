@@ -29,6 +29,7 @@ export class AuthService {
   clearToken(): void {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.rememberMeKey);
+    sessionStorage.removeItem('user'); // Clear user data
     this.stopLogoutTimer();
     this.router.navigate(['/login']);
   }

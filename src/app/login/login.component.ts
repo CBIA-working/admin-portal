@@ -9,7 +9,7 @@ import { PasswordModule } from 'primeng/password';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
-import { ToastModule,  } from 'primeng/toast'; 
+import { ToastModule } from 'primeng/toast'; 
 
 import { AuthService } from '../authentication/auth.service';
 import { MessageService } from 'primeng/api';
@@ -20,7 +20,7 @@ import { MessageService } from 'primeng/api';
   imports: [CommonModule, FormsModule, ReactiveFormsModule, HttpClientModule, PasswordModule, ButtonModule, RippleModule, CheckboxModule, ToastModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
-  providers: [MessageService]  // Add MessageService to providers
+  providers: [MessageService]
 })
 export class LoginComponent implements OnInit {
   authForm: FormGroup;
@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
     private http: HttpClient,
     private router: Router,
     private authService: AuthService,
-    private messageService: MessageService  // Inject MessageService
+    private messageService: MessageService
   ) {
     this.authForm = this.fb.group({
       email: ['knanda3001@gmail.com', [Validators.required, Validators.email]],
@@ -52,34 +52,33 @@ export class LoginComponent implements OnInit {
       this.messageService.add({severity:'error', summary:'Error', detail:'Please fill in all required fields.'});
       return;
     }
-  
+
     const credentials = {
       email: this.authForm.value.email,
       password: this.authForm.value.password,
       rememberMe: this.authForm.value.rememberme
     };
-  
+
     try {
-      const mockToken = 'mock-token-' + Math.random().toString(36).substr(2, 9);
-      const response = {
-        message: 'User found',
-        token: mockToken
-      };
-  
-      this.authService.setToken(response.token, credentials.rememberMe);
-      this.messageService.add({severity:'success', summary:'Login Success', detail:'You have successfully logged in!'});
-  
-      // Delaying navigation only slightly, or not at all if the toast duration is longer
-      setTimeout(() => {
-        this.router.navigate(['/home'], { replaceUrl: true });
-      }, 1000);  // Short delay to start navigation after toast appears
+      // Replace this with the actual API call
+      const response = await this.http.post<any>('http://localhost:3000/api/login', credentials).toPromise();
+
+      if (response.status === 200) {
+        const token = this.generateRandomToken();
+        this.authService.setToken(token, credentials.rememberMe);
+        sessionStorage.setItem('user', JSON.stringify(response.user)); // Store user data in sessionStorage
+        this.messageService.add({severity:'success', summary:'Login Success', detail:'You have successfully logged in!'});
+
+        setTimeout(() => {
+          this.router.navigate(['/home'], { replaceUrl: true });
+        }, 1000);
+      } else {
+        this.messageService.add({severity:'error', summary:'Login Failed', detail:response.message});
+      }
     } catch (error) {
       this.messageService.add({severity:'error', summary:'Server Error', detail:'Could not process login.'});
     }
   }
-  
-  
-  
 
   onForgotPassword() {
     this.router.navigate(['/forgot']);
@@ -92,5 +91,9 @@ export class LoginComponent implements OnInit {
 
   isLoggedIn(): boolean {
     return this.authService.isLoggedIn();
+  }
+
+  private generateRandomToken(): string {
+    return 'token-' + Math.random().toString(36).substr(2, 16);
   }
 }
