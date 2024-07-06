@@ -96,12 +96,15 @@ navigateToMemberPage(option: { name: string, key: string }, studentId: string) {
 ngOnInit(): void {
   const eventid = this.route.snapshot.queryParamMap.get('eventId');
   const accomodationid = this.route.snapshot.queryParamMap.get('accomodationId');
+  const courseid = this.route.snapshot.queryParamMap.get('courseId');
 
   if (eventid) {
     this.fetchStudentEvents(Number(eventid));
   } else if (accomodationid){
     this.fetchStudentAccomodations(Number(accomodationid));
-  } else {
+  } else if (courseid){
+    this.fetchStudentCourse(Number(courseid));
+  }else {
     this.fetchAllData();
   }
 }
@@ -125,6 +128,9 @@ fetchStudentEvents(id: number) {
 
 fetchStudentAccomodations(id: number) {
   this.fetchData(() => this.service.getStudentAccomodation({ Id: id, type: 'accomodation' }), 'student accommodations');
+}
+fetchStudentCourse(id: number) {
+  this.fetchData(() => this.service.getStudentCourse({ Id: id, type: 'course' }), 'student course');
 }
 
 fetchAllData() {

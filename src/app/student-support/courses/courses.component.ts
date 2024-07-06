@@ -56,7 +56,6 @@ export class CoursesComponent implements OnInit, AfterViewInit {
     keyDates: 'Key Dates',
     events: 'Events',
     agreements: 'Agreements',
-    userId: 'User Id'
   };
 
   constructor(
@@ -87,14 +86,14 @@ export class CoursesComponent implements OnInit, AfterViewInit {
   }
 
   fetchStudentAccommodations(studentId: number) {
-    // this.loading = true;
-    // this.service.getStudentAccommodation({ Id: studentId, type: 'student' }).then((response) => {
-    //   this.courses = response.map(item => item.courseDetails);
-    //   this.loading = false;
-    // }).catch(error => {
-    //   console.error('Error fetching student events', error);
-    //   this.loading = false;
-    // });
+    this.loading = true;
+    this.service.getStudentCourse({ Id: studentId, type: 'student' }).then((response) => {
+      this.courses = response.map(item => item.courseDetails);
+      this.loading = false;
+    }).catch(error => {
+      console.error('Error fetching student events', error);
+      this.loading = false;
+    });
   }
 
   fetchAllAccommodations() {
@@ -217,12 +216,12 @@ export class CoursesComponent implements OnInit, AfterViewInit {
     }
   }
 
-  filterByUserId(userId: string) {
-    const userIdNumber = Number(userId);
-    if (!isNaN(userIdNumber)) {
-      this.courses = this.courses.filter(course => course.userId === userIdNumber);
-    } else {
-      console.warn('The provided userId is not a valid number.');
-    }
-  }
+  // filterByUserId(userId: string) {
+  //   const userIdNumber = Number(userId);
+  //   if (!isNaN(userIdNumber)) {
+  //     this.courses = this.courses.filter(course => course.Id === userIdNumber);
+  //   } else {
+  //     console.warn('The provided userId is not a valid number.');
+  //   }
+  // }
 }

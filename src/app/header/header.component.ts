@@ -61,6 +61,13 @@ export class HeaderComponent implements OnInit {
         routerLink: '/accomodations' 
       });
     }
+    else if (path === '/courses') {
+      this.items.push({ 
+        label: 'Courses', 
+        escape: false, 
+        routerLink: '/courses' 
+      });
+    }
     else if (path === '/admin') {
       this.items.push({ label: 'Admin', routerLink: '/admin' });
     }

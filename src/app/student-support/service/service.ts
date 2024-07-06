@@ -29,4 +29,7 @@ export class Service {
     getStudentAccomodation(data: { Id: number, type: string }): Promise<any> {
         return this.http.post(`${this.BASE_URL}/StudentAccomodation`, data).toPromise();
     }
+    getStudentCourse(data: { Id: number, type: string }): Promise<any> {
+        return this.http.post(`${this.BASE_URL}/StudentCourse`, data).toPromise();
+    }
 }

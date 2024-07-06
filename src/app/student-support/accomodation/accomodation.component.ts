@@ -138,7 +138,7 @@ export class AccomodationComponent implements OnInit, AfterViewInit {
   }
 
   downloadAllStudents(format: string) {
-    const data = this.accomodations.map(culturalEvent => this.mapCustomerToExportFormat(culturalEvent));
+    const data = this.accomodations.map(accomodation => this.mapCustomerToExportFormat(accomodation));
     this.download1(format, data, 'accomodations');
   }
 
@@ -148,10 +148,10 @@ export class AccomodationComponent implements OnInit, AfterViewInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: 'Please select at least one culturalEvent.'
+          detail: 'Please select at least one accomodation.'
         });
       } else {
-        const data = this.selectedAccomodation.map(culturalEvent => this.mapCustomerToExportFormat(culturalEvent));
+        const data = this.selectedAccomodation.map(accomodation => this.mapCustomerToExportFormat(accomodation));
         this.download2(this.downloadComponent.format, data, 'selected_accomodations');
         this.exitSelectionMode();
       }
@@ -202,7 +202,7 @@ export class AccomodationComponent implements OnInit, AfterViewInit {
 
       doc.text('Students List', margin.left, margin.top);
       const columns = Object.values(this.exportHeaderMapping);
-      const rows = this.accomodations.map(culturalEvent => Object.keys(this.exportHeaderMapping).map(key => culturalEvent[key]));
+      const rows = this.accomodations.map(accomodation => Object.keys(this.exportHeaderMapping).map(key => accomodation[key]));
 
       autoTable(doc, {
         margin: { top: 30 },
@@ -250,7 +250,7 @@ export class AccomodationComponent implements OnInit, AfterViewInit {
 
       doc.text('Students List', margin.left, margin.top);
       const columns = Object.values(this.exportHeaderMapping);
-      const rows = this.selectedAccomodation.map(culturalEvent => Object.keys(this.exportHeaderMapping).map(key => culturalEvent[key]));
+      const rows = this.selectedAccomodation.map(accomodation => Object.keys(this.exportHeaderMapping).map(key => accomodation[key]));
 
       autoTable(doc, {
         margin: { top: 30 },

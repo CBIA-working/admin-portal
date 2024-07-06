@@ -44,5 +44,4 @@ export interface Courses {
     keyDates: string;
     events: string;
     agreements: string;
-    userId: number;
   }
