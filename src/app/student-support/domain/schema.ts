@@ -34,3 +34,15 @@ export interface Accomodation {
     roommateNames:String;
     userId:number;
 }
+
+export interface Courses {
+    id: number;
+    title: string;
+    description: string;
+    startDate: Date;
+    endDate: Date;
+    keyDates: string;
+    events: string;
+    agreements: string;
+    userId: number;
+  }

@@ -9,6 +9,7 @@ import { AuthGuard } from './authentication/auth.guard';
 import { SettingsComponent } from './settings/settings.component';
 import { CulturalEventsComponent } from './student-support/cultural-events/cultural-events.component';
 import { AccomodationComponent } from './student-support/accomodation/accomodation.component';
+import { CoursesComponent } from './student-support/courses/courses.component';
 
 
 export const routes: Routes = [
@@ -17,6 +18,7 @@ export const routes: Routes = [
   { path: 'managestudent', component:ManageStudentsComponent,canActivate: [AuthGuard]},
   { path: 'culturalevents', component:CulturalEventsComponent,canActivate: [AuthGuard]},
   { path: 'accomodations', component:AccomodationComponent,canActivate: [AuthGuard]},
+  { path: 'courses', component:CoursesComponent,canActivate: [AuthGuard]},
   // { path: 'culturalevents/:id', component:CulturalEventsComponent,canActivate: [AuthGuard]},
   // { path: 'studentservice', component:StudentServicesComponent,canActivate: [AuthGuard]},
   { path: 'settings', component:SettingsComponent,canActivate: [AuthGuard]},
