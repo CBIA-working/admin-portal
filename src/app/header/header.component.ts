@@ -34,16 +34,6 @@ export class HeaderComponent implements OnInit {
       }
     });
   }
-  getAvatarUrl(gender: string): string {
-    switch (gender.toLowerCase()) {
-      case 'male':
-        return 'assets/avatar/male.jpg';
-      case 'female':
-        return 'assets/avatar/female.jpg';
-      default:
-        return 'assets/avatar/other.jpg';
-    }
-  }
   logout() {
     this.authService.clearToken(); // Clear token using AuthService
     this.router.navigate(['/login'], { replaceUrl: true });

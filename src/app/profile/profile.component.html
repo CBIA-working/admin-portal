@@ -2,12 +2,11 @@
     <!-- Avatar on the left -->
     <div style="flex: 0 0 300px; display: flex; flex-direction: column; align-items: center; padding-right: 20px; border-right: 2px solid #e0e0e0;">
         <!-- Dynamic Avatar based on gender -->
-        <img [src]="getAvatarUrl(user.gender)"
-             alt="Profile Image"
-             style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; margin-bottom: 10px;">
-        <h2 style="text-align: center; color: #333;">{{ user.fname }} {{ user.lname }}</h2>
-    </div>
-
+        <img [src]="user.imageUrl"
+        alt="Profile Image"
+        style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; margin-bottom: 10px;">
+   <h2 style="text-align: center; color: #333;">{{ user.fname }} {{ user.lname }}</h2>
+</div>
     <!-- Tabbed profile information on the right -->
     <div style="flex: 1; padding-left: 20px;">
         <p-tabView>
