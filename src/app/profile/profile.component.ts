@@ -3,6 +3,7 @@ import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { TabViewModule } from 'primeng/tabview';
+import { AuthService } from '../authentication/auth.service';
 
 @Component({
   selector: 'app-profile',
@@ -17,18 +18,22 @@ import { TabViewModule } from 'primeng/tabview';
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent {
-  user = {
-    fname: "Kamakshya",
-    lname: "Nanda",
-    email: "knanda3001@gmail.com",
-    password: "Pass@12",
-    dob: "1725-01-17",
-    address: "ABC St. XYZ City",
-    gender: "Male",
-    bloodGroup: "A+",
-    dietaryPreference: "Non-Vegetarian",
-    emergencyContactName: "John Doe",
-    emergencyContactNumber: "9999999999",
-    emergencyContactRelation: "Father"
-  };
+  user: any;
+
+  constructor(private authService: AuthService) { }
+
+  ngOnInit(): void {
+    this.user = JSON.parse(sessionStorage.getItem('user')!);
+  }
+// Function to determine the avatar URL based on gender
+getAvatarUrl(gender: string): string {
+  switch (gender.toLowerCase()) {
+    case 'male':
+      return 'assets/avatar/male.jpg';
+    case 'female':
+      return 'assets/avatar/female.jpg';
+    default:
+      return 'assets/avatar/other.jpg';
+  }
+}
 }

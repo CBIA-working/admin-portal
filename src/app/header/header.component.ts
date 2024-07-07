@@ -5,21 +5,25 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
 import { MenuItem } from 'primeng/api';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { filter } from 'rxjs/operators';
+import { AuthService } from '../authentication/auth.service';
+import { AvatarModule } from 'primeng/avatar';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterModule, CommonModule, SidebarComponent, BreadcrumbModule],
+  imports: [RouterModule, CommonModule, SidebarComponent, BreadcrumbModule,AvatarModule],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
   items: MenuItem[] = [];
   home: MenuItem = { icon: 'pi pi-home', routerLink: '/home' };
+  user: any;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   ngOnInit() {
+    this.user = JSON.parse(sessionStorage.getItem('user')!);
     // Initialize breadcrumb items based on current route
     this.updateBreadcrumbs(this.router.url);
 
@@ -30,7 +34,20 @@ export class HeaderComponent implements OnInit {
       }
     });
   }
-
+  getAvatarUrl(gender: string): string {
+    switch (gender.toLowerCase()) {
+      case 'male':
+        return 'assets/avatar/male.jpg';
+      case 'female':
+        return 'assets/avatar/female.jpg';
+      default:
+        return 'assets/avatar/other.jpg';
+    }
+  }
+  logout() {
+    this.authService.clearToken(); // Clear token using AuthService
+    this.router.navigate(['/login'], { replaceUrl: true });
+  }
   updateBreadcrumbs(url: string) {
     // Reset breadcrumbs
     this.items = [];
