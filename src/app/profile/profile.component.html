@@ -1,0 +1,33 @@
+<!-- Single big card -->
+<div style="background-color: #fff; box-shadow: 0 0 10px rgba(0,0,0,0.1); display: flex; padding: 20px;">
+    <!-- Avatar on the left -->
+    <div style="flex: 0 0 300px; display: flex; flex-direction: column; align-items: center; padding-right: 20px; border-right: 2px solid #e0e0e0;">
+        <img src="assets/avatar/male.jpg"
+             alt="Profile Image"
+             style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; margin-bottom: 10px;">
+        <h2 style="text-align: center; color: #333;">{{ user.fname }} {{ user.lname }}</h2>
+    </div>
+
+    <!-- Tabbed profile information on the right -->
+    <div style="flex: 1; padding-left: 20px;">
+        <p-tabView>
+            <p-tabPanel header="Basic Information">
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 10px;">
+                    <div><strong>Name:</strong> {{ user.fname }} {{ user.lname }}</div>
+                    <div><strong>Gender:</strong> {{ user.gender }}</div>
+                    <div><strong>DOB:</strong> {{ user.dob }}</div>
+                    <div><strong>Email:</strong> {{ user.email }}</div>
+                </div>
+            </p-tabPanel>
+            <p-tabPanel header="Emergency Contact">
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 10px;">
+                    <div><strong>Dietary Prefrence:</strong> {{ user.dietaryPreference }}</div>
+                    <div><strong>Emergency Contact Name:</strong> {{ user.emergencyContactName }}</div>
+                    <div><strong>Emergency Contact Number:</strong> {{ user.emergencyContactNumber }}</div>
+                    <div><strong>Emergency Contact Relation:</strong> {{ user.emergencyContactRelation }}</div>
+                    <div><strong>Address:</strong> {{ user.address }}</div>
+                </div>
+            </p-tabPanel>
+        </p-tabView>
+    </div>
+</div>
