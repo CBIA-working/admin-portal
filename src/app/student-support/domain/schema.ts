@@ -14,6 +14,7 @@ export interface Student {
     emergencyContactName?: string;
     emergencyContactNumber?: string;
     emergencyContactRelation?: string;
+    imageUrl?:string;
 }
 export interface CulturalEvent {
     id: number;

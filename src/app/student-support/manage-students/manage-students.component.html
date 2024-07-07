@@ -40,6 +40,11 @@
             <p-columnFilter type="text" field="id" display="menu"></p-columnFilter>
           </div>
         </th>
+        <th style="min-width: 10%">
+          <div class="flex align-items-center">
+            Profile image
+          </div>
+        </th>
         <th style="min-width: 12%">
           <div class="flex align-items-center">
             First Name
@@ -115,6 +120,9 @@
           <p-tableCheckbox [value]="student"></p-tableCheckbox>
         </td>
         <td>{{ student.id }}</td>
+        <td>
+          <img src="{{ student.imageUrl }}" alt="Profile Image" style="width: 50px; height: auto; border-radius: 50%;">
+        </td>
         <td>{{ student.fname }}</td>
         <td>{{ student.lname }}</td>
         <td>{{ student.email }}</td>

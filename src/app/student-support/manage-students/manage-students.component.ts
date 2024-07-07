@@ -61,7 +61,8 @@ export class ManageStudentsComponent implements OnInit, AfterViewInit {
     dietaryPreference: 'Dietary Preference',
     emergencyContactName: 'Emergency Contact Name',
     emergencyContactNumber: 'Emergency Contact Number',
-    emergencyContactRelation: 'Emergency Contact Relation'
+    emergencyContactRelation: 'Emergency Contact Relation',
+    imageUrl:'Profile image'
   };
 
   constructor(
