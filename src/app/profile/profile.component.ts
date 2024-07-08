@@ -5,11 +5,13 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { TabViewModule } from 'primeng/tabview';
 import { DialogModule } from 'primeng/dialog';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { Service } from '../student-support/service/service';
+
 
 @Component({
   selector: 'app-profile',
@@ -27,7 +29,7 @@ import { MessageService } from 'primeng/api';
   ],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss'],
-  providers: [MessageService]  // Add MessageService to providers
+  providers: [MessageService,Service]  // Add MessageService to providers
 })
 export class ProfileComponent implements OnInit {
   user: any = {
@@ -48,19 +50,8 @@ export class ProfileComponent implements OnInit {
   showAvatarDialog: boolean = false;
   showSaveButton: boolean = false;
   saveSubscription: Subscription | null = null;
-  avatars: string[] = [
-    'assets/avatar/1.jpg',
-    'assets/avatar/2.jpg',
-    'assets/avatar/3.jpg',
-    'assets/avatar/4.jpg',
-    'assets/avatar/5.jpg',
-    'assets/avatar/6.jpg',
-    'assets/avatar/7.jpg',
-    'assets/avatar/8.jpg',
-    'assets/avatar/9.jpg'
-  ]; 
 
-  constructor(private http: HttpClient, private messageService: MessageService) { }
+  constructor(private service: Service, private messageService: MessageService) { }
 
   ngOnInit(): void {
     const userData = JSON.parse(sessionStorage.getItem('user')!);
@@ -91,6 +82,7 @@ export class ProfileComponent implements OnInit {
     this.showAvatarDialog = false;
     this.checkForChanges();
   }
+
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
@@ -106,6 +98,7 @@ export class ProfileComponent implements OnInit {
       reader.readAsDataURL(file); // Convert image file to base64 URL
     }
   }
+
   checkForChanges(): void {
     this.showSaveButton = JSON.stringify(this.user) !== JSON.stringify(this.originalUser);
   }
@@ -135,7 +128,7 @@ export class ProfileComponent implements OnInit {
       formData.append('imageUrl', this.user.imageUrl);
     }
 
-    this.saveSubscription = this.http.post('http://localhost:3000/api/updateProfile', formData)
+    this.saveSubscription = this.service.updateProfile(formData)
       .subscribe(response => {
         console.log('Profile updated successfully:', response);
 
@@ -143,7 +136,7 @@ export class ProfileComponent implements OnInit {
         sessionStorage.setItem('user', JSON.stringify(this.user));
         
         // Show success toast message
-        this.messageService.add({ severity: 'success', summary: 'Profile Updated', detail: 'Will relod to apply the changes.' });
+        this.messageService.add({ severity: 'success', summary: 'Profile Updated', detail: 'Will reload to apply the changes.' });
         
         // Reload the page after a short delay to ensure the toast message is visible
         setTimeout(() => {

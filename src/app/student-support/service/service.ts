@@ -32,4 +32,8 @@ export class Service {
     getStudentCourse(data: { Id: number, type: string }): Promise<any> {
         return this.http.post(`${this.BASE_URL}/StudentCourse`, data).toPromise();
     }
+     // Add the updateProfile method
+     updateProfile(formData: FormData) {
+        return this.http.post(`${this.BASE_URL}/updateProfile`, formData);
+    }
 }
