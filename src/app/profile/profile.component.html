@@ -2,31 +2,80 @@
     <!-- Avatar on the left -->
     <div style="flex: 0 0 300px; display: flex; flex-direction: column; align-items: center; padding-right: 20px; border-right: 2px solid #e0e0e0;">
         <!-- Dynamic Avatar based on gender -->
-        <img [src]="user.imageUrl"
-        alt="Profile Image"
-        style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; margin-bottom: 10px;">
-   <h2 style="text-align: center; color: #333;">{{ user.fname }} {{ user.lname }}</h2>
-</div>
+        <img [src]="user.imageUrl || 'assets/avatar/default-avatar.jpg'"
+             alt="Profile Image"
+             style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; margin-bottom: 10px;">
+        <div style="display: flex; align-items: center;">
+            <h2 style="text-align: center; color: #333;">{{ user.fname }} {{ user.lname }}</h2>
+            <button pButton type="button" icon="pi pi-pencil" class="p-button-rounded p-button-text" (click)="openAvatarDialog()"></button>
+        </div>
+    </div>
     <!-- Tabbed profile information on the right -->
     <div style="flex: 1; padding-left: 20px;">
         <p-tabView>
             <p-tabPanel header="Basic Information">
                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 10px;">
-                    <div><strong>Name:</strong> {{ user.fname }} {{ user.lname }}</div>
-                    <div><strong>Gender:</strong> {{ user.gender }}</div>
-                    <div><strong>DOB:</strong> {{ user.dob }}</div>
-                    <div><strong>Email:</strong> {{ user.email }}</div>
+                    <div>
+                        <strong>Name:</strong>
+                        <input [(ngModel)]="user.fullName" (ngModelChange)="updateFullName()" placeholder="Full Name">
+                    </div>
+                    <div>
+                        <strong>Gender:</strong>
+                        <input [(ngModel)]="user.gender" placeholder="Gender">
+                    </div>
+                    <div>
+                        <strong>DOB:</strong>
+                        <input [(ngModel)]="user.dob" placeholder="Date of Birth">
+                    </div>
+                    <div>
+                        <strong>Email:</strong>
+                        <input [(ngModel)]="user.email" placeholder="Email">
+                    </div>
                 </div>
             </p-tabPanel>
             <p-tabPanel header="Emergency Contact">
                 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 10px;">
-                    <div><strong>Dietary Preference:</strong> {{ user.dietaryPreference }}</div>
-                    <div><strong>Emergency Contact Name:</strong> {{ user.emergencyContactName }}</div>
-                    <div><strong>Emergency Contact Number:</strong> {{ user.emergencyContactNumber }}</div>
-                    <div><strong>Emergency Contact Relation:</strong> {{ user.emergencyContactRelation }}</div>
-                    <div><strong>Address:</strong> {{ user.address }}</div>
+                    <div>
+                        <strong>Dietary Preference:</strong>
+                        <input [(ngModel)]="user.dietaryPreference" placeholder="Dietary Preference">
+                    </div>
+                    <div>
+                        <strong>Emergency Contact Name:</strong>
+                        <input [(ngModel)]="user.emergencyContactName" placeholder="Emergency Contact Name">
+                    </div>
+                    <div>
+                        <strong>Emergency Contact Number:</strong>
+                        <input [(ngModel)]="user.emergencyContactNumber" placeholder="Emergency Contact Number">
+                    </div>
+                    <div>
+                        <strong>Emergency Contact Relation:</strong>
+                        <input [(ngModel)]="user.emergencyContactRelation" placeholder="Emergency Contact Relation">
+                    </div>
+                    <div>
+                        <strong>Address:</strong>
+                        <input [(ngModel)]="user.address" placeholder="Address">
+                    </div>
                 </div>
             </p-tabPanel>
         </p-tabView>
     </div>
+</div>
+
+<p-dialog header="Select Avatar" [(visible)]="showAvatarDialog" [modal]="true" [closable]="true" [draggable]="false" [resizable]="false"
+           style="width: auto; max-width: 80vw; max-height: 80vh; margin: auto; display: flex; flex-direction: column; align-items: center;">
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;">
+        <img src="assets/avatar/1.jpg" alt="Avatar 1" (click)="selectAvatar('assets/avatar/1.jpg')"
+             style="width: 100px; height: 100px; cursor: pointer; border-radius: 50%; object-fit: cover;">
+        <img src="assets/avatar/17.jpg" alt="Avatar 2" (click)="selectAvatar('assets/avatar/17.jpg')"
+             style="width: 100px; height: 100px; cursor: pointer; border-radius: 50%; object-fit: cover;">
+        <img src="assets/avatar/24.jpg" alt="Avatar 3" (click)="selectAvatar('assets/avatar/24.jpg')"
+             style="width: 100px; height: 100px; cursor: pointer; border-radius: 50%; object-fit: cover;">
+        <img src="assets/avatar/27.jpg" alt="Avatar 4" (click)="selectAvatar('assets/avatar/27.jpg')"
+             style="width: 100px; height: 100px; cursor: pointer; border-radius: 50%; object-fit: cover;">
+    </div>
+</p-dialog>
+
+<!-- Save Changes Button -->
+<div style="text-align: center; margin-top: 20px;">
+    <button *ngIf="showSaveButton" pButton type="button" label="Save Changes" (click)="saveChanges()"></button>
 </div>
