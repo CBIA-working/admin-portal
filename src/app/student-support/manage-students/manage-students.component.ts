@@ -48,7 +48,8 @@ export class ManageStudentsComponent implements OnInit, AfterViewInit {
   loading: boolean = true;
   searchValue: string | undefined;
   downloadSelectedMode: boolean = false;
-
+  defaultSortField: string = 'id'; // The field you want to sort by
+  defaultSortOrder: number = 1;
   exportHeaderMapping = {
     id: 'ID',
     fname: 'First Name',
