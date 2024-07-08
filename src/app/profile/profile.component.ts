@@ -48,6 +48,17 @@ export class ProfileComponent implements OnInit {
   showAvatarDialog: boolean = false;
   showSaveButton: boolean = false;
   saveSubscription: Subscription | null = null;
+  avatars: string[] = [
+    'assets/avatar/1.jpg',
+    'assets/avatar/2.jpg',
+    'assets/avatar/3.jpg',
+    'assets/avatar/4.jpg',
+    'assets/avatar/5.jpg',
+    'assets/avatar/6.jpg',
+    'assets/avatar/7.jpg',
+    'assets/avatar/8.jpg',
+    'assets/avatar/9.jpg'
+  ]; 
 
   constructor(private http: HttpClient, private messageService: MessageService) { }
 
