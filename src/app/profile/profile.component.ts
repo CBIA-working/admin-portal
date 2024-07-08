@@ -41,7 +41,7 @@ export class ProfileComponent implements OnInit {
     emergencyContactNumber: '',
     emergencyContactRelation: '',
     address: '',
-    imageUrl: 'assets/avatar/1.jpg', // Default avatar
+    imageUrl: '', // Default avatar
     fullName: ''
   };
   originalUser: any;
@@ -80,7 +80,21 @@ export class ProfileComponent implements OnInit {
     this.showAvatarDialog = false;
     this.checkForChanges();
   }
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      const reader = new FileReader();
 
+      reader.onloadend = () => {
+        this.user.imageUrl = reader.result as string;
+        this.checkForChanges();
+        this.showAvatarDialog = false; // Close the dialog after selecting the file
+      };
+
+      reader.readAsDataURL(file); // Convert image file to base64 URL
+    }
+  }
   checkForChanges(): void {
     this.showSaveButton = JSON.stringify(this.user) !== JSON.stringify(this.originalUser);
   }
@@ -118,7 +132,7 @@ export class ProfileComponent implements OnInit {
         sessionStorage.setItem('user', JSON.stringify(this.user));
         
         // Show success toast message
-        this.messageService.add({ severity: 'success', summary: 'Profile Updated', detail: 'User details and image updated successfully.' });
+        this.messageService.add({ severity: 'success', summary: 'Profile Updated', detail: 'Will relod to apply the changes.' });
         
         // Reload the page after a short delay to ensure the toast message is visible
         setTimeout(() => {
