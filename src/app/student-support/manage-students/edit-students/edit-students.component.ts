@@ -33,7 +33,7 @@ import { Student } from '../../domain/schema';
 })
 export class EditStudentsComponent implements OnInit {
   @Input() student: Student | null = null;
-  @Output() dialogClose: EventEmitter<Student> = new EventEmitter<Student>();
+  @Output() dialogClose: EventEmitter<Student | null> = new EventEmitter<Student | null>();
 
   originalStudent: Student | null = null;
   showAvatarDialog: boolean = false;
@@ -167,5 +167,8 @@ export class EditStudentsComponent implements OnInit {
       }, error => {
         console.error('Error updating profile:', error);
       });
+  }
+  closeDialog(): void {
+    this.dialogClose.emit(null);
   }
 }

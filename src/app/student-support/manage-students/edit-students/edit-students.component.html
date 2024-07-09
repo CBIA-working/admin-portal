@@ -18,23 +18,28 @@
                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 10px;">
                     <div>
                         <strong>First Name:</strong>
-                        <input [(ngModel)]="student.fname"  placeholder="First Name">
+                        <input  pInputText  type="text" [(ngModel)]="student.fname" (ngModelChange)="onFieldChange()" placeholder="First Name"
+                        style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;">
                     </div>
                     <div>
                         <strong>Last Name:</strong>
-                        <input [(ngModel)]="student.fname"  placeholder="Last Name">
+                        <input pInputText  type="text" [(ngModel)]="student.lname" (ngModelChange)="onFieldChange()"  placeholder="Last Name"
+                        style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;">
                     </div>
                     <div>
                         <strong>Gender:</strong>
-                        <input [(ngModel)]="student.gender" (ngModelChange)="onFieldChange()" placeholder="Gender">
+                        <input pInputText  type="text" [(ngModel)]="student.gender" (ngModelChange)="onFieldChange()" placeholder="Gender"
+                        style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;">
                     </div>
                     <div>
                         <strong>DOB:</strong>
-                        <input [(ngModel)]="student.dob" (ngModelChange)="onFieldChange()" placeholder="Date of Birth">
+                        <input [(ngModel)]="student.dob" pInputText  type="date"(ngModelChange)="onFieldChange()" placeholder="Date of Birth"
+                        style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;">
                     </div>
                     <div>
                         <strong>Email:</strong>
-                        <input [(ngModel)]="student.email" (ngModelChange)="onFieldChange()" placeholder="Email">
+                        <input pInputText  type="email"[(ngModel)]="student.email" (ngModelChange)="onFieldChange()" placeholder="Email"
+                        style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;">
                     </div>
                 </div>
             </p-tabPanel>
@@ -42,23 +47,28 @@
                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 10px;">
                     <div>
                         <strong>Dietary Preference:</strong>
-                        <input [(ngModel)]="student.dietaryPreference" (ngModelChange)="onFieldChange()" placeholder="Dietary Preference">
+                        <input pInputText  type="text" [(ngModel)]="student.dietaryPreference" (ngModelChange)="onFieldChange()" placeholder="Dietary Preference"
+                        style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;">
                     </div>
                     <div>
                         <strong>Emergency Contact Name:</strong>
-                        <input [(ngModel)]="student.emergencyContactName" (ngModelChange)="onFieldChange()" placeholder="Emergency Contact Name">
+                        <input pInputText  type="text" [(ngModel)]="student.emergencyContactName" (ngModelChange)="onFieldChange()" placeholder="Emergency Contact Name"
+                        style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;">
                     </div>
                     <div>
                         <strong>Emergency Contact Number:</strong>
-                        <input [(ngModel)]="student.emergencyContactNumber" (ngModelChange)="onFieldChange()" placeholder="Emergency Contact Number">
+                        <input pInputText  type="number" [(ngModel)]="student.emergencyContactNumber" (ngModelChange)="onFieldChange()" placeholder="Emergency Contact Number"
+                        style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;">
                     </div>
                     <div>
                         <strong>Emergency Contact Relation:</strong>
-                        <input [(ngModel)]="student.emergencyContactRelation" (ngModelChange)="onFieldChange()" placeholder="Emergency Contact Relation">
+                        <input pInputText  type="text" [(ngModel)]="student.emergencyContactRelation" (ngModelChange)="onFieldChange()" placeholder="Emergency Contact Relation"
+                        style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;">
                     </div>
                     <div>
                         <strong>Address:</strong>
-                        <input [(ngModel)]="student.address" (ngModelChange)="onFieldChange()" placeholder="Address">
+                        <input pInputTextarea  rows="1" [(ngModel)]="student.address" (ngModelChange)="onFieldChange()" placeholder="Address"
+                        style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;">
                     </div>
                 </div>
             </p-tabPanel>
@@ -101,8 +111,9 @@
     </div>
 </p-dialog>
 
-<!-- Save Changes Button -->
-<div style="text-align: center; margin-top: 20px;">
-    <button *ngIf="showSaveButton" pButton type="button" label="Save Changes" (click)="saveChanges()"></button>
-</div>
+<p-footer style="display: flex; justify-content: flex-end; padding: 0 20px; margin-top: 20px;">
+    <button *ngIf="showSaveButton" pButton type="button" label="Save Changes" (click)="saveChanges()" style="margin-right: 10px;"></button>
+    <button pButton type="button" label="Close" icon="pi pi-times" (click)="closeDialog()" style="margin-right: 10px;"></button>
+    
+</p-footer>
 

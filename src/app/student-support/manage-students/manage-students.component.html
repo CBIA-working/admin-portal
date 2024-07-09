@@ -113,7 +113,6 @@
             <p-columnFilter type="text" field="emergencyContactRelation" display="menu"></p-columnFilter>
           </div>
         </th>
-        <th style="min-width: 5%"></th>
         <th style="min-width: 10%">
           <div class="flex align-items-center">
             Actions
@@ -142,7 +141,9 @@
         <td>{{ student.emergencyContactNumber }}</td>
         <td>{{ student.emergencyContactRelation }}</td>
         <td>
-            <p-button (click)="op.toggle($event)" icon="pi pi-ellipsis-v"  [text]="true" [plain]="true"></p-button>
+          <div class="button-container" style="display: flex; gap: 0.5rem;">
+            <p-button (click)="showEditDialog(student)" icon="pi pi-user-plus" [text]="true" [plain]="true"></p-button>
+            <p-button (click)="op.toggle($event)" icon="pi pi-ellipsis-v" [text]="true" [plain]="true"></p-button>
             <p-overlayPanel #op>
               <div>
                 <ul class="list-none p-0 m-0 flex flex-column gap-3">
@@ -156,10 +157,9 @@
                 </ul>
               </div>
             </p-overlayPanel>
+          </div>
         </td>
-        <td>
-          <button pButton type="button" icon="pi pi-pencil" (click)="showEditDialog(student)"></button>
-        </td>
+
       </tr>
     </ng-template>
     <ng-template pTemplate="emptymessage">
@@ -172,8 +172,6 @@
 
 <p-dialog [(visible)]="dialogVisible" [modal]="true" [closable]="false" header="Edit Student" [responsive]="true" [style]="{width: '60vw'}">
   <app-edit-students *ngIf="selectedStudent" [student]="selectedStudent" (dialogClose)="onDialogClose($event)"></app-edit-students>
-  <p-footer>
-    <button pButton type="button" label="Close" icon="pi pi-times" (click)="dialogVisible = false"></button>
-  </p-footer>
+
 </p-dialog>
 

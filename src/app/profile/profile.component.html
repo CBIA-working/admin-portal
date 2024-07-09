@@ -18,19 +18,23 @@
                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 10px;">
                     <div>
                         <strong>Name:</strong>
-                        <input [(ngModel)]="user.fullName" (ngModelChange)="updateFullName()" placeholder="Full Name">
+                        <input  pInputText  type="text" [(ngModel)]="user.fullName" (ngModelChange)="updateFullName()" placeholder="Full Name"
+                        style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;">
                     </div>
                     <div>
                         <strong>Gender:</strong>
-                        <input [(ngModel)]="user.gender" (ngModelChange)="onFieldChange()" placeholder="Gender">
+                        <input pInputText  type="text" [(ngModel)]="user.gender" (ngModelChange)="onFieldChange()" placeholder="Gender"
+                        style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;">
                     </div>
                     <div>
                         <strong>DOB:</strong>
-                        <input [(ngModel)]="user.dob" (ngModelChange)="onFieldChange()" placeholder="Date of Birth">
+                        <input [(ngModel)]="user.dob" pInputText  type="date"(ngModelChange)="onFieldChange()" placeholder="Date of Birth"
+                        style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;">
                     </div>
                     <div>
                         <strong>Email:</strong>
-                        <input [(ngModel)]="user.email" (ngModelChange)="onFieldChange()" placeholder="Email">
+                        <input pInputText  type="email"[(ngModel)]="user.email" (ngModelChange)="onFieldChange()" placeholder="Email"
+                        style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;">
                     </div>
                 </div>
             </p-tabPanel>
@@ -38,23 +42,28 @@
                 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 10px;">
                     <div>
                         <strong>Dietary Preference:</strong>
-                        <input [(ngModel)]="user.dietaryPreference" (ngModelChange)="onFieldChange()" placeholder="Dietary Preference">
+                        <input pInputText  type="text" [(ngModel)]="user.dietaryPreference" (ngModelChange)="onFieldChange()" placeholder="Dietary Preference"
+                        style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;">
                     </div>
                     <div>
                         <strong>Emergency Contact Name:</strong>
-                        <input [(ngModel)]="user.emergencyContactName" (ngModelChange)="onFieldChange()" placeholder="Emergency Contact Name">
+                        <input pInputText  type="text" [(ngModel)]="user.emergencyContactName" (ngModelChange)="onFieldChange()" placeholder="Emergency Contact Name"
+                        style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;">
                     </div>
                     <div>
                         <strong>Emergency Contact Number:</strong>
-                        <input [(ngModel)]="user.emergencyContactNumber" (ngModelChange)="onFieldChange()" placeholder="Emergency Contact Number">
+                        <input pInputText  type="number" [(ngModel)]="user.emergencyContactNumber" (ngModelChange)="onFieldChange()" placeholder="Emergency Contact Number"
+                        style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;">
                     </div>
                     <div>
                         <strong>Emergency Contact Relation:</strong>
-                        <input [(ngModel)]="user.emergencyContactRelation" (ngModelChange)="onFieldChange()" placeholder="Emergency Contact Relation">
+                        <input pInputText  type="text" [(ngModel)]="user.emergencyContactRelation" (ngModelChange)="onFieldChange()" placeholder="Emergency Contact Relation"
+                        style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;">
                     </div>
                     <div>
                         <strong>Address:</strong>
-                        <input [(ngModel)]="user.address" (ngModelChange)="onFieldChange()" placeholder="Address">
+                        <input pInputTextarea  rows="1" [(ngModel)]="user.address" (ngModelChange)="onFieldChange()" placeholder="Address"
+                        style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;">
                     </div>
                 </div>
             </p-tabPanel>
