@@ -1,0 +1,108 @@
+<p-toast></p-toast>
+<div style="background-color: #fff; box-shadow: 0 0 10px rgba(0,0,0,0.1); display: flex; padding: 20px;">
+    <!-- Avatar on the left -->
+    <div style="flex: 0 0 300px; display: flex; flex-direction: column; align-items: center; padding-right: 20px; border-right: 2px solid #e0e0e0;">
+        <!-- Dynamic Avatar based on gender -->
+        <img [src]="student.imageUrl || 'assets/avatar/default-avatar.jpg'"
+             alt="Profile Image"
+             style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; margin-bottom: 10px;">
+        <div style="display: flex; align-items: center;">
+            <h2 style="text-align: center; color: #333;">{{ student.fname }} {{ student.lname }}</h2>
+            <button pButton type="button" icon="pi pi-pencil" class="p-button-rounded p-button-text" (click)="openAvatarDialog()"></button>
+        </div>
+    </div>
+    <!-- Tabbed profile information on the right -->
+    <div style="flex: 1; padding-left: 20px;">
+        <p-tabView>
+            <p-tabPanel header="Basic Information">
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 10px;">
+                    <div>
+                        <strong>First Name:</strong>
+                        <input [(ngModel)]="student.fname"  placeholder="First Name">
+                    </div>
+                    <div>
+                        <strong>Last Name:</strong>
+                        <input [(ngModel)]="student.fname"  placeholder="Last Name">
+                    </div>
+                    <div>
+                        <strong>Gender:</strong>
+                        <input [(ngModel)]="student.gender" (ngModelChange)="onFieldChange()" placeholder="Gender">
+                    </div>
+                    <div>
+                        <strong>DOB:</strong>
+                        <input [(ngModel)]="student.dob" (ngModelChange)="onFieldChange()" placeholder="Date of Birth">
+                    </div>
+                    <div>
+                        <strong>Email:</strong>
+                        <input [(ngModel)]="student.email" (ngModelChange)="onFieldChange()" placeholder="Email">
+                    </div>
+                </div>
+            </p-tabPanel>
+            <p-tabPanel header="Emergency Contact">
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 10px;">
+                    <div>
+                        <strong>Dietary Preference:</strong>
+                        <input [(ngModel)]="student.dietaryPreference" (ngModelChange)="onFieldChange()" placeholder="Dietary Preference">
+                    </div>
+                    <div>
+                        <strong>Emergency Contact Name:</strong>
+                        <input [(ngModel)]="student.emergencyContactName" (ngModelChange)="onFieldChange()" placeholder="Emergency Contact Name">
+                    </div>
+                    <div>
+                        <strong>Emergency Contact Number:</strong>
+                        <input [(ngModel)]="student.emergencyContactNumber" (ngModelChange)="onFieldChange()" placeholder="Emergency Contact Number">
+                    </div>
+                    <div>
+                        <strong>Emergency Contact Relation:</strong>
+                        <input [(ngModel)]="student.emergencyContactRelation" (ngModelChange)="onFieldChange()" placeholder="Emergency Contact Relation">
+                    </div>
+                    <div>
+                        <strong>Address:</strong>
+                        <input [(ngModel)]="student.address" (ngModelChange)="onFieldChange()" placeholder="Address">
+                    </div>
+                </div>
+            </p-tabPanel>
+        </p-tabView>
+    </div>
+</div>
+
+<p-dialog header="Select Avatar" [(visible)]="showAvatarDialog" [modal]="true" [closable]="true" [draggable]="false" [resizable]="false"
+           style="width: auto; max-width: 80vw; max-height: 80vh; margin: auto; display: flex; flex-direction: column; align-items: center;">
+    <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; justify-content: center; width: 100%;">
+        <!-- Manually ordered Avatars -->
+        <img src="assets/avatar/1.jpg" alt="Avatar 1" (click)="selectAvatar('assets/avatar/1.jpg')"
+             style="width: 100px; height: 100px; cursor: pointer; border-radius: 50%; object-fit: cover;">
+        <img src="assets/avatar/9.jpg" alt="Avatar 9" (click)="selectAvatar('assets/avatar/9.jpg')"
+             style="width: 100px; height: 100px; cursor: pointer; border-radius: 50%; object-fit: cover;">
+        <img src="assets/avatar/2.jpg" alt="Avatar 2" (click)="selectAvatar('assets/avatar/2.jpg')"
+             style="width: 100px; height: 100px; cursor: pointer; border-radius: 50%; object-fit: cover;">
+        <img src="assets/avatar/8.jpg" alt="Avatar 8" (click)="selectAvatar('assets/avatar/8.jpg')"
+             style="width: 100px; height: 100px; cursor: pointer; border-radius: 50%; object-fit: cover;">
+        <img src="assets/avatar/3.jpg" alt="Avatar 3" (click)="selectAvatar('assets/avatar/3.jpg')"
+             style="width: 100px; height: 100px; cursor: pointer; border-radius: 50%; object-fit: cover;">
+        <img src="assets/avatar/7.jpg" alt="Avatar 7" (click)="selectAvatar('assets/avatar/7.jpg')"
+             style="width: 100px; height: 100px; cursor: pointer; border-radius: 50%; object-fit: cover;">
+        <img src="assets/avatar/4.jpg" alt="Avatar 4" (click)="selectAvatar('assets/avatar/4.jpg')"
+             style="width: 100px; height: 100px; cursor: pointer; border-radius: 50%; object-fit: cover;">
+        <img src="assets/avatar/6.jpg" alt="Avatar 6" (click)="selectAvatar('assets/avatar/6.jpg')"
+             style="width: 100px; height: 100px; cursor: pointer; border-radius: 50%; object-fit: cover;">
+        <img src="assets/avatar/5.jpg" alt="Avatar 5" (click)="selectAvatar('assets/avatar/5.jpg')"
+             style="width: 100px; height: 100px; cursor: pointer; border-radius: 50%; object-fit: cover;">
+        <img src="assets/avatar/10.jpg" alt="Avatar 10" (click)="selectAvatar('assets/avatar/10.jpg')"
+             style="width: 100px; height: 100px; cursor: pointer; border-radius: 50%; object-fit: cover;">
+
+
+        <!-- Upload New Avatar -->
+        <div style="width: 100px; height: 100px; border-radius: 50%; background-color: #f0f0f0; display: flex; align-items: center; justify-content: center; cursor: pointer;"
+             (click)="fileInput.click()">
+            <i class="pi pi-plus" style="font-size: 24px; color: #888;"></i>
+            <input #fileInput type="file" accept="image/*" style="display: none;" (change)="onFileSelected($event)">
+        </div>
+    </div>
+</p-dialog>
+
+<!-- Save Changes Button -->
+<div style="text-align: center; margin-top: 20px;">
+    <button *ngIf="showSaveButton" pButton type="button" label="Save Changes" (click)="saveChanges()"></button>
+</div>
+

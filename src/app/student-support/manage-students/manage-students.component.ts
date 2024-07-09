@@ -24,6 +24,8 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { ChipsModule } from 'primeng/chips';
 import { NavigationService } from '../service/navigation.service'; // Import the service
+import { EditStudentsComponent } from './edit-students/edit-students.component';
+import { DialogModule } from 'primeng/dialog';
 
 
 @Component({
@@ -33,7 +35,8 @@ import { NavigationService } from '../service/navigation.service'; // Import the
     TableModule, RouterModule, HttpClientModule, CommonModule, InputTextModule,
     TagModule, DropdownModule, MultiSelectModule, ProgressBarModule, ButtonModule,
     AddStudentComponent, DownloadComponent, ToastModule, BulkUploadComponent, 
-    OverlayPanelModule, InputGroupModule, InputGroupAddonModule, ChipsModule
+    OverlayPanelModule, InputGroupModule, InputGroupAddonModule, ChipsModule,
+    EditStudentsComponent,DialogModule
   ],
   providers: [Service, MessageService],
   templateUrl: './manage-students.component.html',
@@ -45,11 +48,31 @@ export class ManageStudentsComponent implements OnInit, AfterViewInit {
 
   students!: Student[];
   selectedStudents: Student[] = [];
+  selectedStudent: Student | null = null;
   loading: boolean = true;
   searchValue: string | undefined;
   downloadSelectedMode: boolean = false;
   defaultSortField: string = 'id'; // The field you want to sort by
   defaultSortOrder: number = 1;
+  dialogVisible: boolean = false;
+  currentUser: any = {}; // Load current user data here
+
+  showEditDialog(student: Student): void {
+    this.selectedStudent = student;
+    this.dialogVisible = true;
+  }
+
+  onDialogClose(updatedStudent: Student | null): void {
+    if (updatedStudent) {
+      const index = this.students.findIndex(s => s.id === updatedStudent.id);
+      if (index !== -1) {
+        this.students[index] = updatedStudent;
+      }
+    }
+    this.selectedStudent = null;
+    this.dialogVisible = false;
+  }
+
   exportHeaderMapping = {
     id: 'ID',
     fname: 'First Name',

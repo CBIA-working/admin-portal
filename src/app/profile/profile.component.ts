@@ -171,7 +171,7 @@ export class ProfileComponent implements OnInit {
   }
 
   private submitFormData(formData: FormData): void {
-    this.saveSubscription = this.service.updateProfile(formData)
+    this.saveSubscription = this.service.getupdateProfile(formData)
       .subscribe(response => {
         console.log('Profile updated successfully:', response);
         sessionStorage.setItem('user', JSON.stringify(this.user));

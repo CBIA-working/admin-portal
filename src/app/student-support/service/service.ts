@@ -36,7 +36,10 @@ export class Service {
         return this.http.post(`${this.BASE_URL}/StudentCourse`, data).toPromise();
     }
 
-    updateProfile(formData: FormData): Observable<any> {
+    getupdateProfile(formData: FormData): Observable<any> {
+        return this.http.post<any>(`${this.BASE_URL}/updateProfile`, formData);
+      }
+    getupdateStudent(formData: FormData): Observable<any> {
         return this.http.post<any>(`${this.BASE_URL}/updateProfile`, formData);
       }
 }
