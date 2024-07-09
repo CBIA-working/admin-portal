@@ -52,6 +52,7 @@ export class EditStudentsComponent implements OnInit {
   ];
   selectedFile: File | null = null; // Store the selected file
   isAvatarSelected: boolean = false; // Track if a predefined avatar is selected
+  fullName: string = '';
 
   constructor(
     private service: Service,
@@ -66,6 +67,18 @@ export class EditStudentsComponent implements OnInit {
       // Format the date of birth
       this.student.dob = this.datePipe.transform(this.student.dob, 'yyyy-MM-dd');
       this.originalStudent.dob = this.datePipe.transform(this.originalStudent.dob, 'yyyy-MM-dd');
+
+      // Set full name
+      this.fullName = `${this.student.fname} ${this.student.lname}`;
+    }
+  }
+
+  onFullNameChange(): void {
+    if (this.student) {
+      const [fname, ...lnameParts] = this.fullName.split(' ');
+      this.student.fname = fname;
+      this.student.lname = lnameParts.join(' '); // Join the rest of the name if there are spaces
+      this.checkForChanges();
     }
   }
 

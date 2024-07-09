@@ -8,8 +8,9 @@
              style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; margin-bottom: 10px;">
         <div style="display: flex; align-items: center;">
             <h2 style="text-align: center; color: #333;">{{ user.fname }} {{ user.lname }}</h2>
-            <button pButton type="button" icon="pi pi-pencil" class="p-button-rounded p-button-text" (click)="openAvatarDialog()"></button>
+            <p-button (click)="openAvatarDialog()" icon="pi pi-pencil" [text]="true" [plain]="true" class="p-button-rounded p-button-text" style="margin-left: 20px;"></p-button> <!-- Add margin-left -->
         </div>
+        
     </div>
     <!-- Tabbed profile information on the right -->
     <div style="flex: 1; padding-left: 20px;">
