@@ -108,6 +108,7 @@
         <td>{{ culturalEvent.signedUp }}</td>
         <td>
           <div class="button-container" style="display: flex; gap: 0.5rem;">
+            <p-button (click)="deleteCulturalEvent(culturalEvent)" icon="pi pi-trash" [text]="true" [plain]="true"></p-button>
             <p-button (click)="showEditDialog(culturalEvent)" icon="pi pi-pencil" [text]="true" [plain]="true"></p-button>
             <p-button (click)="op.toggle($event)" icon="pi pi-ellipsis-v"  [text]="true" [plain]="true"></p-button>
             <p-overlayPanel #op>
@@ -145,3 +146,4 @@
 
 
 </p-dialog>
+<p-confirmDialog></p-confirmDialog>

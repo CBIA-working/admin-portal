@@ -15,7 +15,7 @@ import { DownloadComponent } from '../download/download.component';
 import * as XLSX from 'xlsx';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { MessageService } from 'primeng/api';
+import { MessageService, ConfirmationService } from 'primeng/api'; // Import ConfirmationService
 import { ToastModule } from 'primeng/toast';
 import { NavigationService } from '../service/navigation.service';
 import { FormsModule } from '@angular/forms';
@@ -25,6 +25,7 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { DialogModule } from 'primeng/dialog';
 import { EditEventComponent } from './edit-events/edit-events.component';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @Component({
   selector: 'app-cultural-events',
@@ -32,10 +33,10 @@ import { EditEventComponent } from './edit-events/edit-events.component';
   imports: [
     TableModule, RouterModule, HttpClientModule, CommonModule, InputTextModule,
     TagModule, DropdownModule, MultiSelectModule, ProgressBarModule, ButtonModule,
-    DownloadComponent, ToastModule, FormsModule,OverlayPanelModule, InputGroupModule, 
-    InputGroupAddonModule, ChipsModule,DialogModule,EditEventComponent
+    DownloadComponent, ToastModule, FormsModule, OverlayPanelModule, InputGroupModule, 
+    InputGroupAddonModule, ChipsModule, DialogModule, EditEventComponent,ConfirmDialogModule
   ],
-  providers: [Service, MessageService],
+  providers: [Service, MessageService, ConfirmationService], // Add ConfirmationService here
   templateUrl: './cultural-events.component.html',
   styleUrls: ['./cultural-events.component.scss']
 })
@@ -52,6 +53,16 @@ export class CulturalEventsComponent implements OnInit, AfterViewInit {
   dialogVisible: boolean = false;
   currentUser: any = {};
 
+  constructor(
+    private route: ActivatedRoute,
+    private service: Service,
+    private messageService: MessageService,
+    private navigationService: NavigationService,
+    private router: Router,
+    private http: HttpClient,
+    private confirmationService: ConfirmationService // Inject ConfirmationService
+  ) {}
+
   showEditDialog(culturalEvent: CulturalEvent): void {
     this.selectedCulturalEvents = culturalEvent;
     this.dialogVisible = true;
@@ -67,6 +78,7 @@ export class CulturalEventsComponent implements OnInit, AfterViewInit {
     this.selectedCulturalEvent = null;
     this.dialogVisible = false;
   }
+
   exportHeaderMapping = {
     id: 'ID',
     eventName: 'Event Name',
@@ -76,19 +88,10 @@ export class CulturalEventsComponent implements OnInit, AfterViewInit {
     userId: 'User ID'
   };
 
-  constructor(
-    private route: ActivatedRoute,
-    private service: Service,
-    private messageService: MessageService,
-    private navigationService: NavigationService,
-    private router: Router,
-    private http: HttpClient
-  ) {}
-
   options = [
     { name: 'Students', key: 'managestudent' },
-
   ];
+
   navigateToMemberPage(option: { name: string, key: string }, id: string) {
     this.navigationService.setSelectedId(id);
     localStorage.setItem('refreshPage', 'true');
@@ -125,9 +128,37 @@ export class CulturalEventsComponent implements OnInit, AfterViewInit {
       this.loading = false;
     });
   }
-  
 
-  
+  deleteCulturalEvent(culturalEvent: CulturalEvent): void {
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to delete this cultural event?',
+      header: 'Confirm',
+      icon: 'pi pi-info-circle',
+      accept: () => {
+        this.service.deleteCulturalEvent(culturalEvent.id).subscribe(
+          () => {
+            this.culturalEvents = this.culturalEvents.filter(event => event.id !== culturalEvent.id);
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: 'Cultural event deleted successfully'
+            });
+          },
+          error => {
+            console.error('Error deleting cultural event', error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Failed to delete cultural event'
+            });
+          }
+        );
+      },
+      reject: () => {
+        // Optionally handle rejection (user clicks cancel)
+      }
+    });
+  }
 
   ngAfterViewInit() {
     if (this.downloadComponent) {
@@ -148,7 +179,7 @@ export class CulturalEventsComponent implements OnInit, AfterViewInit {
   enterSelectionMode() {
     this.downloadSelectedMode = true;
   }
-  
+
   exitSelectionMode() {
     this.downloadSelectedMode = false;
     this.selectedCulturalEvent = [];
@@ -198,7 +229,6 @@ export class CulturalEventsComponent implements OnInit, AfterViewInit {
     } else if (format === 'pdf') {
       const doc = new jsPDF();
   
-      // Set document properties
       doc.setProperties({
         title: `${filename}`,
         author: 'Your Name',
@@ -207,7 +237,6 @@ export class CulturalEventsComponent implements OnInit, AfterViewInit {
 
       doc.setFont('helvetica');
 
-      // Set margins
       const margin = {
         top: 20,
         left: 20,
@@ -246,7 +275,6 @@ export class CulturalEventsComponent implements OnInit, AfterViewInit {
     } else if (format === 'pdf') {
       const doc = new jsPDF();
   
-      // Set document properties
       doc.setProperties({
         title: `${filename}`,
         author: 'Your Name',
@@ -255,7 +283,6 @@ export class CulturalEventsComponent implements OnInit, AfterViewInit {
 
       doc.setFont('helvetica');
 
-      // Set margins
       const margin = {
         top: 20,
         left: 20,
@@ -282,16 +309,13 @@ export class CulturalEventsComponent implements OnInit, AfterViewInit {
       doc.save(`${filename}.pdf`);
     }
   }
+
   filterByUserId(userId: string) {
-    // Convert search parameter to number
     const userIdNumber = Number(userId);
-  
-    // Check if the conversion was successful and filter the events
     if (!isNaN(userIdNumber)) {
       this.culturalEvents = this.culturalEvents.filter(event => event.userId === userIdNumber);
     } else {
       console.warn('The provided userId is not a valid number.');
-      // Optionally, you could handle the case where userId is not valid, like showing an error message or resetting the data.
     }
-  }  
+  }
 }
