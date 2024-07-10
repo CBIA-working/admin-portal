@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
@@ -30,11 +30,11 @@ import { CulturalEvent } from '../../domain/schema';
   styleUrls: ['./edit-events.component.scss'],
   providers: [MessageService, Service, DatePipe]
 })
-export class EditEventComponent implements OnInit {
+export class EditEventComponent implements OnInit, OnChanges {
   @Input() culturalEvent: CulturalEvent | null = null;
   @Output() dialogClose: EventEmitter<CulturalEvent | null> = new EventEmitter<CulturalEvent | null>();
 
-  originalculturalEvent: CulturalEvent | null = null;
+  originalCulturalEvent: CulturalEvent | null = null;
   showSaveButton: boolean = false;
   saveSubscription: Subscription | null = null;
   selectedFile: File | null = null; // Store the selected file
@@ -42,37 +42,36 @@ export class EditEventComponent implements OnInit {
   constructor(
     private service: Service,
     private messageService: MessageService,
-    private datePipe: DatePipe  // Inject DatePipe
+    private datePipe: DatePipe,  // Inject DatePipe
+    private cdr: ChangeDetectorRef  // Inject ChangeDetectorRef for manual change detection
   ) { }
 
-  ngOnInit(): void {
-    if (this.culturalEvent && this.culturalEvent.date) {
-      // Assuming the date is in a common format like 'MM/DD/YYYY' or 'DD-MM-YYYY'
-      const parts = this.culturalEvent.date.split(/[-\/]/);  // This regex splits by both dash and slash
-      let formattedDate;
-      if (parts.length === 3) {
-        // Convert to 'YYYY-MM-DD'
-        if (this.culturalEvent.date.includes('/')) {
-          // Assuming 'MM/DD/YYYY'
-          formattedDate = `${parts[2]}-${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}`;
-        } else {
-          // Assuming 'DD-MM-YYYY'
-          formattedDate = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
-        }
-        this.culturalEvent.date = formattedDate;
-      }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.culturalEvent && changes.culturalEvent.currentValue) {
+        // Use DatePipe to format the date properly for the input field
+        const formattedDate = this.datePipe.transform(changes.culturalEvent.currentValue.date, 'yyyy-MM-dd');
+        this.culturalEvent = {
+            ...changes.culturalEvent.currentValue,
+            date: formattedDate
+        };
+        this.cdr.detectChanges();  // Manually trigger change detection to update the view
     }
   }
   
+  ngOnInit(): void {
+    if (this.culturalEvent) {
+      this.originalCulturalEvent = { ...this.culturalEvent };
+    }
+  }
 
   onFieldChange(): void {
     this.checkForChanges();
   }
 
   checkForChanges(): void {
-    if (this.culturalEvent && this.originalculturalEvent) {
+    if (this.culturalEvent && this.originalCulturalEvent) {
       const culturalEventCopy = { ...this.culturalEvent };
-      this.showSaveButton = JSON.stringify(culturalEventCopy) !== JSON.stringify(this.originalculturalEvent);
+      this.showSaveButton = JSON.stringify(culturalEventCopy) !== JSON.stringify(this.originalCulturalEvent);
     }
   }
 
