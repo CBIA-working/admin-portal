@@ -42,4 +42,7 @@ export class Service {
     getupdateStudent(formData: FormData): Observable<any> {
         return this.http.post<any>(`${this.BASE_URL}/updateProfile`, formData);
       }
+      getupdateEvents(params?: any): Observable<any>  {
+        return this.http.post<any>(`${this.BASE_URL}/updateCulturalEvents`,params);
+    }
 }

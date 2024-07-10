@@ -88,7 +88,11 @@
             <p-columnFilter type="text" field="signedUp" display="menu"></p-columnFilter>
           </div>
         </th>
-        <th style="min-width: 5%">Actions</th>
+        <th style="min-width: 10%">
+          <div class="flex align-items-center">
+            Actions
+          </div>
+        </th>
       </tr>
     </ng-template>
 
@@ -103,6 +107,8 @@
         <td>{{ culturalEvent.description }}</td>
         <td>{{ culturalEvent.signedUp }}</td>
         <td>
+          <div class="button-container" style="display: flex; gap: 0.5rem;">
+            <p-button (click)="showEditDialog(culturalEvent)" icon="pi pi-pencil" [text]="true" [plain]="true"></p-button>
             <p-button (click)="op.toggle($event)" icon="pi pi-ellipsis-v"  [text]="true" [plain]="true"></p-button>
             <p-overlayPanel #op>
               <div>
@@ -118,6 +124,7 @@
                 </ul>
               </div>
             </p-overlayPanel>
+          </div>
         </td>
       </tr>
     </ng-template>
@@ -129,3 +136,12 @@
     </ng-template>
   </p-table>
 </div>
+<p-dialog [(visible)]="dialogVisible" [modal]="true" [closable]="false" header="Edit cultural Event" [responsive]="true" [style]="{width: '60vw'}">
+  <app-edit-events 
+  *ngIf="selectedCulturalEvents" 
+  [culturalEvent]="selectedCulturalEvents" 
+  (dialogClose)="onDialogClose($event)">
+</app-edit-events>
+
+
+</p-dialog>

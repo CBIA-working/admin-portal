@@ -19,11 +19,12 @@ export interface Student {
 export interface CulturalEvent {
     id: number;
     eventName: string;
-    date: string;
+    date: string;  // Temporarily handle as string when dealing with forms
     description: string;
     signedUp: boolean;
     userId: number;
 }
+
 
 export interface Accomodation {
     id :number;     

@@ -1,0 +1,32 @@
+<p-toast></p-toast>
+<div style="background-color: #fff; box-shadow: 0 0 10px rgba(0,0,0,0.1); display: flex; padding: 20px;">
+    <div style="flex: 2; padding-left: 20px;">
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 10px;">
+            <div>
+                <strong>Event Name</strong>
+                <input pInputText type="text" [(ngModel)]="culturalEvent.eventName" (ngModelChange)="onFieldChange()" placeholder="Event Title"
+                       style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;">
+            </div>
+            <div>
+                <strong>Date:</strong>
+                <input pInputText type="text" [(ngModel)]="culturalEvent.date" (ngModelChange)="onFieldChange()" placeholder="Event Date"
+                     style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;">
+            </div>
+            <div>
+                <strong>Signed Up:</strong>
+                <input pInputText type="text" [(ngModel)]="culturalEvent.signedUp" (ngModelChange)="onFieldChange()" placeholder="Signed Up"
+                       style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;">
+            </div>
+            <div>
+                <strong>Description:</strong>
+                <textarea pInputTextarea rows="1" [(ngModel)]="culturalEvent.description" (ngModelChange)="onFieldChange()" placeholder="Description"
+                          style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;"></textarea>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p-footer style="display: flex; justify-content: flex-end; padding: 0 20px; margin-top: 20px;">
+    <button *ngIf="showSaveButton" pButton type="button" label="Save Changes" (click)="saveChanges()" style="margin-right: 10px;"></button>
+    <button pButton type="button" label="Close" icon="pi pi-times" (click)="closeDialog()" style="margin-right: 10px;"></button>
+</p-footer>

@@ -23,6 +23,8 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { ChipsModule } from 'primeng/chips';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { DialogModule } from 'primeng/dialog';
+import { EditEventComponent } from './edit-events/edit-events.component';
 
 @Component({
   selector: 'app-cultural-events',
@@ -31,7 +33,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
     TableModule, RouterModule, HttpClientModule, CommonModule, InputTextModule,
     TagModule, DropdownModule, MultiSelectModule, ProgressBarModule, ButtonModule,
     DownloadComponent, ToastModule, FormsModule,OverlayPanelModule, InputGroupModule, 
-    InputGroupAddonModule, ChipsModule
+    InputGroupAddonModule, ChipsModule,DialogModule,EditEventComponent
   ],
   providers: [Service, MessageService],
   templateUrl: './cultural-events.component.html',
@@ -43,10 +45,28 @@ export class CulturalEventsComponent implements OnInit, AfterViewInit {
 
   culturalEvents: CulturalEvent[] = [];
   selectedCulturalEvent: CulturalEvent[] = [];
+  selectedCulturalEvents: CulturalEvent | null = null;
   loading: boolean = true;
   searchValue: string | undefined;
   downloadSelectedMode: boolean = false;
+  dialogVisible: boolean = false;
+  currentUser: any = {};
 
+  showEditDialog(culturalEvent: CulturalEvent): void {
+    this.selectedCulturalEvents = culturalEvent;
+    this.dialogVisible = true;
+  }
+
+  onDialogClose(updatedCulturalEvent: CulturalEvent | null): void {
+    if (updatedCulturalEvent) {
+      const index = this.culturalEvents.findIndex(s => s.id === updatedCulturalEvent.id);
+      if (index !== -1) {
+        this.culturalEvents[index] = updatedCulturalEvent;
+      }
+    }
+    this.selectedCulturalEvent = null;
+    this.dialogVisible = false;
+  }
   exportHeaderMapping = {
     id: 'ID',
     eventName: 'Event Name',
