@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
@@ -15,7 +15,7 @@ import { DownloadComponent } from '../download/download.component';
 import * as XLSX from 'xlsx';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { NavigationService } from '../service/navigation.service';
 import { FormsModule } from '@angular/forms';
@@ -23,6 +23,9 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { ChipsModule } from 'primeng/chips';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { DialogModule } from 'primeng/dialog';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { EditAccomodationComponent } from './edit-accomodation/edit-accomodation.component';
 
 @Component({
   selector: 'app-accomodation',
@@ -31,9 +34,9 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
     TableModule, RouterModule, HttpClientModule, CommonModule, InputTextModule,
     TagModule, DropdownModule, MultiSelectModule, ProgressBarModule, ButtonModule,
     DownloadComponent, ToastModule, FormsModule,OverlayPanelModule, InputGroupModule, 
-    InputGroupAddonModule, ChipsModule
+    InputGroupAddonModule, ChipsModule,DialogModule, EditAccomodationComponent,ConfirmDialogModule
   ],
-  providers: [Service, MessageService],
+  providers: [Service, MessageService,ConfirmationService],
   templateUrl: './accomodation.component.html',
   styleUrl: './accomodation.component.scss'
 })
@@ -43,10 +46,69 @@ export class AccomodationComponent implements OnInit, AfterViewInit {
 
   accomodations: Accomodation[] = [];
   selectedAccomodation: Accomodation[] = [];
+  selectedAccomodations: Accomodation | null = null;
   loading: boolean = true;
   searchValue: string | undefined;
   downloadSelectedMode: boolean = false;
+  dialogVisible: boolean = false;
+  currentUser: any = {};
 
+  constructor(
+    private route: ActivatedRoute,
+    private service: Service,
+    private messageService: MessageService,
+    private navigationService: NavigationService,
+    private router: Router,
+    private http: HttpClient,
+    private confirmationService: ConfirmationService
+  ) {}
+
+  showEditDialog(accomodation: Accomodation): void {
+    this.selectedAccomodations = accomodation;
+    this.dialogVisible = true;
+  }
+  
+  onDialogClose(updatedAccomodation: Accomodation | null): void {
+    if (updatedAccomodation) {
+      const index = this.accomodations.findIndex(s => s.id === updatedAccomodation.id);
+      if (index !== -1) {
+        this.accomodations[index] = updatedAccomodation;
+      }
+    }
+    this.selectedAccomodations = null;
+    this.dialogVisible = false;
+  }
+
+  deleteAccomodation(accomodation: Accomodation): void {
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to delete this cultural event?',
+      header: 'Confirm',
+      icon: 'pi pi-info-circle',
+      accept: () => {
+        this.service.deleteAccomodation(accomodation.id).subscribe(
+          () => {
+            this.accomodations = this.accomodations.filter(event => event.id !== accomodation.id);
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: 'Cultural event deleted successfully'
+            });
+          },
+          error => {
+            console.error('Error deleting cultural event', error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Failed to delete cultural event'
+            });
+          }
+        );
+      },
+      reject: () => {
+        // Optionally handle rejection (user clicks cancel)
+      }
+    });
+  }
   exportHeaderMapping = {
     id: 'ID',
     roomNumber:'Room Number',
@@ -57,15 +119,6 @@ export class AccomodationComponent implements OnInit, AfterViewInit {
     roommateNames:'Roommate Names',
     userId:'User ID',
   };
-
-  constructor(
-    private route: ActivatedRoute,
-    private service: Service,
-    private messageService: MessageService,
-    private navigationService: NavigationService,
-    private router: Router
-  ) {}
-
   options = [
     { name: 'Students', key: 'managestudent' },
 

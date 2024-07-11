@@ -79,6 +79,37 @@ export class CulturalEventsComponent implements OnInit, AfterViewInit {
     this.dialogVisible = false;
   }
 
+  deleteCulturalEvent(culturalEvent: CulturalEvent): void {
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to delete this cultural event?',
+      header: 'Confirm',
+      icon: 'pi pi-info-circle',
+      accept: () => {
+        this.service.deleteCulturalEvent(culturalEvent.id).subscribe(
+          () => {
+            this.culturalEvents = this.culturalEvents.filter(event => event.id !== culturalEvent.id);
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: 'Cultural event deleted successfully'
+            });
+          },
+          error => {
+            console.error('Error deleting cultural event', error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Failed to delete cultural event'
+            });
+          }
+        );
+      },
+      reject: () => {
+        // Optionally handle rejection (user clicks cancel)
+      }
+    });
+  }
+
   exportHeaderMapping = {
     id: 'ID',
     eventName: 'Event Name',
@@ -129,36 +160,7 @@ export class CulturalEventsComponent implements OnInit, AfterViewInit {
     });
   }
 
-  deleteCulturalEvent(culturalEvent: CulturalEvent): void {
-    this.confirmationService.confirm({
-      message: 'Are you sure you want to delete this cultural event?',
-      header: 'Confirm',
-      icon: 'pi pi-info-circle',
-      accept: () => {
-        this.service.deleteCulturalEvent(culturalEvent.id).subscribe(
-          () => {
-            this.culturalEvents = this.culturalEvents.filter(event => event.id !== culturalEvent.id);
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Success',
-              detail: 'Cultural event deleted successfully'
-            });
-          },
-          error => {
-            console.error('Error deleting cultural event', error);
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: 'Failed to delete cultural event'
-            });
-          }
-        );
-      },
-      reject: () => {
-        // Optionally handle rejection (user clicks cancel)
-      }
-    });
-  }
+  
 
   ngAfterViewInit() {
     if (this.downloadComponent) {

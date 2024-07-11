@@ -1,0 +1,43 @@
+<p-toast></p-toast>
+<div style="background-color: #fff; box-shadow: 0 0 10px rgba(0,0,0,0.1); display: flex; padding: 20px;">
+    <div style="flex: 2; padding-left: 20px;">
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 10px;">
+            <div>
+                <strong>Room Number</strong>
+                <input pInputText type="text" [(ngModel)]="accomodation.roomNumber" (ngModelChange)="onFieldChange()" placeholder="Room Number"
+                       style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;">
+            </div>
+            <div>
+                <strong>Building Name :</strong>
+                <input pInputText type="text" [(ngModel)]="accomodation.buildingName" (ngModelChange)="onFieldChange()" placeholder="Building Name"
+                       style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;">
+            </div>
+            <div>
+                <strong>Floor:</strong>
+                <input pInputText type="text" [(ngModel)]="accomodation.floor" (ngModelChange)="onFieldChange()" placeholder="Floor"
+                          style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;">
+            </div>
+
+            <div>
+                <strong>Single Occupancy</strong>
+                <input pInputText type="text" [(ngModel)]="accomodation.isSingleOccupancy" (ngModelChange)="onFieldChange()" placeholder="Single Occupancy"
+                       style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;">
+            </div>
+            <div>
+                <strong>Number Of Roommates:</strong>
+                <input pInputText type="text" [(ngModel)]="accomodation.numberOfRoommates" (ngModelChange)="onFieldChange()" placeholder="Number Of Roommates"
+                       style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;">
+            </div>
+            <div>
+                <strong>Roommate Names:</strong>
+                <input pInputText type="text" [(ngModel)]="accomodation.roommateNames" (ngModelChange)="onFieldChange()" placeholder="Roommate Names"
+                          style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;">
+            </div>
+        </div>
+    </div>
+</div>
+
+<p-footer style="display: flex; justify-content: flex-end; padding: 0 20px; margin-top: 20px;">
+    <button *ngIf="showSaveButton" pButton type="button" label="Save Changes" (click)="saveChanges()" style="margin-right: 10px;"></button>
+    <button pButton type="button" label="Close" icon="pi pi-times" (click)="closeDialog()" style="margin-right: 10px;"></button>
+</p-footer>

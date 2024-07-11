@@ -8,47 +8,75 @@ export class Service {
 
     constructor(private http: HttpClient) {}
 
+
+//admin
+getupdateProfile(formData: FormData): Observable<any> {
+    return this.http.post<any>(`${this.BASE_URL}/updateProfile`, formData);
+  }
+
+
+
+//students 
     getStudents(params?: any): Promise<any> {
-        return this.http.get<any>(`${this.BASE_URL}/getUsers`, { params }).toPromise();
+        return this.http.get<any>(`${this.BASE_URL}/studentsAdmin`, { params }).toPromise();
     }
 
+    getupdateStudent(formData: FormData): Observable<any> {
+        return this.http.post<any>(`${this.BASE_URL}/updateStudents`, formData);
+      }
+      
+      deleteStudents(id: number): Observable<void> {
+        return this.http.delete<void>(`${this.BASE_URL}/deleteStudents`, { 
+          body: { id: id } 
+    });
+    }
+
+
+//culttural events
     getCultural(params?: any): Promise<any> {
         return this.http.get<any>(`${this.BASE_URL}/CulturalEventAdmin`, { params }).toPromise();
     }
-
-    getAccomodation(params?: any): Promise<any> {
-        return this.http.get<any>(`${this.BASE_URL}/AccomodationAdmin`, { params }).toPromise();
-    }
-
-    getCourse(params?: any): Promise<any> {
-        return this.http.get<any>(`${this.BASE_URL}/CoursesAdmin`, { params }).toPromise();
-    }
-
+    
     getStudentEvents(data: { Id: number, type: string }): Promise<any> {
         return this.http.post(`${this.BASE_URL}/StudentEvents`, data).toPromise();
     }
 
+    getupdateEvents(params?: any): Observable<any>  {
+        return this.http.post<any>(`${this.BASE_URL}/updateCulturalEvents`,params);
+    }
+    deleteCulturalEvent(eventId: number): Observable<void> {
+        return this.http.delete<void>(`${this.BASE_URL}/deleteCulturalEvents`, { 
+          body: { id: eventId } 
+    });
+    }
+
+    
+//accomodation
+    getAccomodation(params?: any): Promise<any> {
+        return this.http.get<any>(`${this.BASE_URL}/AccomodationAdmin`, { params }).toPromise();
+    }
     getStudentAccomodation(data: { Id: number, type: string }): Promise<any> {
         return this.http.post(`${this.BASE_URL}/StudentAccomodation`, data).toPromise();
+    }
+    getupdateAccomodation(params?: any): Observable<any>  {
+        return this.http.post<any>(`${this.BASE_URL}/updateAccomodation`,params);
+    }
+    deleteAccomodation(accomodationId : number): Observable<void> {
+        return this.http.delete<void>(`${this.BASE_URL}/deleteAccomodation`, { 
+          body: { id: accomodationId } 
+    });
+    }
+
+
+//course
+    getCourse(params?: any): Promise<any> {
+        return this.http.get<any>(`${this.BASE_URL}/CoursesAdmin`, { params }).toPromise();
     }
 
     getStudentCourse(data: { Id: number, type: string }): Promise<any> {
         return this.http.post(`${this.BASE_URL}/StudentCourse`, data).toPromise();
     }
 
-    getupdateProfile(formData: FormData): Observable<any> {
-        return this.http.post<any>(`${this.BASE_URL}/updateProfile`, formData);
-      }
-    getupdateStudent(formData: FormData): Observable<any> {
-        return this.http.post<any>(`${this.BASE_URL}/updateProfile`, formData);
-      }
-    getupdateEvents(params?: any): Observable<any>  {
-        return this.http.post<any>(`${this.BASE_URL}/updateCulturalEvents`,params);
-    }
 
-    deleteCulturalEvent(eventId: number): Observable<void> {
-        return this.http.delete<void>(`${this.BASE_URL}/deleteCulturalEvents`, { 
-          body: { id: eventId } 
-        });
-      }
+   
 }

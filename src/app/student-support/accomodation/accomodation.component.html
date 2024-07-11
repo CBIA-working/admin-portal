@@ -100,7 +100,11 @@
             <p-columnFilter type="text" field="roommateNames" display="menu"></p-columnFilter>
           </div>
         </th>
-        <th style="min-width: 5%">Actions</th>
+        <th style="min-width: 10%">
+          <div class="flex align-items-center">
+            Actions
+          </div>
+        </th>
       </tr>
     </ng-template>
 
@@ -119,7 +123,10 @@
             <!-- Show "It is Single Occupancy" if roommateNames is empty -->
             {{ accomodation.roommateNames ? accomodation.roommateNames : 'It is Single Occupancy' }}
           </td>
-        <td>
+          <td>
+            <div class="button-container" style="display: flex; gap: 0.5rem;">
+              <p-button (click)="deleteAccomodation(accomodation)" icon="pi pi-trash" [text]="true" [plain]="true"></p-button>
+              <p-button (click)="showEditDialog(accomodation)" icon="pi pi-pencil" [text]="true" [plain]="true"></p-button>
           <p-button (click)="op.toggle($event)" icon="pi pi-ellipsis-v"  [text]="true" [plain]="true"></p-button>
 
             <p-overlayPanel #op>
@@ -136,6 +143,7 @@
                 </ul>
               </div>
             </p-overlayPanel>
+            </div>
         </td>
     </ng-template>
 
@@ -146,3 +154,11 @@
     </ng-template>
   </p-table>
 </div>
+<p-dialog [(visible)]="dialogVisible" [modal]="true" [closable]="false" header="Edit Accomodations" [responsive]="true" [style]="{width: '60vw'}">
+  <app-edit-accomodation 
+    *ngIf="selectedAccomodations" 
+    [accomodation]="selectedAccomodations" 
+    (dialogClose)="onDialogClose($event)">
+  </app-edit-accomodation>
+</p-dialog>
+<p-confirmDialog></p-confirmDialog>
