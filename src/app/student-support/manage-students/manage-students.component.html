@@ -113,8 +113,8 @@
             <p-columnFilter type="text" field="emergencyContactRelation" display="menu"></p-columnFilter>
           </div>
         </th>
-        <th style="min-width: 10%">
-          <div class="flex align-items-center">
+        <th style="min-width: 10%; text-align: center;">
+          <div style="display: flex; justify-content: center; align-items: center;">
             Actions
           </div>
         </th>
@@ -143,6 +143,7 @@
         <td>
           <div class="button-container" style="display: flex; gap: 0.5rem;">
             <p-button (click)="showEditDialog(student)" icon="pi pi-user-plus" [text]="true" [plain]="true"></p-button>
+            <p-button (click)="deleteStudents(student)" icon="pi pi-trash" [text]="true" [plain]="true"></p-button>
             <p-button (click)="op.toggle($event)" icon="pi pi-ellipsis-v" [text]="true" [plain]="true"></p-button>
             <p-overlayPanel #op>
               <div>
@@ -174,4 +175,4 @@
   <app-edit-students *ngIf="selectedStudent" [student]="selectedStudent" (dialogClose)="onDialogClose($event)"></app-edit-students>
 
 </p-dialog>
-
+<p-confirmDialog></p-confirmDialog>

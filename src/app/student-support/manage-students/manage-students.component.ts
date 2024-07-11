@@ -16,7 +16,7 @@ import { DownloadComponent } from '../download/download.component';
 import * as XLSX from 'xlsx';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable'; 
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { BulkUploadComponent } from './bulk-upload/bulk-upload.component';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
@@ -26,6 +26,7 @@ import { ChipsModule } from 'primeng/chips';
 import { NavigationService } from '../service/navigation.service'; // Import the service
 import { EditStudentsComponent } from './edit-students/edit-students.component';
 import { DialogModule } from 'primeng/dialog';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 
 @Component({
@@ -36,9 +37,9 @@ import { DialogModule } from 'primeng/dialog';
     TagModule, DropdownModule, MultiSelectModule, ProgressBarModule, ButtonModule,
     AddStudentComponent, DownloadComponent, ToastModule, BulkUploadComponent, 
     OverlayPanelModule, InputGroupModule, InputGroupAddonModule, ChipsModule,
-    EditStudentsComponent,DialogModule
+    EditStudentsComponent,DialogModule,ConfirmDialogModule
   ],
-  providers: [Service, MessageService],
+  providers: [Service, MessageService,ConfirmationService],
   templateUrl: './manage-students.component.html',
   styleUrls: ['./manage-students.component.scss']
 })
@@ -72,7 +73,39 @@ export class ManageStudentsComponent implements OnInit, AfterViewInit {
     this.selectedStudent = null;
     this.dialogVisible = false;
   }
-
+  deleteStudents(student: Student): void {
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to delete this student?',
+      header: 'Confirm',
+      icon: 'pi pi-info-circle',
+      accept: () => {
+        this.service.deleteStudents(student.id).subscribe(
+          () => {
+            this.students = this.students.filter(s => s.id !== student.id); // Corrected from this.student to this.students
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: 'Student deleted successfully'
+            });
+          },
+          error => {
+            console.error('Error deleting student', error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Failed to delete student'
+            });
+          }
+        );
+      },
+      reject: () => {
+        // Optionally handle rejection (user clicks cancel)
+      }
+    });
+  }
+  
+  
+  
   exportHeaderMapping = {
     id: 'ID',
     fname: 'First Name',
@@ -95,7 +128,8 @@ export class ManageStudentsComponent implements OnInit, AfterViewInit {
     private router: Router,
     private navigationService: NavigationService,
     private route: ActivatedRoute,
-    private http: HttpClient
+    private http: HttpClient,
+    private confirmationService:ConfirmationService
   ) {}
 
   options = [
