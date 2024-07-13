@@ -1,7 +1,10 @@
 <p-toast></p-toast>
 <div class="card" style="margin: 0 20px; overflow: hidden;">
   <div class="mb-2 ml-auto z-0" style="display: flex; gap: 10px;">
-    <app-add-student *ngIf="!downloadSelectedMode"></app-add-student>
+    
+
+    <p-button icon="pi pi-plus" (click)="showAddDialog()" [raised]="true" severity="primary"></p-button>
+
     <app-download [class.hidden]="downloadSelectedMode" (downloadSelectedStudentsEvent)="downloadSelectedStudents()"></app-download>
     <p-button label="Download Selected Students" icon="pi pi-download" [raised]="true" severity="secondary" (click)="downloadSelectedStudents()" *ngIf="downloadSelectedMode"></p-button>
     <p-button icon="pi pi-times" severity="danger" [raised]="true" (click)="exitSelectionMode()" *ngIf="downloadSelectedMode"></p-button>
@@ -175,4 +178,8 @@
   <app-edit-students *ngIf="selectedStudent" [student]="selectedStudent" (dialogClose)="onDialogClose($event)"></app-edit-students>
 
 </p-dialog>
+    <!-- <app-add-student *ngIf="!downloadSelectedMode"></app-add-student> -->
+    <p-dialog [(visible)]="addDialogVisible" [modal]="true" [closable]="false" header="Add Student" [responsive]="true" [style]="{width: '70vw' ,height:'78vh'}">
+      <app-add-student (dialogClose)="onAddDialogClose()"></app-add-student>
+    </p-dialog>
 <p-confirmDialog></p-confirmDialog>

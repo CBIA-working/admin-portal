@@ -57,7 +57,16 @@ export class ManageStudentsComponent implements OnInit, AfterViewInit {
   defaultSortOrder: number = 1;
   dialogVisible: boolean = false;
   currentUser: any = {}; // Load current user data here
+  addDialogVisible: boolean = false;
 
+  showAddDialog() {
+    this.addDialogVisible = true;
+  }
+  
+  onAddDialogClose() {
+    this.addDialogVisible = false;
+    // Optionally refresh the student list here
+  }
   showEditDialog(student: Student): void {
     this.selectedStudent = student;
     this.dialogVisible = true;
@@ -138,12 +147,6 @@ export class ManageStudentsComponent implements OnInit, AfterViewInit {
     { name: 'Courses', key: 'courses' }
   ];
 
-  // navigateToMemberPage(option: { name: string, key: string }, studentId: string) {
-  //   this.navigationService.setSelectedId(studentId);
-  //   this.router.navigate([`/${option.key}/${studentId}`]);
-  // }
-
-// manage-students.component.ts
 
 navigateToMemberPage(option: { name: string, key: string }, studentId: string) {
   this.navigationService.setSelectedId(studentId);
@@ -255,6 +258,7 @@ fetchAllData() {
   mapCustomerToExportFormat(student: Student) {
     return {
       ID: student.id,
+      'Profile image':student.imageUrl,
       'First Name': student.fname,
       'Last Name': student.lname,
       Email: student.email,

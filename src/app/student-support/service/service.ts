@@ -24,9 +24,12 @@ getupdateProfile(formData: FormData): Observable<any> {
     getupdateStudent(formData: FormData): Observable<any> {
         return this.http.post<any>(`${this.BASE_URL}/updateStudents`, formData);
       }
-      deleteStudents(studentId: number): Observable<void> {
+    deleteStudents(studentId: number): Observable<void> {
         return this.http.request<void>('delete', `${this.BASE_URL}/deleteStudents`, 
             { body: { id: studentId } });
+      }
+      addStudent(formData: FormData): Observable<any> {
+        return this.http.post<any>(`${this.BASE_URL}/registerStudent`, formData);
       }
 
 //culttural events
