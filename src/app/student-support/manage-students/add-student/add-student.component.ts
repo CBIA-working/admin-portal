@@ -166,16 +166,26 @@ export class AddStudentComponent implements OnInit {
   }
 
   saveChanges(): void {
+    console.log('Save Changes button clicked'); // Debugging output
+
     if (!this.student) {
       console.error('No student data to save');
       this.messageService.add({ severity: 'error', summary: 'Save Error', detail: 'No student data to save.' });
       return;
     }
-  
+    
+    if (!this.validateForm()) {
+      console.error('Form validation failed', this.student); // Debugging output
+      this.messageService.add({ severity: 'error', summary: 'Validation Error', detail: 'Please fill out all required fields.' });
+      return;
+    }
+
+    console.log('Form is valid, proceeding to save', this.student); // Debugging output
+
     if (this.saveSubscription) {
       this.saveSubscription.unsubscribe();
     }
-  
+
     const formData: FormData = new FormData();
     formData.append('id', this.student.id.toString());
     formData.append('fname', this.student.fname);
@@ -183,16 +193,16 @@ export class AddStudentComponent implements OnInit {
     formData.append('gender', this.student.gender);
     formData.append('dob', this.student.dob);
     formData.append('email', this.student.email);
+    formData.append('password', this.student.password);
     formData.append('dietaryPreference', this.student.dietaryPreference);
     formData.append('emergencyContactName', this.student.emergencyContactName);
     formData.append('emergencyContactNumber', this.student.emergencyContactNumber);
     formData.append('emergencyContactRelation', this.student.emergencyContactRelation);
     formData.append('address', this.student.address);
-  
+
     if (this.selectedFile) {
       formData.append('image', this.selectedFile);
     } else if (this.isAvatarSelected) {
-      // Convert predefined avatar URL to a File object
       this.urlToFile(this.student.imageUrl, 'avatar.jpg', 'image/jpeg').then((file) => {
         formData.append('image', file);
         this.submitFormData(formData);  // Submit the form data
@@ -210,8 +220,9 @@ export class AddStudentComponent implements OnInit {
       .then(res => res.arrayBuffer())
       .then(buf => new File([buf], filename, { type: mimeType }));
   }
+
   private submitFormData(formData: FormData): void {
-    console.log('Attempting to submit form data...');  // Debugging output
+    console.log('Attempting to submit form data...', formData);  // Debugging output
     this.saveSubscription = this.service.addStudent(formData)
       .subscribe(response => {
         console.log('Profile added successfully:', response);  // Debugging output
@@ -223,7 +234,11 @@ export class AddStudentComponent implements OnInit {
         this.messageService.add({ severity: 'error', summary: 'Add Error', detail: 'Error adding the profile.' });
       });
   }
-  
+
+  private validateForm(): boolean {
+    if (!this.student) return false;
+    return !!this.student.fname && !!this.student.lname && !!this.student.gender && !!this.student.dob && !!this.student.email;
+  }
 
   onClose(): void {
     this.resetForm(); // Reset form when closing
