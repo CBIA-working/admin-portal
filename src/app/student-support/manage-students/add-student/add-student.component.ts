@@ -82,7 +82,7 @@ export class AddStudentComponent implements OnInit {
       emergencyContactNumber: '',
       emergencyContactRelation: '',
       address: '',
-      imageUrl: 'assets/avatar/1.jpg' // Default avatar path
+      imageUrl: 'assets/avatar/default.png' // Default avatar path
     };
     this.fullName = '';
     this.isAvatarSelected = false;
@@ -166,89 +166,64 @@ export class AddStudentComponent implements OnInit {
   }
 
   saveChanges(): void {
+    if (!this.student) {
+      console.error('No student data to save');
+      this.messageService.add({ severity: 'error', summary: 'Save Error', detail: 'No student data to save.' });
+      return;
+    }
+  
     if (this.saveSubscription) {
       this.saveSubscription.unsubscribe();
     }
-
-    if (this.student) {
-      const formData: FormData = new FormData();
-      formData.append('id', this.student.id.toString());
-      formData.append('fname', this.student.fname);
-      formData.append('lname', this.student.lname);
-      formData.append('gender', this.student.gender);
-      formData.append('dob', this.student.dob);
-      formData.append('email', this.student.email);
-      formData.append('dietaryPreference', this.student.dietaryPreference);
-      formData.append('emergencyContactName', this.student.emergencyContactName);
-      formData.append('emergencyContactNumber', this.student.emergencyContactNumber);
-      formData.append('emergencyContactRelation', this.student.emergencyContactRelation);
-      formData.append('address', this.student.address);
-
-      if (this.selectedFile) {
-        formData.append('image', this.selectedFile);
-      } else if (this.isAvatarSelected) {
-        this.urlToFile(this.student.imageUrl, 'avatar.jpg', 'image/jpeg').then((file) => {
-          formData.append('image', file);
-          this.submitFormData(formData);
-        }).catch(error => {
-          console.error('Error fetching URL:', error);
-          // Handle error or use default image
-          this.useDefaultImage(formData);
-        });
-        return;
-      } else {
-        // Append image URL if no image is selected
-        formData.append('imageUrl', this.student.imageUrl);
-      }
-
-      this.submitFormData(formData);
-    }
-  }
-
-  private urlToFile(url: string, filename: string, mimeType: string): Promise<File> {
-    console.log('Fetching URL:', url);  // Debug URL
-    return fetch(url)
-      .then(res => {
-        if (!res.ok) throw new Error(`Failed to fetch image: ${res.statusText}`);
-        return res.blob();
-      })
-      .then(blob => new File([blob], filename, { type: mimeType }))
-      .catch(error => {
-        console.error('Error fetching URL:', error);
-        throw error;
+  
+    const formData: FormData = new FormData();
+    formData.append('id', this.student.id.toString());
+    formData.append('fname', this.student.fname);
+    formData.append('lname', this.student.lname);
+    formData.append('gender', this.student.gender);
+    formData.append('dob', this.student.dob);
+    formData.append('email', this.student.email);
+    formData.append('dietaryPreference', this.student.dietaryPreference);
+    formData.append('emergencyContactName', this.student.emergencyContactName);
+    formData.append('emergencyContactNumber', this.student.emergencyContactNumber);
+    formData.append('emergencyContactRelation', this.student.emergencyContactRelation);
+    formData.append('address', this.student.address);
+  
+    if (this.selectedFile) {
+      formData.append('image', this.selectedFile);
+    } else if (this.isAvatarSelected) {
+      // Convert predefined avatar URL to a File object
+      this.urlToFile(this.student.imageUrl, 'avatar.jpg', 'image/jpeg').then((file) => {
+        formData.append('image', file);
+        this.submitFormData(formData);  // Submit the form data
       });
-  }
+      return;  // Return early to wait for the file conversion
+    } else {
+      formData.append('imageUrl', this.student.imageUrl);
+    }
 
-  private useDefaultImage(formData: FormData): void {
-    // Use base64 representation for default avatar
-    const base64Image = 'data:image/jpeg;base64,[BASE64_STRING]';  // Replace [BASE64_STRING] with actual base64 string
-    const file = this.base64ToFile(base64Image, 'default-avatar.jpg', 'image/jpeg');
-    formData.append('image', file);
     this.submitFormData(formData);
   }
 
-  private base64ToFile(base64: string, filename: string, mimeType: string): File {
-    const byteCharacters = atob(base64);
-    const byteNumbers = new Array(byteCharacters.length);
-    for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.charCodeAt(i);
-    }
-    const byteArray = new Uint8Array(byteNumbers);
-    return new File([byteArray], filename, { type: mimeType });
+  private urlToFile(url: string, filename: string, mimeType: string): Promise<File> {
+    return fetch(url)
+      .then(res => res.arrayBuffer())
+      .then(buf => new File([buf], filename, { type: mimeType }));
   }
-
   private submitFormData(formData: FormData): void {
+    console.log('Attempting to submit form data...');  // Debugging output
     this.saveSubscription = this.service.addStudent(formData)
       .subscribe(response => {
-        console.log('Profile added successfully:', response);
+        console.log('Profile added successfully:', response);  // Debugging output
         this.messageService.add({ severity: 'success', summary: 'Add Success', detail: 'Profile added successfully.' });
         this.dialogClose.emit(this.student);
         this.resetForm();
       }, error => {
-        console.error('Error adding profile:', error);
+        console.error('Error adding profile:', error);  // More detailed error logging
         this.messageService.add({ severity: 'error', summary: 'Add Error', detail: 'Error adding the profile.' });
       });
   }
+  
 
   onClose(): void {
     this.resetForm(); // Reset form when closing
