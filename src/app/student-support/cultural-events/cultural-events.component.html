@@ -109,6 +109,7 @@
         <td>
           <div class="button-container" style="display: flex; gap: 0.5rem;">
             <p-button (click)="showEditDialog(culturalEvent)" icon="pi pi-pencil" [text]="true" [plain]="true"></p-button>
+            <p-button (click)="showAssignDialog(culturalEvent.id)" icon="pi pi-user-plus" [text]="true" [plain]="true"></p-button>
             <p-button (click)="deleteCulturalEvent(culturalEvent)" icon="pi pi-trash" [text]="true" [plain]="true"></p-button>
             <p-button (click)="op.toggle($event)" icon="pi pi-ellipsis-v"  [text]="true" [plain]="true"></p-button>
             <p-overlayPanel #op>
@@ -126,6 +127,7 @@
               </div>
             </p-overlayPanel>
           </div>
+          
         </td>
       </tr>
     </ng-template>
@@ -143,7 +145,9 @@
   [culturalEvent]="selectedCulturalEvents" 
   (dialogClose)="onDialogClose($event)">
 </app-edit-events>
-
-
 </p-dialog>
+<p-dialog [(visible)]="assignDialogVisible" [modal]="true" header="Assign Students"  [responsive]="true" [style]="{'width': '50vw'}">
+  <app-assign-events [eventId]="selectedEventId"(dialogClose)="onDialogClose($event)"></app-assign-events>
+</p-dialog>
+
 <p-confirmDialog></p-confirmDialog>

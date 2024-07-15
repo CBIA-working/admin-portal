@@ -49,7 +49,9 @@ getupdateProfile(formData: FormData): Observable<any> {
           body: { id: eventId } 
     });
     }
-
+    assignEvent(studentId: number, eventId: number): Observable<any> {
+        return this.http.post<any>(`${this.BASE_URL}/assignEvent`, { studentId, eventId });
+    }
     
 //accomodation
     getAccomodation(params?: any): Promise<any> {

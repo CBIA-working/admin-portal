@@ -26,6 +26,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { DialogModule } from 'primeng/dialog';
 import { EditEventComponent } from './edit-events/edit-events.component';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { AssignEventsComponent } from "./assign-events/assign-events.component";
 
 @Component({
   selector: 'app-cultural-events',
@@ -33,9 +34,10 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
   imports: [
     TableModule, RouterModule, HttpClientModule, CommonModule, InputTextModule,
     TagModule, DropdownModule, MultiSelectModule, ProgressBarModule, ButtonModule,
-    DownloadComponent, ToastModule, FormsModule, OverlayPanelModule, InputGroupModule, 
-    InputGroupAddonModule, ChipsModule, DialogModule, EditEventComponent,ConfirmDialogModule
-  ],
+    DownloadComponent, ToastModule, FormsModule, OverlayPanelModule, InputGroupModule,
+    InputGroupAddonModule, ChipsModule, DialogModule, EditEventComponent, ConfirmDialogModule,
+    AssignEventsComponent
+],
   providers: [Service, MessageService, ConfirmationService], // Add ConfirmationService here
   templateUrl: './cultural-events.component.html',
   styleUrls: ['./cultural-events.component.scss']
@@ -52,6 +54,8 @@ export class CulturalEventsComponent implements OnInit, AfterViewInit {
   downloadSelectedMode: boolean = false;
   dialogVisible: boolean = false;
   currentUser: any = {};
+  assignDialogVisible: boolean = false;
+  selectedEventId: number | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -67,6 +71,16 @@ export class CulturalEventsComponent implements OnInit, AfterViewInit {
     this.selectedCulturalEvents = culturalEvent;
     this.dialogVisible = true;
   }
+  showAssignDialog(eventId: number) {
+    this.selectedEventId = eventId;
+    this.assignDialogVisible = true;
+  }
+  
+  onAssignDialogClose() {
+    this.selectedEventId = null;
+    this.assignDialogVisible = false;
+  }
+  
 
   onDialogClose(updatedCulturalEvent: CulturalEvent | null): void {
     if (updatedCulturalEvent) {

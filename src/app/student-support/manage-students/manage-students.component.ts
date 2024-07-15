@@ -83,6 +83,9 @@ export class ManageStudentsComponent implements OnInit, AfterViewInit {
     this.dialogVisible = false;
   }
   deleteStudents(student: Student): void {
+    // Save the current page index
+    const currentPage = this.table.first / this.table.rows;
+    
     this.confirmationService.confirm({
       message: 'Are you sure you want to delete this student?',
       header: 'Confirm',
@@ -96,6 +99,9 @@ export class ManageStudentsComponent implements OnInit, AfterViewInit {
               summary: 'Success',
               detail: 'Student deleted successfully'
             });
+            
+            // Restore the page index
+            this.table.first = currentPage * this.table.rows;
           },
           error => {
             console.error('Error deleting student', error);
@@ -112,7 +118,6 @@ export class ManageStudentsComponent implements OnInit, AfterViewInit {
       }
     });
   }
-  
   
   
   exportHeaderMapping = {
