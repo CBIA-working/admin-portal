@@ -18,6 +18,9 @@
         <th style="width: 30%; padding: 0.5rem; text-align: left;">
           <p-skeleton shape="rectangle" width="100%" height="2rem"></p-skeleton>
         </th>
+        <th style="width: 15%; padding: 0.5rem; text-align: center;">
+          <p-skeleton shape="circle" width="50px" height="50px"></p-skeleton>
+        </th>
       </tr>
     </thead>
     <tbody>
@@ -30,6 +33,9 @@
         </td>
         <td style="padding: 0.5rem; text-align: left;">
           <p-skeleton shape="rectangle" width="100%" height="2rem"></p-skeleton>
+        </td>
+        <td style="padding: 0.5rem; text-align: center;">
+          <p-skeleton shape="circle" width="50px" height="50px"></p-skeleton>
         </td>
       </tr>
     </tbody>
@@ -51,6 +57,7 @@
         <th style="width: 10%;">ID</th>
         <th style="width: 15%;">Image</th>
         <th style="width: 30%;">Name</th>
+        <th style="width: 15%; text-align: center;">Actions</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-student>
@@ -60,11 +67,19 @@
           <img [src]="student.imageUrl" alt="Student Image" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;" />
         </td>
         <td>{{ student.fname }} {{ student.lname }}</td>
+        <td style="text-align: center;">
+          <p-button
+            icon="pi pi-trash"
+            (click)="deleteAssignment(student.id)"
+            [rounded]="true" severity="danger"
+            style="display: inline-block;"
+          ></p-button>
+        </td>
       </tr>
     </ng-template>
     <ng-template pTemplate="footer">
       <tr>
-        <td colspan="3" style="text-align: right; padding-top: 10px;">
+        <td colspan="4" style="text-align: right; padding-top: 10px;">
           <p-dropdown
             [options]="studentsList"
             [(ngModel)]="selectedStudentId"

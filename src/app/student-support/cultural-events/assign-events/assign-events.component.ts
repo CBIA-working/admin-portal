@@ -86,9 +86,6 @@ export class AssignEventsComponent implements OnChanges {
   }
 
   assignEventToStudent() {
-    console.log('Assign Event Button Clicked');
-    console.log('Selected Student ID:', this.selectedStudentId);
-    console.log('Event ID:', this.eventId);
 
     if (this.selectedStudentId && this.eventId) {
       this.service.assignEvent(this.selectedStudentId, this.eventId).subscribe(
@@ -118,7 +115,9 @@ export class AssignEventsComponent implements OnChanges {
   closeDialog(): void {
     this.dialogClose.emit(null);
     this.assignDialogVisible = false;
+    this.selectedStudentId = null; // Reset the selected student ID
   }
+  
 
   trackById(index: number, student: any): number {
     return student.id;
@@ -128,4 +127,32 @@ export class AssignEventsComponent implements OnChanges {
     const student = this.studentsList.find(s => s.id === studentId);
     return student ? student.name : '';
   }
+
+  deleteAssignment(studentId: number) {
+    if (this.eventId) {
+      this.service.deleteAssignment(studentId, this.eventId).subscribe(
+        (response) => {
+          console.log('Assignment deleted successfully', response);
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Deletion Successful',
+            detail: `Removed assignment of cultural event: ${this.eventId} from student id: ${studentId}`
+          });
+          this.fetchStudentDetails(); // Refresh student details to reflect changes
+        },
+        (error) => {
+          console.error('Error deleting assignment', error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Deletion Failed',
+            detail: 'There was an error deleting the assignment. Please try again.'
+          });
+        }
+      );
+    } else {
+      console.warn('Event ID is missing.');
+    }
+  }
+  
+  
 }

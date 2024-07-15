@@ -52,7 +52,11 @@ getupdateProfile(formData: FormData): Observable<any> {
     assignEvent(studentId: number, eventId: number): Observable<any> {
         return this.http.post<any>(`${this.BASE_URL}/assignEvent`, { studentId, eventId });
     }
-    
+    deleteAssignment(studentId: number, eventId: number): Observable<any> {
+        return this.http.request('DELETE', `${this.BASE_URL}/deleteAssign`, {
+          body: { studentId, eventId }
+        });
+      }
 //accomodation
     getAccomodation(params?: any): Promise<any> {
         return this.http.get<any>(`${this.BASE_URL}/AccomodationAdmin`, { params }).toPromise();
