@@ -1,12 +1,47 @@
 <p-toast></p-toast>
+
 <div style="margin-bottom: 10px;">
   <strong>Event ID:</strong> {{ eventId }}
 </div>
-<div *ngIf="studentDetails && studentDetails.length">
+
+<div *ngIf="loading; else content">
+  <!-- Skeleton Table -->
+  <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+    <thead>
+      <tr>
+        <th style="width: 10%; padding: 0.5rem; text-align: left;">
+          <p-skeleton shape="rectangle" width="100%" height="2rem"></p-skeleton>
+        </th>
+        <th style="width: 15%; padding: 0.5rem; text-align: left;">
+          <p-skeleton shape="circle" width="50px" height="50px"></p-skeleton>
+        </th>
+        <th style="width: 30%; padding: 0.5rem; text-align: left;">
+          <p-skeleton shape="rectangle" width="100%" height="2rem"></p-skeleton>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let i of [1, 2, 3, 4, 5]">
+        <td style="padding: 0.5rem; text-align: left;">
+          <p-skeleton shape="rectangle" width="100%" height="2rem"></p-skeleton>
+        </td>
+        <td style="padding: 0.5rem; text-align: left;">
+          <p-skeleton shape="circle" width="50px" height="50px"></p-skeleton>
+        </td>
+        <td style="padding: 0.5rem; text-align: left;">
+          <p-skeleton shape="rectangle" width="100%" height="2rem"></p-skeleton>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<ng-template #content>
+  <!-- Actual p-table -->
   <p-table 
     [value]="studentDetails" 
     [paginator]="true" 
-    [rows]="10" 
+    [rows]="2" 
     [responsive]="true" 
     style="width: 100%; margin-top: 10px;"
     [trackBy]="trackById"
@@ -52,7 +87,7 @@
       </tr>
     </ng-template>
   </p-table>
-</div>
-<div style="text-align: right; padding-top: 10px;">
-  <button pButton type="button" label="Close" icon="pi pi-times" (click)="closeDialog()" style="margin-right: 10px;"></button>
-</div>
+  <div style="text-align: right; padding-top: 10px;">
+    <button pButton type="button" label="Close" icon="pi pi-times" (click)="closeDialog()" style="margin-right: 10px;"></button>
+  </div>
+</ng-template>

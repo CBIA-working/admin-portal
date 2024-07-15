@@ -8,11 +8,12 @@ import { FormsModule } from '@angular/forms';
 import { Service } from '../../service/service'; // Import your service
 import { MessageService } from 'primeng/api'; // Import ToastModule and MessageService
 import { ToastModule } from 'primeng/toast';
+import { SkeletonModule } from 'primeng/skeleton';
 
 @Component({
   selector: 'app-assign-events',
   standalone: true,
-  imports: [CommonModule, DialogModule, TableModule, ButtonModule, DropdownModule, FormsModule, ToastModule],
+  imports: [CommonModule, DialogModule, TableModule, ButtonModule, DropdownModule, FormsModule, ToastModule, SkeletonModule],
   templateUrl: './assign-events.component.html',
   styleUrls: ['./assign-events.component.scss'],
   providers: [MessageService] // Provide MessageService in the component
@@ -24,7 +25,9 @@ export class AssignEventsComponent implements OnChanges {
   studentDetails: any[] = [];
   studentsList: any[] = []; // To hold the list of students for dropdown
   selectedStudentId: number | null = null;
+  skeletonRows = Array(10).fill(0);
 
+  loading: boolean = false;
   constructor(private service: Service, private messageService: MessageService, private cdr: ChangeDetectorRef) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -34,21 +37,21 @@ export class AssignEventsComponent implements OnChanges {
   }
 
   async openDialog() {
-    console.log('Opening Assign Event Dialog');
-    console.log('Event ID:', this.eventId);
-
     if (this.eventId) {
+      this.loading = true;
       try {
         await this.fetchStudentDetails();
         await this.fetchStudentsList();
         this.cdr.detectChanges(); // Ensure change detection to reflect dialog state
         this.assignDialogVisible = true;
-        console.log('Dialog is now visible');
       } catch (error) {
         console.error('Error opening dialog', error);
+      } finally {
+        this.loading = false;
       }
     }
   }
+  
 
   async fetchStudentDetails() {
     try {
@@ -69,11 +72,14 @@ export class AssignEventsComponent implements OnChanges {
   async fetchStudentsList() {
     try {
       const data = await this.service.getStudents();
-      this.studentsList = data.map((student: any) => ({
-        id: student.id,
-        name: `${student.fname} ${student.lname}`
-      }));
-      console.log('Students list fetched:', this.studentsList);
+      const assignedStudentIds = this.studentDetails.map((student: any) => student.id);
+      this.studentsList = data
+        .filter((student: any) => !assignedStudentIds.includes(student.id))
+        .map((student: any) => ({
+          id: student.id,
+          name: `${student.id}: ${student.fname} ${student.lname}`
+        }));
+      console.log('Filtered students list fetched:', this.studentsList);
     } catch (error) {
       console.error('Error fetching students list', error);
     }
