@@ -71,16 +71,16 @@ export class CulturalEventsComponent implements OnInit, AfterViewInit {
     this.selectedCulturalEvents = culturalEvent;
     this.dialogVisible = true;
   }
-  showAssignDialog(eventId: number) {
+ showAssignDialog(eventId: number) {
     this.selectedEventId = eventId;
     this.assignDialogVisible = true;
   }
-  
+
   onAssignDialogClose() {
     this.selectedEventId = null;
     this.assignDialogVisible = false;
   }
-  
+
 
   onDialogClose(updatedCulturalEvent: CulturalEvent | null): void {
     if (updatedCulturalEvent) {

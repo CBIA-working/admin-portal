@@ -146,8 +146,9 @@
   (dialogClose)="onDialogClose($event)">
 </app-edit-events>
 </p-dialog>
-<p-dialog [(visible)]="assignDialogVisible" [modal]="true" header="Assign Students"  [responsive]="true" [style]="{'width': '50vw'}">
-  <app-assign-events [eventId]="selectedEventId"(dialogClose)="onDialogClose($event)"></app-assign-events>
+<p-dialog header="Assign Event" [(visible)]="assignDialogVisible" [modal]="true" [style]="{'width': '50vw'}" [closable]="false">
+  <app-assign-events [eventId]="selectedEventId" (dialogClose)="onAssignDialogClose()"></app-assign-events>
 </p-dialog>
+
 
 <p-confirmDialog></p-confirmDialog>
