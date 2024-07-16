@@ -82,15 +82,19 @@ export class AddEventsComponent implements OnInit {
         ...this.originalEvent,
         ...this.eventForm.value
       };
-
+  
       this.service.addEvent(updatedEvent).subscribe({
         next: (response) => {
           this.messageService.add({ severity: 'success', summary: 'Event added', detail: 'Event has been successfully added.' });
-          this.dialogClose.emit(updatedEvent);
+          
+          // Close the dialog after a delay
+          setTimeout(() => {
+            this.dialogClose.emit(updatedEvent);
+          }, 2000); // Adjust the delay time as needed (2000 ms = 2 seconds)
         },
         error: (error) => {
           console.error('Error adding event:', error);
-
+  
           let errorMessage = 'Failed to add event. Please try again later.';
           if (error.error) {
             if (error.error.message) {
@@ -101,7 +105,7 @@ export class AddEventsComponent implements OnInit {
           } else if (error.status === 0) {
             errorMessage = 'Network error. Please check your connection.';
           }
-
+  
           this.messageService.add({ severity: 'error', summary: 'Error', detail: errorMessage });
         }
       });
@@ -109,6 +113,7 @@ export class AddEventsComponent implements OnInit {
       this.eventForm.markAllAsTouched();
     }
   }
+  
 
   onClose(): void {
     this.dialogClose.emit(null);

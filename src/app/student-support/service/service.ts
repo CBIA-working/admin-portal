@@ -78,7 +78,7 @@ getupdateProfile(formData: FormData): Observable<any> {
     }
     addAccomodation(accomodation: Accomodation): Observable<any> {
         return this.http.post<any>(`${this.BASE_URL}/addAccomodation`, accomodation);
-    }
+      }      
     assignAccomodation(studentId: number, accomodationId: number): Observable<any> {
         return this.http.post<any>(`${this.BASE_URL}/assignAccomodation`, { studentId, accomodationId });
     }
