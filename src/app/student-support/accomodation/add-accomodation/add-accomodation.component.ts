@@ -60,7 +60,6 @@ export class AddAccomodationComponent implements OnInit {
       isSingleOccupancy: [false, Validators.required],
       numberOfRoommates: ['', Validators.required],
       roommateNames: ['', Validators.required],
-      userId: ['', Validators.required]
     });
   }
 
@@ -73,7 +72,6 @@ export class AddAccomodationComponent implements OnInit {
         isSingleOccupancy: this.accomodation.isSingleOccupancy,
         numberOfRoommates: this.accomodation.numberOfRoommates,
         roommateNames: this.accomodation.roommateNames,
-        userId: this.accomodation.userId
       });
     } else {
       this.accomodationForm.reset({ isSingleOccupancy: false });
@@ -87,18 +85,16 @@ export class AddAccomodationComponent implements OnInit {
         ...this.originalAccomodation,
         ...this.accomodationForm.value
       };
-
+  
       this.service.addAccomodation(updatedAccomodation).subscribe({
         next: (response) => {
           this.messageService.add({ severity: 'success', summary: 'Accomodation added', detail: 'Accomodation has been successfully added.' });
-          
           setTimeout(() => {
             this.dialogClose.emit(updatedAccomodation);
-          }, 2000); // Adjust the delay time as needed (2000 ms = 2 seconds)
+          }, 2000);
         },
         error: (error) => {
           console.error('Error adding accomodation:', error);
-
           let errorMessage = 'Failed to add accomodation. Please try again later.';
           if (error.error) {
             if (error.error.message) {
@@ -109,7 +105,6 @@ export class AddAccomodationComponent implements OnInit {
           } else if (error.status === 0) {
             errorMessage = 'Network error. Please check your connection.';
           }
-
           this.messageService.add({ severity: 'error', summary: 'Error', detail: errorMessage });
         }
       });
@@ -117,8 +112,10 @@ export class AddAccomodationComponent implements OnInit {
       this.accomodationForm.markAllAsTouched();
     }
   }
-
+  
   onClose(): void {
     this.dialogClose.emit(null);
+    this.resetForm(); // Correctly call the resetForm method
   }
+  
 }

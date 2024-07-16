@@ -117,5 +117,7 @@ export class AddEventsComponent implements OnInit {
 
   onClose(): void {
     this.dialogClose.emit(null);
+    this.resetForm(); // Correctly call the resetForm method
   }
+  
 }
