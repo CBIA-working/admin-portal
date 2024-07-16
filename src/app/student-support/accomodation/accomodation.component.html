@@ -1,6 +1,8 @@
 <p-toast></p-toast>
 <div class="card" style="margin: 0 20px; overflow: hidden;">
   <div class="mb-2 ml-auto z-0" style="display: flex; gap: 10px;">
+    <p-button icon="pi pi-plus" (click)="showAddDialog()" [raised]="true" severity="primary"></p-button>
+
     <app-download [class.hidden]="downloadSelectedMode" (downloadSelectedStudentsEvent)="downloadSelectedStudents()"></app-download>
     <p-button 
       label="Download Selected Students" 
@@ -126,6 +128,7 @@
           <td>
             <div class="button-container" style="display: flex; gap: 0.5rem;">
               <p-button (click)="showEditDialog(accomodation)" icon="pi pi-pencil" [text]="true" [plain]="true"></p-button>
+              <p-button (click)="showAssignDialog(accomodation.id)" icon="pi pi-user-plus" [text]="true" [plain]="true"></p-button>
               <p-button (click)="deleteAccomodation(accomodation)" icon="pi pi-trash" [text]="true" [plain]="true"></p-button>
           <p-button (click)="op.toggle($event)" icon="pi pi-ellipsis-v"  [text]="true" [plain]="true"></p-button>
 
@@ -161,4 +164,12 @@
     (dialogClose)="onDialogClose($event)">
   </app-edit-accomodation>
 </p-dialog>
+<p-dialog header="Assign Event" [(visible)]="assignDialogVisible" [modal]="true" [style]="{'width': '50vw'}" [closable]="false">
+  <app-assign-accomodation [accomodationId]="selectedAccomodationId" (dialogClose)="onAssignDialogClose()"></app-assign-accomodation>
+</p-dialog>
+
+  <!-- <app-add-student *ngIf="!downloadSelectedMode"></app-add-student> -->
+  <p-dialog [(visible)]="addDialogVisible" [modal]="true" [closable]="false" header="Add Event" [responsive]="true" [style]="{width: '60vw' ,height:'68vh'}">
+    <app-add-accomodation (dialogClose)="onAddDialogClose()"></app-add-accomodation>
+  </p-dialog>
 <p-confirmDialog></p-confirmDialog>

@@ -76,11 +76,7 @@ export class CulturalEventsComponent implements OnInit, AfterViewInit {
     this.addDialogVisible = false;
     // Optionally refresh the student list here
   }
-  showEditDialog(culturalEvent: CulturalEvent): void {
-    this.selectedCulturalEvents = culturalEvent;
-    this.dialogVisible = true;
-  }
- showAssignDialog(eventId: number) {
+  showAssignDialog(eventId: number) {
     this.selectedEventId = eventId;
     this.assignDialogVisible = true;
   }
@@ -89,8 +85,10 @@ export class CulturalEventsComponent implements OnInit, AfterViewInit {
     this.selectedEventId = null;
     this.assignDialogVisible = false;
   }
-
-
+  showEditDialog(culturalEvent: CulturalEvent): void {
+    this.selectedCulturalEvents = culturalEvent;
+    this.dialogVisible = true;
+  }
   onDialogClose(updatedCulturalEvent: CulturalEvent | null): void {
     if (updatedCulturalEvent) {
       const index = this.culturalEvents.findIndex(s => s.id === updatedCulturalEvent.id);

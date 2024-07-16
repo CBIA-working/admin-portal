@@ -24,8 +24,10 @@ import { ChipsModule } from 'primeng/chips';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { DialogModule } from 'primeng/dialog';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { EditAccomodationComponent } from './edit-accomodation/edit-accomodation.component';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { AssignAccomodationComponent } from './assign-accomodation/assign-accomodation.component';
+import { AddAccomodationComponent } from './add-accomodation/add-accomodation.component';
 
 @Component({
   selector: 'app-accomodation',
@@ -34,7 +36,8 @@ import { EditAccomodationComponent } from './edit-accomodation/edit-accomodation
     TableModule, RouterModule, HttpClientModule, CommonModule, InputTextModule,
     TagModule, DropdownModule, MultiSelectModule, ProgressBarModule, ButtonModule,
     DownloadComponent, ToastModule, FormsModule,OverlayPanelModule, InputGroupModule, 
-    InputGroupAddonModule, ChipsModule,DialogModule, EditAccomodationComponent,ConfirmDialogModule
+    InputGroupAddonModule, ChipsModule,DialogModule, EditAccomodationComponent,ConfirmDialogModule,
+    AssignAccomodationComponent,AddAccomodationComponent
   ],
   providers: [Service, MessageService,ConfirmationService],
   templateUrl: './accomodation.component.html',
@@ -52,7 +55,10 @@ export class AccomodationComponent implements OnInit, AfterViewInit {
   downloadSelectedMode: boolean = false;
   dialogVisible: boolean = false;
   currentUser: any = {};
-
+  assignDialogVisible: boolean = false;
+  selectedAccomodationId: number | null = null;
+  addDialogVisible: boolean = false;
+  
   constructor(
     private route: ActivatedRoute,
     private service: Service,
@@ -62,7 +68,22 @@ export class AccomodationComponent implements OnInit, AfterViewInit {
     private http: HttpClient,
     private confirmationService: ConfirmationService
   ) {}
+  showAddDialog() {
+    this.addDialogVisible = true;
+  }
+  onAddDialogClose() {
+    this.addDialogVisible = false;
+    // Optionally refresh the student list here
+  }
+  showAssignDialog(accomodationId: number) {
+    this.selectedAccomodationId = accomodationId;
+    this.assignDialogVisible = true;
+  }
 
+  onAssignDialogClose() {
+    this.selectedAccomodationId = null;
+    this.assignDialogVisible = false;
+  }
   showEditDialog(accomodation: Accomodation): void {
     this.selectedAccomodations = accomodation;
     this.dialogVisible = true;

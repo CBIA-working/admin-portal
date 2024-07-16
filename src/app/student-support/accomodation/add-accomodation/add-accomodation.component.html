@@ -1,0 +1,76 @@
+<p-toast></p-toast>
+
+<div style="background-color: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 10px; border-radius: 8px;">
+    <!-- Accommodations Information -->
+    <div style="padding-left: 20px;">
+        <p-tabView>
+            <p-tabPanel header="Accommodations Details">
+                <form [formGroup]="accomodationForm" (ngSubmit)="saveChanges()">
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; padding: 10px;">
+                        <div>
+                            <label for="roomNumber" style="display: block; margin-bottom: 8px; font-weight: bold;">Room Number:</label>
+                            <input id="roomNumber" pInputText type="text" formControlName="roomNumber" placeholder="Room Number" 
+                                   style="border: 1px solid #ccc; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box;">
+                            <p-message *ngIf="accomodationForm.get('roomNumber')?.invalid && accomodationForm.get('roomNumber')?.touched"
+                                       severity="error" text="Room Number is required." style="margin-top: 8px;"></p-message>
+                        </div>
+                        <div>
+                            <label for="buildingName" style="display: block; margin-bottom: 8px; font-weight: bold;">Building Name:</label>
+                            <input id="buildingName" pInputText type="text" formControlName="buildingName" placeholder="Building Name" 
+                                   style="border: 1px solid #ccc; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box;">
+                            <p-message *ngIf="accomodationForm.get('buildingName')?.invalid && accomodationForm.get('buildingName')?.touched"
+                                       severity="error" text="Building Name is required." style="margin-top: 8px;"></p-message>
+                        </div>
+                        <div>
+                            <label for="floor" style="display: block; margin-bottom: 8px; font-weight: bold;">Floor:</label>
+                            <input id="floor" pInputText type="text" formControlName="floor" placeholder="Floor" 
+                                   style="border: 1px solid #ccc; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box;">
+                            <p-message *ngIf="accomodationForm.get('floor')?.invalid && accomodationForm.get('floor')?.touched"
+                                       severity="error" text="Floor is required." style="margin-top: 8px;"></p-message>
+                        </div>
+                    </div>
+                </form>
+            </p-tabPanel>
+            <p-tabPanel header="Roommate Details">
+                <form [formGroup]="accomodationForm" (ngSubmit)="saveChanges()">
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; padding: 10px;">
+                        <div>
+                            <label for="isSingleOccupancy" style="display: block; margin-bottom: 8px; font-weight: bold;">Is Single Occupancy:</label>
+                            <p-dropdown 
+                                id="isSingleOccupancy" 
+                                [options]="isSingleOccupancyOptions" 
+                                formControlName="isSingleOccupancy" 
+                                placeholder="Select an option" 
+                                style="border: 1px solid #ccc; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box;"
+                            ></p-dropdown>
+                            <p-message 
+                                *ngIf="accomodationForm.get('isSingleOccupancy')?.invalid && accomodationForm.get('isSingleOccupancy')?.touched"
+                                severity="error" 
+                                text="Is Single Occupancy selection is required."
+                                style="margin-top: 8px;"
+                            ></p-message>
+                        </div>
+                        <div>
+                            <label for="numberOfRoommates" style="display: block; margin-bottom: 8px; font-weight: bold;">Number Of Roommates:</label>
+                            <input id="numberOfRoommates" pInputText type="text" formControlName="numberOfRoommates" placeholder="Number Of Roommates" 
+                                   style="border: 1px solid #ccc; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box;">
+                            <p-message *ngIf="accomodationForm.get('numberOfRoommates')?.invalid && accomodationForm.get('numberOfRoommates')?.touched"
+                                       severity="error" text="Number Of Roommates is required." style="margin-top: 8px;"></p-message>
+                        </div>
+                        <div>
+                            <label for="roommateNames" style="display: block; margin-bottom: 8px; font-weight: bold;">Roommate Names:</label>
+                            <input id="roommateNames" pInputText type="text" formControlName="roommateNames" placeholder="Roommate Names" 
+                                   style="border: 1px solid #ccc; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box;">
+                            <p-message *ngIf="accomodationForm.get('roommateNames')?.invalid && accomodationForm.get('roommateNames')?.touched"
+                                       severity="error" text="Roommate Names is required." style="margin-top: 8px;"></p-message>
+                        </div>
+                    </div>
+                </form>
+            </p-tabPanel>
+        </p-tabView>
+    </div>
+    <div style="display: flex; justify-content: flex-end; padding: 20px; border-top: 1px solid #eee;">
+        <button pButton type="submit" label="Save" [disabled]="accomodationForm.invalid" style="margin-right: 10px;"></button>
+        <button pButton type="button" label="Close" icon="pi pi-times" (click)="onClose()"></button>
+    </div>
+</div>

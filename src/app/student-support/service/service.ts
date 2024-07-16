@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { CulturalEvent } from '../domain/schema';
+import { Accomodation, CulturalEvent } from '../domain/schema';
 
 @Injectable()
 export class Service {
@@ -76,8 +76,17 @@ getupdateProfile(formData: FormData): Observable<any> {
           body: { id: accomodationId } 
     });
     }
-
-
+    addAccomodation(accomodation: Accomodation): Observable<any> {
+        return this.http.post<any>(`${this.BASE_URL}/addAccomodation`, accomodation);
+    }
+    assignAccomodation(studentId: number, accomodationId: number): Observable<any> {
+        return this.http.post<any>(`${this.BASE_URL}/assignAccomodation`, { studentId, accomodationId });
+    }
+    deleteAssignAccomodation(studentId: number, accomodationId: number): Observable<any> {
+        return this.http.request('DELETE', `${this.BASE_URL}/deleteAssignAccomodation`, {
+          body: { studentId, accomodationId }
+        });
+      }
 //course
     getCourse(params?: any): Promise<any> {
         return this.http.get<any>(`${this.BASE_URL}/CoursesAdmin`, { params }).toPromise();

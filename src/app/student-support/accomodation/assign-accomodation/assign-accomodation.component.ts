@@ -11,33 +11,32 @@ import { ToastModule } from 'primeng/toast';
 import { SkeletonModule } from 'primeng/skeleton';
 
 @Component({
-  selector: 'app-assign-events',
+  selector: 'app-assign-accomodation',
   standalone: true,
   imports: [CommonModule, DialogModule, TableModule, ButtonModule, DropdownModule, FormsModule, ToastModule, SkeletonModule],
-  templateUrl: './assign-events.component.html',
-  styleUrls: ['./assign-events.component.scss'],
+  templateUrl: './assign-accomodation.component.html',
+  styleUrl: './assign-accomodation.component.scss',
   providers: [MessageService] // Provide MessageService in the component
 })
-export class AssignEventsComponent implements OnChanges {
-  @Input() eventId!: number;
+export class AssignAccomodationComponent implements OnChanges {
+  @Input() accomodationId!: number;
   @Output() dialogClose: EventEmitter<null> = new EventEmitter<null>();
   assignDialogVisible: boolean = false;
   studentDetails: any[] = [];
   studentsList: any[] = []; // To hold the list of students for dropdown
   selectedStudentId: number | null = null;
   skeletonRows = Array(4).fill(0);
-
   loading: boolean = false;
+  
   constructor(private service: Service, private messageService: MessageService, private cdr: ChangeDetectorRef) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.eventId && this.eventId) {
+    if (changes.accomodationId && this.accomodationId) {
       this.openDialog();
     }
   }
-
   async openDialog() {
-    if (this.eventId) {
+    if (this.accomodationId) {
       this.loading = true;
       try {
         await this.fetchStudentDetails();
@@ -51,12 +50,10 @@ export class AssignEventsComponent implements OnChanges {
       }
     }
   }
-  
-
   async fetchStudentDetails() {
     try {
-      const body = { Id: this.eventId, type: 'event' };
-      const data = await this.service.getStudentEvents(body);
+      const body = { Id: this.accomodationId, type: 'accomodation' };
+      const data = await this.service.getStudentAccomodation(body);
       this.studentDetails = data.map((item: any) => ({
         id: item.studentDetails.id,
         fname: item.studentDetails.fname,
@@ -68,7 +65,6 @@ export class AssignEventsComponent implements OnChanges {
       console.error('Error fetching student details', error);
     }
   }
-
   async fetchStudentsList() {
     try {
       const data = await this.service.getStudents();
@@ -84,35 +80,33 @@ export class AssignEventsComponent implements OnChanges {
       console.error('Error fetching students list', error);
     }
   }
+  assignAccomodationToStudent() {
 
-  assignEventToStudent() {
-
-    if (this.selectedStudentId && this.eventId) {
-      this.service.assignEvent(this.selectedStudentId, this.eventId).subscribe(
+    if (this.selectedStudentId && this.accomodationId) {
+      this.service.assignAccomodation(this.selectedStudentId, this.accomodationId).subscribe(
         (response) => {
-          console.log('Event assigned successfully', response);
+          console.log('Accomodation assigned successfully', response);
           this.messageService.add({
             severity: 'success',
             summary: 'Assignment Successful',
-            detail: `Assigned cultural event: ${this.eventId} to student id: ${this.selectedStudentId}/${this.getStudentName(this.selectedStudentId)}`
+            detail: `Assigned Accomodation: ${this.accomodationId} to student id: ${this.selectedStudentId}/${this.getStudentName(this.selectedStudentId)}`
           });
           this.fetchStudentDetails(); // Refresh student details without closing the dialog
           this.selectedStudentId = null;
         },
         (error) => {
-          console.error('Error assigning event', error);
+          console.error('Error assigning Accomodation', error);
           this.messageService.add({
             severity: 'error',
             summary: 'Assignment Failed',
-            detail: 'There was an error assigning the event. Please try again.'
+            detail: 'There was an error assigning the Accomodation. Please try again.'
           });
         }
       );
     } else {
-      console.warn('No student selected or event ID is missing.');
+      console.warn('No student selected or Accomodation ID is missing.');
     }
   }
-
   closeDialog(): void {
     this.dialogClose.emit(null);
     this.assignDialogVisible = false;
@@ -123,21 +117,19 @@ export class AssignEventsComponent implements OnChanges {
   trackById(index: number, student: any): number {
     return student.id;
   }
-
   getStudentName(studentId: number): string {
     const student = this.studentsList.find(s => s.id === studentId);
     return student ? student.name : '';
   }
-
-  deleteAssignment(studentId: number) {
-    if (this.eventId) {
-      this.service.deleteAssignment(studentId, this.eventId).subscribe(
+  deleteAccomodationAssignment(studentId: number) {
+    if (this.accomodationId) {
+      this.service.deleteAssignAccomodation(studentId, this.accomodationId).subscribe(
         (response) => {
           console.log('Assignment deleted successfully', response);
           this.messageService.add({
             severity: 'success',
             summary: 'Deletion Successful',
-            detail: `Removed assignment of cultural event: ${this.eventId} from student id: ${studentId}`
+            detail: `Removed assignment of Accomodation: ${this.accomodationId} from student id: ${studentId}`
           });
           this.fetchStudentDetails(); // Refresh student details to reflect changes
         },
@@ -151,9 +143,7 @@ export class AssignEventsComponent implements OnChanges {
         }
       );
     } else {
-      console.warn('Event ID is missing.');
+      console.warn('Accomodation Id is missing.');
     }
   }
-  
-  
 }
