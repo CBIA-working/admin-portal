@@ -27,6 +27,7 @@ import { DialogModule } from 'primeng/dialog';
 import { EditEventComponent } from './edit-events/edit-events.component';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { AssignEventsComponent } from "./assign-events/assign-events.component";
+import { AddEventsComponent } from "./add-events/add-events.component";
 
 @Component({
   selector: 'app-cultural-events',
@@ -36,7 +37,7 @@ import { AssignEventsComponent } from "./assign-events/assign-events.component";
     TagModule, DropdownModule, MultiSelectModule, ProgressBarModule, ButtonModule,
     DownloadComponent, ToastModule, FormsModule, OverlayPanelModule, InputGroupModule,
     InputGroupAddonModule, ChipsModule, DialogModule, EditEventComponent, ConfirmDialogModule,
-    AssignEventsComponent
+    AssignEventsComponent,AddEventsComponent
 ],
   providers: [Service, MessageService, ConfirmationService], // Add ConfirmationService here
   templateUrl: './cultural-events.component.html',
@@ -56,6 +57,7 @@ export class CulturalEventsComponent implements OnInit, AfterViewInit {
   currentUser: any = {};
   assignDialogVisible: boolean = false;
   selectedEventId: number | null = null;
+  addDialogVisible: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -67,6 +69,13 @@ export class CulturalEventsComponent implements OnInit, AfterViewInit {
     private confirmationService: ConfirmationService // Inject ConfirmationService
   ) {}
 
+  showAddDialog() {
+    this.addDialogVisible = true;
+  }
+  onAddDialogClose() {
+    this.addDialogVisible = false;
+    // Optionally refresh the student list here
+  }
   showEditDialog(culturalEvent: CulturalEvent): void {
     this.selectedCulturalEvents = culturalEvent;
     this.dialogVisible = true;

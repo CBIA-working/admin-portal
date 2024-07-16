@@ -1,0 +1,66 @@
+<p-toast></p-toast>
+
+<div style="background-color: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 10px; border-radius: 8px;">
+    <!-- Event Information -->
+    <div style="padding-left: 20px;">
+        <p-tabView>
+            <p-tabPanel header="Event Details">
+                <form [formGroup]="eventForm" (ngSubmit)="saveChanges()">
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; padding: 10px;">
+                        <div>
+                            <label for="eventName" style="display: block; margin-bottom: 8px; font-weight: bold;">Event Name:</label>
+                            <input id="eventName" pInputText type="text" formControlName="eventName" placeholder="Event Name" 
+                                   style="border: 1px solid #ccc; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box;">
+                            <p-message *ngIf="eventForm.get('eventName')?.invalid && eventForm.get('eventName')?.touched"
+                                       severity="error" text="Event Name is required." style="margin-top: 8px;"></p-message>
+                        </div>
+                        <div>
+                            <label for="date" style="display: block; margin-bottom: 8px; font-weight: bold;">Date:</label>
+                            <input id="date" pInputText type="date" formControlName="date" placeholder="Date" 
+                                   style="border: 1px solid #ccc; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box;">
+                            <p-message *ngIf="eventForm.get('date')?.invalid && eventForm.get('date')?.touched"
+                                       severity="error" text="Date is required." style="margin-top: 8px;"></p-message>
+                        </div>
+                        <div>
+                            <label for="description" style="display: block; margin-bottom: 8px; font-weight: bold;">Description:</label>
+                            <textarea 
+                                id="description" 
+                                pInputTextarea 
+                                rows="1" 
+                                formControlName="description" 
+                                placeholder="Description" 
+                                style="border: 1px solid #ccc; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box;"
+                            ></textarea>
+                            <p-message 
+                                *ngIf="eventForm.get('description')?.invalid && eventForm.get('description')?.touched"
+                                severity="error" 
+                                text="Description is required."
+                                style="margin-top: 8px;"
+                            ></p-message>
+                        </div>
+                        <div>
+                            <label for="signedUp" style="display: block; margin-bottom: 8px; font-weight: bold;">Signed Up:</label>
+                            <p-dropdown 
+                                id="signedUp" 
+                                [options]="signedUpOptions" 
+                                formControlName="signedUp" 
+                                placeholder="Select an option" 
+                                style="width: 100%;"
+                            ></p-dropdown>
+                            <p-message 
+                                *ngIf="eventForm.get('signedUp')?.invalid && eventForm.get('signedUp')?.touched"
+                                severity="error" 
+                                text="Signed Up selection is required."
+                                style="margin-top: 8px;"
+                            ></p-message>
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: flex-end; padding: 20px; border-top: 1px solid #eee;">
+                        <button pButton type="submit" label="Save Changes" [disabled]="eventForm.invalid" style="margin-right: 10px;"></button>
+                        <button pButton type="button" label="Close" icon="pi pi-times" (click)="onClose()"></button>
+                    </div>
+                </form>
+            </p-tabPanel>
+        </p-tabView>
+    </div>
+</div>

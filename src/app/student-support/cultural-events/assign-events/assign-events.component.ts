@@ -97,6 +97,7 @@ export class AssignEventsComponent implements OnChanges {
             detail: `Assigned cultural event: ${this.eventId} to student id: ${this.selectedStudentId}/${this.getStudentName(this.selectedStudentId)}`
           });
           this.fetchStudentDetails(); // Refresh student details without closing the dialog
+          this.selectedStudentId = null;
         },
         (error) => {
           console.error('Error assigning event', error);

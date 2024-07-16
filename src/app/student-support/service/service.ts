@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { CulturalEvent } from '../domain/schema';
 
 @Injectable()
 export class Service {
@@ -48,6 +49,9 @@ getupdateProfile(formData: FormData): Observable<any> {
         return this.http.delete<void>(`${this.BASE_URL}/deleteCulturalEvents`, { 
           body: { id: eventId } 
     });
+    }
+    addEvent(event: CulturalEvent): Observable<any> {
+        return this.http.post<any>(`${this.BASE_URL}/addCulturalEvent`, event);
     }
     assignEvent(studentId: number, eventId: number): Observable<any> {
         return this.http.post<any>(`${this.BASE_URL}/assignEvent`, { studentId, eventId });
