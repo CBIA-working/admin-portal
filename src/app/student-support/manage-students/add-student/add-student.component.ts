@@ -12,6 +12,9 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { Service } from '../../service/service';
 import { Student } from '../../domain/schema';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { MessageModule } from 'primeng/message';
 
 @Component({
   selector: 'app-add-student',
@@ -25,7 +28,10 @@ import { Student } from '../../domain/schema';
     DialogModule,
     HttpClientModule,
     CommonModule,
-    ToastModule
+    ToastModule,
+    InputTextModule,
+    InputTextareaModule,
+    MessageModule,
   ],
   providers: [MessageService, Service, DatePipe],
   templateUrl: './add-student.component.html',

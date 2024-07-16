@@ -14,6 +14,11 @@ import { ButtonModule } from 'primeng/button';
 import { Subscription } from 'rxjs';
 import { MessageService } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { MessageModule } from 'primeng/message';
+import { DialogModule } from 'primeng/dialog';
+
 
 @Component({
   selector: 'app-add-events',
@@ -25,7 +30,11 @@ import { DropdownModule } from 'primeng/dropdown';
     HttpClientModule,
     CommonModule,
     ToastModule,
-    DropdownModule
+    DropdownModule,
+    InputTextModule, // For pInputText
+    InputTextareaModule, // For pInputTextarea
+    MessageModule, // For p-message
+    DialogModule, // If using p-dialog for modals/popups
   ],
   templateUrl: './add-events.component.html',
   styleUrls: ['./add-events.component.scss'],

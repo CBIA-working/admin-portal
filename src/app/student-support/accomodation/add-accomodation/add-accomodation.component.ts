@@ -13,9 +13,16 @@ import { HttpClientModule } from '@angular/common/http';
 import { TabViewModule } from 'primeng/tabview';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { MessageModule } from 'primeng/message';
+import { DialogModule } from 'primeng/dialog';
 
 @Component({
   selector: 'app-add-accomodation',
+  templateUrl: './add-accomodation.component.html',
+  styleUrls: ['./add-accomodation.component.scss'],
+  providers: [MessageService],
   standalone: true,
   imports: [
     CommonModule,
@@ -28,24 +35,24 @@ import { DropdownModule } from 'primeng/dropdown';
     FormsModule,
     HttpClientModule,
     ToastModule,
-    DropdownModule
-  ],
-  templateUrl: './add-accomodation.component.html',
-  styleUrls: ['./add-accomodation.component.scss'],
-  providers: [MessageService]
+    DropdownModule,
+    InputTextModule,
+    InputTextareaModule,
+    MessageModule,
+    DialogModule  // Include this only if you are using dialogs
+  ]
 })
 export class AddAccomodationComponent implements OnInit {
   @Input() accomodation: Accomodation | null = null;
   @Output() dialogClose = new EventEmitter<Accomodation | null>();
 
   accomodationForm!: FormGroup;
-  originalAccomodation: Accomodation | null = null;
 
   constructor(
     private fb: FormBuilder,
     private service: Service,
     private messageService: MessageService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.createForm();
@@ -58,64 +65,87 @@ export class AddAccomodationComponent implements OnInit {
       buildingName: ['', Validators.required],
       floor: ['', Validators.required],
       isSingleOccupancy: [false, Validators.required],
-      numberOfRoommates: ['', Validators.required],
-      roommateNames: ['', Validators.required],
+      numberOfRoommates: [{ value: '', disabled: true }],
+      roommateNames: [{ value: '', disabled: true }]
     });
   }
 
-  resetForm(): void {
-    if (this.accomodation) {
-      this.accomodationForm.patchValue({
-        roomNumber: this.accomodation.roomNumber,
-        buildingName: this.accomodation.buildingName,
-        floor: this.accomodation.floor,
-        isSingleOccupancy: this.accomodation.isSingleOccupancy,
-        numberOfRoommates: this.accomodation.numberOfRoommates,
-        roommateNames: this.accomodation.roommateNames,
-      });
+  onSingleOccupancyChange(event: any): void {
+    console.log('Dropdown Change Event:', event);
+    const isSingle = event.value;
+    this.accomodationForm.get('isSingleOccupancy').setValue(isSingle, {emitEvent: false}); // Prevent circular event loops
+    this.updateRoommateValidation(isSingle);
+  }
+
+  updateRoommateValidation(isSingle: boolean): void {
+    console.log('Updating Roommate Validation, isSingle:', isSingle);
+    if (isSingle) {
+      this.accomodationForm.get('numberOfRoommates').disable();
+      this.accomodationForm.get('roommateNames').disable();
+      this.accomodationForm.get('numberOfRoommates').reset();
+      this.accomodationForm.get('roommateNames').reset();
     } else {
-      this.accomodationForm.reset({ isSingleOccupancy: false });
+      this.accomodationForm.get('numberOfRoommates').enable();
+      this.accomodationForm.get('roommateNames').enable();
+      this.accomodationForm.get('numberOfRoommates').setValidators(Validators.required);
+      this.accomodationForm.get('roommateNames').setValidators(Validators.required);
     }
-    this.originalAccomodation = { ...this.accomodation };
+    this.accomodationForm.get('numberOfRoommates').updateValueAndValidity();
+    this.accomodationForm.get('roommateNames').updateValueAndValidity();
+  }
+
+  resetForm(): void {
+    this.accomodationForm.reset({
+      roomNumber: '',
+      buildingName: '',
+      floor: '',
+      isSingleOccupancy: false,
+      numberOfRoommates: '',
+      roommateNames: ''
+    });
+    this.updateRoommateValidation(false);  // Reset validation for roommates as initially false
   }
 
   saveChanges(): void {
+    console.log('Saving Changes:', this.accomodationForm.value);
+  
+    const formValue = { ...this.accomodationForm.getRawValue() };
+  
+    if (formValue.isSingleOccupancy) {
+      formValue.numberOfRoommates = 0;
+      formValue.roommateNames = ' ';
+    }
+  
     if (this.accomodationForm.valid) {
       const updatedAccomodation: Accomodation = {
-        ...this.originalAccomodation,
-        ...this.accomodationForm.value
+        ...formValue
       };
-  
       this.service.addAccomodation(updatedAccomodation).subscribe({
         next: (response) => {
-          this.messageService.add({ severity: 'success', summary: 'Accomodation added', detail: 'Accomodation has been successfully added.' });
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Accommodation updated successfully.' });
           setTimeout(() => {
             this.dialogClose.emit(updatedAccomodation);
-          }, 2000);
+            this.resetForm();  // Reset the form after closing the dialog
+          }, 1000); // Delay for 1 second before closing the dialog
         },
         error: (error) => {
-          console.error('Error adding accomodation:', error);
-          let errorMessage = 'Failed to add accomodation. Please try again later.';
-          if (error.error) {
-            if (error.error.message) {
-              errorMessage = error.error.message;
-            } else if (error.error.errors) {
-              errorMessage = 'Validation errors occurred: ' + Object.values(error.error.errors).join(', ');
-            }
-          } else if (error.status === 0) {
-            errorMessage = 'Network error. Please check your connection.';
+          let errorMessage = 'Failed to update accommodation. Please try again later.';
+          if (error.error && error.error.message) {
+            errorMessage = error.error.message;
           }
           this.messageService.add({ severity: 'error', summary: 'Error', detail: errorMessage });
         }
       });
     } else {
       this.accomodationForm.markAllAsTouched();
+      this.messageService.add({ severity: 'error', summary: 'Form Error', detail: 'Please fill in all required fields correctly.' });
     }
   }
   
+  
+  
   onClose(): void {
     this.dialogClose.emit(null);
-    this.resetForm(); // Correctly call the resetForm method
+    this.resetForm();
   }
-  
 }

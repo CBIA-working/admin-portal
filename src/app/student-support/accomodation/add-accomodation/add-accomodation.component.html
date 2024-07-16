@@ -1,9 +1,9 @@
+<!-- Angular Template Code (add-accomodation.component.html) -->
 <div style="background-color: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 10px; border-radius: 8px;">
-    <!-- Accomodation Information -->
     <form [formGroup]="accomodationForm" (ngSubmit)="saveChanges()">
       <div style="padding-left: 20px;">
         <p-tabView>
-          <p-tabPanel header="Accomodation Details">
+          <p-tabPanel header="Accommodation Details">
             <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; padding: 10px;">
               <div>
                 <label for="roomNumber" style="display: block; margin-bottom: 8px; font-weight: bold;">Room Number:</label>
@@ -30,18 +30,18 @@
                 <label for="isSingleOccupancy" style="display: block; margin-bottom: 8px; font-weight: bold;">Single Occupancy:</label>
                 <p-dropdown 
                   id="isSingleOccupancy" 
-                  [options]="[{ label: 'False', value: false }, { label: 'True', value: true }]" 
+                  [options]="[{ label: 'Yes', value: true }, { label: 'No', value: false }]" 
                   formControlName="isSingleOccupancy" 
                   placeholder="Select an option" 
+                  (onChange)="onSingleOccupancyChange($event)"
                   style="width: 100%;"
                 ></p-dropdown>
-                <p-message *ngIf="accomodationForm.get('isSingleOccupancy')?.invalid && accomodationForm.get('isSingleOccupancy')?.touched"
-                           severity="error" text="Single Occupancy selection is required." style="margin-top: 8px;"></p-message>
               </div>
             </div>
           </p-tabPanel>
-  
-          <p-tabPanel header="Roommate Details">
+
+          <!-- Conditional rendering for Roommate Details -->
+          <p-tabPanel header="Roommate Details" *ngIf="accomodationForm.get('isSingleOccupancy').value === false">
             <div style="display: grid; grid-template-columns: 1fr; gap: 20px; padding: 10px;">
               <div>
                 <label for="numberOfRoommates" style="display: block; margin-bottom: 8px; font-weight: bold;">Number of Roommates:</label>
@@ -66,12 +66,12 @@
             </div>
           </p-tabPanel>
         </p-tabView>
-      </div>            
-  
+      </div>
+
       <div style="display: flex; justify-content: flex-end; padding: 20px; border-top: 1px solid #eee;">
         <button pButton type="submit" label="Save" [disabled]="accomodationForm.invalid" style="margin-right: 10px;"></button>
         <button pButton type="button" label="Close" icon="pi pi-times" (click)="onClose()"></button>
       </div>
     </form>
     <p-toast></p-toast>
-  
+</div>
