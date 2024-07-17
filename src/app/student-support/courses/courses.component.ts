@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { CommonModule, DatePipe } from '@angular/common';
+import {  HttpClient,HttpClientModule } from '@angular/common/http';
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
@@ -15,7 +15,7 @@ import { DownloadComponent } from '../download/download.component';
 import * as XLSX from 'xlsx';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { MessageService } from 'primeng/api';
+import { MessageService,ConfirmationService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { NavigationService } from '../service/navigation.service';
 import { FormsModule } from '@angular/forms';
@@ -23,6 +23,11 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { ChipsModule } from 'primeng/chips';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { DialogModule } from 'primeng/dialog';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { EditCoursesComponent } from "./edit-courses/edit-courses.component";
+import { AssignCoursesComponent } from "./assign-courses/assign-courses.component";
+import { AddCoursesComponent } from "./add-courses/add-courses.component";
 
 @Component({
   selector: 'app-courses',
@@ -30,10 +35,13 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
   imports: [
     TableModule, RouterModule, HttpClientModule, CommonModule, InputTextModule,
     TagModule, DropdownModule, MultiSelectModule, ProgressBarModule, ButtonModule,
-    DownloadComponent, ToastModule, FormsModule, OverlayPanelModule, InputGroupModule, 
-    InputGroupAddonModule, ChipsModule
-  ],
-  providers: [Service, MessageService],
+    DownloadComponent, ToastModule, FormsModule, OverlayPanelModule, InputGroupModule,
+    InputGroupAddonModule, ChipsModule,DialogModule,ConfirmDialogModule,
+    EditCoursesComponent,
+    AssignCoursesComponent,
+    AddCoursesComponent
+],
+  providers: [Service, MessageService,ConfirmationService,DatePipe],
   templateUrl: './courses.component.html',
   styleUrls: ['./courses.component.scss']
 })
@@ -43,10 +51,88 @@ export class CoursesComponent implements OnInit, AfterViewInit {
 
   courses: Courses[] = [];
   selectedCourses: Courses[] = [];
+  selectedCourse: Courses | null = null;
   loading: boolean = true;
   searchValue: string | undefined;
   downloadSelectedMode: boolean = false;
+  dialogVisible: boolean = false;
+  currentUser: any = {};
+  assignDialogVisible: boolean = false;
+  selectedCourseId: number | null = null;
+  addDialogVisible: boolean = false;
 
+  constructor(
+    private route: ActivatedRoute,
+    private service: Service,
+    private messageService: MessageService,
+    private navigationService: NavigationService,
+    private router: Router,
+    private http: HttpClient,
+    private confirmationService: ConfirmationService,
+    private datePipe: DatePipe
+  ) {}
+
+  showAddDialog() {
+    this.addDialogVisible = true;
+  }
+  onAddDialogClose() {
+    this.addDialogVisible = false;
+    // Optionally refresh the student list here
+  }
+  showAssignDialog(courseId: number) {
+    this.selectedCourseId = courseId;
+    this.assignDialogVisible = true;
+  }
+
+  onAssignDialogClose() {
+    this.selectedCourseId = null;
+    this.assignDialogVisible = false;
+  }
+  showEditDialog(courses: Courses): void {
+    this.selectedCourse = courses;
+    this.dialogVisible = true;
+  }
+  onDialogClose(updatedCourses: Courses | null): void {
+    if (updatedCourses) {
+      const index = this.courses.findIndex(s => s.id === updatedCourses.id);
+      if (index !== -1) {
+        this.courses[index] = updatedCourses;
+      }
+    }
+    this.selectedCourse = null;
+    this.dialogVisible = false;
+  }
+
+  deleteCulturalEvent(courses: Courses): void {
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to delete this course?',
+      header: 'Confirm',
+      icon: 'pi pi-info-circle',
+      accept: () => {
+        this.service.deleteCourse(courses.id).subscribe(
+          () => {
+            this.courses = this.courses.filter(courses => courses.id !== courses.id);
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: 'Cultural event deleted successfully'
+            });
+          },
+          error => {
+            console.error('Error deleting course', error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Failed to delete courses'
+            });
+          }
+        );
+      },
+      reject: () => {
+        // Optionally handle rejection (user clicks cancel)
+      }
+    });
+  }
   exportHeaderMapping = {
     id: 'ID',
     title: 'Title',
@@ -57,14 +143,6 @@ export class CoursesComponent implements OnInit, AfterViewInit {
     events: 'Events',
     agreements: 'Agreements',
   };
-
-  constructor(
-    private route: ActivatedRoute,
-    private service: Service,
-    private messageService: MessageService,
-    private navigationService: NavigationService,
-    private router: Router
-  ) {}
 
   options = [
     { name: 'Students', key: 'managestudent' },

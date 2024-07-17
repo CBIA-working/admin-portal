@@ -41,9 +41,9 @@ export interface Courses {
     id: number;
     title: string;
     description: string;
-    startDate: Date;
-    endDate: Date;
+    startDate: Date | string;
+    endDate: Date | string;
     keyDates: string;
     events: string;
     agreements: string;
-  }
+}

@@ -1,6 +1,8 @@
 <p-toast></p-toast>
 <div class="card" style="margin: 0 20px; overflow: hidden;">
   <div class="mb-2 ml-auto z-0" style="display: flex; gap: 10px;">
+    <p-button icon="pi pi-plus" (click)="showAddDialog()" [raised]="true" severity="primary"></p-button>
+
     <app-download [class.hidden]="downloadSelectedMode" (downloadSelectedStudentsEvent)="downloadSelectedStudents()"></app-download>
     <p-button 
       label="Download Selected Students" 
@@ -105,7 +107,11 @@
               <p-columnFilter type="text" field="agreements" display="menu"></p-columnFilter>
             </div>
           </th>
-        <th style="min-width: 5%">Actions</th>
+          <th style="min-width: 10%; text-align: center;">
+            <div style="display: flex; justify-content: center; align-items: center;">
+              Actions
+            </div>
+          </th>
       </tr>
     </ng-template>
 
@@ -117,12 +123,16 @@
         <td>{{ courses.id }}</td>
         <td>{{ courses.title }}</td>
         <td>{{ courses.description }}</td>
-        <td>{{ courses.startDate }}</td>
-        <td>{{ courses.endDate }}</td>
+        <td>{{ courses.startDate | date: 'dd-MM-yyyy' }}</td>
+        <td>{{ courses.endDate | date: 'dd-MM-yyyy' }}</td>
         <td>{{ courses.keyDates }}</td>
         <td>{{ courses.events }}</td>
         <td>{{ courses.agreements }}</td>
         <td>
+          <div class="button-container" style="display: flex; gap: 0.5rem;">
+          <p-button (click)="showEditDialog(courses)" icon="pi pi-pencil" [text]="true" [plain]="true"></p-button>
+            <p-button (click)="showAssignDialog(courses.id)" icon="pi pi-user-plus" [text]="true" [plain]="true"></p-button>
+            <p-button (click)="deleteCulturalEvent(courses)" icon="pi pi-trash" [text]="true" [plain]="true"></p-button>
           <p-button (click)="op.toggle($event)" icon="pi pi-ellipsis-v" [text]="true" [plain]="true"></p-button>
           <p-overlayPanel #op>
             <div>
@@ -137,6 +147,7 @@
               </ul>
             </div>
           </p-overlayPanel>
+        </div>
         </td>
       </tr>
     </ng-template>
@@ -148,3 +159,19 @@
     </ng-template>
   </p-table>
 </div>
+<p-dialog [(visible)]="dialogVisible" [modal]="true" [closable]="false" header="Edit Courses" [responsive]="true" [style]="{width: '60vw'}">
+  <app-edit-courses
+  *ngIf="selectedCourse" 
+  [courses]="selectedCourse" 
+  (dialogClose)="onDialogClose($event)">
+  </app-edit-courses>
+</p-dialog>
+<p-dialog header="Assign courses" [(visible)]="assignDialogVisible" [modal]="true" [style]="{'width': '50vw'}" [closable]="false">
+  <app-assign-courses [courseId]="selectedCourseId" (dialogClose)="onAssignDialogClose()"></app-assign-courses>
+</p-dialog>
+
+  <!-- <app-add-student *ngIf="!downloadSelectedMode"></app-add-student> -->
+  <p-dialog [(visible)]="addDialogVisible" [modal]="true" [closable]="false" header="Add Event" [responsive]="true" [style]="{width: '60vw' ,height:'68vh'}">
+    <app-add-courses (dialogClose)="onAddDialogClose()"></app-add-courses>
+  </p-dialog>
+<p-confirmDialog></p-confirmDialog>
