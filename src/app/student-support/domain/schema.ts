@@ -47,3 +47,11 @@ export interface Courses {
     events: string;
     agreements: string;
 }
+
+export interface KeyProgramDate {
+    id: number;
+    name: string;
+    date: Date;
+    description: string;
+  }
+  

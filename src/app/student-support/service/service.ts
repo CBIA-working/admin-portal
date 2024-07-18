@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Accomodation, Courses, CulturalEvent } from '../domain/schema';
+import { Accomodation, Courses, CulturalEvent, KeyProgramDate } from '../domain/schema';
 
 @Injectable()
 export class Service {
@@ -115,5 +115,10 @@ getupdateProfile(formData: FormData): Observable<any> {
           body: { studentId, courseId }
         });
       }
-   
+//keyprogramdates
+
+getkeyprogramdates(): Promise<{[key: string]: KeyProgramDate[]}> {
+    return this.http.get<{[key: string]: KeyProgramDate[]}>(`${this.BASE_URL}/KeyProgramDatesAdmin`).toPromise();
+  }
+  
 }

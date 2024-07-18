@@ -1,0 +1,8 @@
+<div *ngFor="let month of keyProgramDates; let i = index">
+  <h3>Month {{ i + 1 }}</h3>
+  <ul>
+    <li *ngFor="let event of month">
+      <strong>{{ event.name }}</strong> - {{ event.date | date:'medium' }}: {{ event.description }}
+    </li>
+  </ul>
+</div>
