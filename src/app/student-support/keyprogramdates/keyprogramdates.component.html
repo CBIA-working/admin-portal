@@ -1,8 +1,23 @@
-<div *ngFor="let month of keyProgramDates; let i = index">
-  <h3>Month {{ i + 1 }}</h3>
-  <ul>
-    <li *ngFor="let event of month">
-      <strong>{{ event.name }}</strong> - {{ event.date | date:'medium' }}: {{ event.description }}
-    </li>
-  </ul>
+<div>
+  <label for="monthSelect">Select Month:</label>
+  <select id="monthSelect" [(ngModel)]="selectedMonth" (change)="onMonthChange($event.target.value)">
+    <option *ngFor="let month of months" [value]="month.value">{{ month.name }}</option>
+  </select>
+</div>
+
+<div *ngIf="currentMonthDates.length > 0 || prevMonthDates.length > 0 || nextMonthDates.length > 0">
+  <div *ngFor="let month of [currentMonthDates, prevMonthDates, nextMonthDates]; let i = index">
+    <h2 *ngIf="i === 0">Current Month</h2>
+    <h2 *ngIf="i === 1">Previous Month</h2>
+    <h2 *ngIf="i === 2">Next Month</h2>
+    <ul>
+      <li *ngFor="let event of month">
+        <strong>{{ event.name }}</strong> - {{ event.date | date:'medium' }}: {{ event.description }}
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div *ngIf="currentMonthDates.length === 0 && prevMonthDates.length === 0 && nextMonthDates.length === 0">
+  <p>No key program dates available for selected month.</p>
 </div>

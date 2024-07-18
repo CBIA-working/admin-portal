@@ -117,8 +117,9 @@ getupdateProfile(formData: FormData): Observable<any> {
       }
 //keyprogramdates
 
-getkeyprogramdates(): Promise<{[key: string]: KeyProgramDate[]}> {
-    return this.http.get<{[key: string]: KeyProgramDate[]}>(`${this.BASE_URL}/KeyProgramDatesAdmin`).toPromise();
+getKeyProgramDates(month: number): Promise<any> {
+    const url = `${this.BASE_URL}/KeyProgramDatesAdmin`;
+    const body = { month };
+    return this.http.post(url, body).toPromise();
   }
-  
 }
