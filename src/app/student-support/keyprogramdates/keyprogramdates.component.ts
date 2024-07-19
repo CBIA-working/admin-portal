@@ -32,8 +32,11 @@ export class KeyprogramdatesComponent implements OnInit {
   
   loadKeyProgramDates(month: number): void {
     this.service.getKeyProgramDates(month).then(data => {
-      this.currentMonthDates = data.currentMonthDates || [];
-      this.events = this.currentMonthDates.reduce((acc, event) => {
+      // Combine all month data into a single array
+      const allDates = [...data.prevMonthDates, ...data.currentMonthDates, ...data.nextMonthDates];
+  
+      this.currentMonthDates = allDates;
+      this.events = allDates.reduce((acc, event) => {
         // Convert UTC date to local date
         const eventDate = new Date(event.date);
         const dateStr = eventDate.toLocaleDateString();  // Using locale date string for key
@@ -49,6 +52,7 @@ export class KeyprogramdatesComponent implements OnInit {
       this.events = {};
     });
   }
+  
   
   onDateSelect(event: any): void {
     // Using local date for selection

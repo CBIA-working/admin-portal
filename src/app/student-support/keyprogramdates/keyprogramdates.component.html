@@ -36,8 +36,9 @@
       </ng-template>
       <ng-template pTemplate="content">
         <p><strong>Date:</strong> {{ event.date | date:'fullDate' }}</p>
+        <p><strong>Time:</strong> {{ event.date | date:'shortTime' }}</p> <!-- New line for time -->
         <p><strong>Description:</strong> {{ event.description }}</p>
       </ng-template>
     </p-card>
   </div>
-</div>
+  
