@@ -1,23 +1,24 @@
-<div style="display: flex; align-items: flex-start; gap: 20px;">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
   <p-calendar 
     inline="true" 
     (onSelect)="onDateSelect($event)"
+    (onMonthChange)="onMonthChange($event)"
     [monthNavigator]="true" 
     [yearNavigator]="true" 
     yearRange="2020:2030"
-    [style]="{width: '100%', maxWidth: '500px'}"
+    [style]="{width: '100%', maxWidth: '500px', border: '1px solid #ddd', borderRadius: '10px', padding: '10px', backgroundColor: '#f9f9f9'}"
   >
     <ng-template pTemplate="date" let-date>
       <div 
         [ngStyle]="{
-          'background-color': hasEvents(date) ? '#FFD700' : 'transparent',
+          'background-color': hasEvents(date) ? '#FF6347' : 'transparent',
           'color': hasEvents(date) ? 'white' : 'black',
           'border-radius': '50%',
           'text-align': 'center',
           'line-height': '1.5',
           'padding': '5px',
-          'width': '30px',
-          'height': '30px',
+          'width': '35px',
+          'height': '35px',
           'display': 'flex',
           'align-items': 'center',
           'justify-content': 'center',
@@ -29,16 +30,16 @@
     </ng-template>
   </p-calendar>
 
-  <div *ngIf="showDetails" style="flex: 1; max-width: 400px; margin-top: 0;">
-    <p-card *ngFor="let event of selectedDateEvents" style="margin-bottom: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+  <div *ngIf="showDetails" style="flex: 1; max-width: 400px; margin-top: 20px;">
+    <p-card *ngFor="let event of selectedDateEvents" style="margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); border-radius: 10px; border: none; background-color: #fff; padding: 15px;">
       <ng-template pTemplate="header">
-        <h2>{{ event.name }}</h2>
+        <h3 style="margin-top: 0; font-size: 1.5em; color: #333;">{{ event.name }}</h3>
       </ng-template>
       <ng-template pTemplate="content">
-        <p><strong>Date:</strong> {{ event.date | date:'fullDate' }}</p>
-        <p><strong>Time:</strong> {{ event.date | date:'shortTime' }}</p> <!-- New line for time -->
-        <p><strong>Description:</strong> {{ event.description }}</p>
+        <p style="color: #555; font-size: 1em; line-height: 1.5;"><strong style="color: #333;">Date:</strong> {{ event.date | date:'fullDate' }}</p>
+        <p style="color: #555; font-size: 1em; line-height: 1.5;"><strong style="color: #333;">Time:</strong> {{ event.date | date:'shortTime' }}</p>
+        <p style="color: #555; font-size: 1em; line-height: 1.5;"><strong style="color: #333;">Description:</strong> {{ event.description }}</p>
       </ng-template>
     </p-card>
   </div>
-  
+</div>

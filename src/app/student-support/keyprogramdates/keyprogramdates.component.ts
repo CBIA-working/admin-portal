@@ -52,13 +52,17 @@ export class KeyprogramdatesComponent implements OnInit {
       this.events = {};
     });
   }
-  
-  
+
   onDateSelect(event: any): void {
     // Using local date for selection
     const selectedDate = new Date(event).toLocaleDateString();
     this.selectedDateEvents = this.events[selectedDate] || [];
     this.showDetails = this.selectedDateEvents.length > 0;
+  }
+
+  onMonthChange(event: any): void {
+    const newMonth = event.month + 1; // PrimeNG months are zero-indexed
+    this.loadKeyProgramDates(newMonth);
   }
 
   hasEvents(date: any): boolean {
