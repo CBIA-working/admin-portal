@@ -1,23 +1,43 @@
-<div>
-  <label for="monthSelect">Select Month:</label>
-  <select id="monthSelect" [(ngModel)]="selectedMonth" (change)="onMonthChange($event.target.value)">
-    <option *ngFor="let month of months" [value]="month.value">{{ month.name }}</option>
-  </select>
-</div>
+<div style="display: flex; align-items: flex-start; gap: 20px;">
+  <p-calendar 
+    inline="true" 
+    (onSelect)="onDateSelect($event)"
+    [monthNavigator]="true" 
+    [yearNavigator]="true" 
+    yearRange="2020:2030"
+    [style]="{width: '100%', maxWidth: '500px'}"
+  >
+    <ng-template pTemplate="date" let-date>
+      <div 
+        [ngStyle]="{
+          'background-color': hasEvents(date) ? '#FFD700' : 'transparent',
+          'color': hasEvents(date) ? 'white' : 'black',
+          'border-radius': '50%',
+          'text-align': 'center',
+          'line-height': '1.5',
+          'padding': '5px',
+          'width': '30px',
+          'height': '30px',
+          'display': 'flex',
+          'align-items': 'center',
+          'justify-content': 'center',
+          'font-weight': hasEvents(date) ? 'bold' : 'normal'
+        }"
+      >
+        {{ date.day }}
+      </div>
+    </ng-template>
+  </p-calendar>
 
-<div *ngIf="currentMonthDates.length > 0 || prevMonthDates.length > 0 || nextMonthDates.length > 0">
-  <div *ngFor="let month of [currentMonthDates, prevMonthDates, nextMonthDates]; let i = index">
-    <h2 *ngIf="i === 0">Current Month</h2>
-    <h2 *ngIf="i === 1">Previous Month</h2>
-    <h2 *ngIf="i === 2">Next Month</h2>
-    <ul>
-      <li *ngFor="let event of month">
-        <strong>{{ event.name }}</strong> - {{ event.date | date:'medium' }}: {{ event.description }}
-      </li>
-    </ul>
+  <div *ngIf="showDetails" style="flex: 1; max-width: 400px; margin-top: 0;">
+    <p-card *ngFor="let event of selectedDateEvents" style="margin-bottom: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+      <ng-template pTemplate="header">
+        <h2>{{ event.name }}</h2>
+      </ng-template>
+      <ng-template pTemplate="content">
+        <p><strong>Date:</strong> {{ event.date | date:'fullDate' }}</p>
+        <p><strong>Description:</strong> {{ event.description }}</p>
+      </ng-template>
+    </p-card>
   </div>
-</div>
-
-<div *ngIf="currentMonthDates.length === 0 && prevMonthDates.length === 0 && nextMonthDates.length === 0">
-  <p>No key program dates available for selected month.</p>
 </div>
