@@ -8,11 +8,12 @@ import { CalendarModule } from 'primeng/calendar';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { PrimeTemplate } from 'primeng/api';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 @Component({
   selector: 'app-keyprogramdates',
   standalone: true,
-  imports: [HttpClientModule, CommonModule, FormsModule, CalendarModule, CardModule, ButtonModule, PrimeTemplate],
+  imports: [HttpClientModule, CommonModule, FormsModule, CalendarModule, CardModule, ButtonModule, PrimeTemplate,OverlayPanelModule],
   providers: [Service],
   templateUrl: './keyprogramdates.component.html',
   styleUrls: ['./keyprogramdates.component.scss']
@@ -71,4 +72,9 @@ export class KeyprogramdatesComponent implements OnInit {
     const dateStr = checkDate.toLocaleDateString();
     return this.events[dateStr] ? true : false;
   }
+  dateToString(date: any): string {
+    const checkDate = new Date(date.year, date.month, date.day);
+    return checkDate.toLocaleDateString();  // This should match the format used in loadKeyProgramDates
+  }
+  
 }

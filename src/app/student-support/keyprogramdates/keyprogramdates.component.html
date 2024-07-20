@@ -1,18 +1,19 @@
-<div style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
-  <p-calendar 
+<div style="display: flex; align-items: flex-start; gap: 20px;">
+  <!-- Calendar Component -->
+<!-- Calendar Component with corrected overlay panel usage -->
+<p-calendar 
     inline="true" 
     (onSelect)="onDateSelect($event)"
     (onMonthChange)="onMonthChange($event)"
     [monthNavigator]="true" 
     [yearNavigator]="true" 
     yearRange="2020:2030"
-    [style]="{width: '100%', maxWidth: '500px', border: '1px solid #ddd', borderRadius: '10px', padding: '10px', backgroundColor: '#f9f9f9'}"
-  >
-    <ng-template pTemplate="date" let-date>
-      <div 
+    [style]="{width: '100%', maxWidth: '500px', border: '1px solid #ddd', borderRadius: '10px', padding: '10px', backgroundColor: '#f9f9f9'}">
+    <ng-template pTemplate="date" let-date let-locale="locale">
+      <div (mouseenter)="op.show($event)" (mouseleave)="op.hide($event)"
         [ngStyle]="{
-          'background-color': hasEvents(date) ? '#FF6347' : 'transparent',
-          'color': hasEvents(date) ? 'white' : 'black',
+          'border': hasEvents(date) ? '2px solid #FF6347' : 'none',
+          'color': 'black',
           'border-radius': '50%',
           'text-align': 'center',
           'line-height': '1.5',
@@ -21,25 +22,38 @@
           'height': '35px',
           'display': 'flex',
           'align-items': 'center',
-          'justify-content': 'center',
-          'font-weight': hasEvents(date) ? 'bold' : 'normal'
-        }"
-      >
+          'justify-content': 'center'
+        }">
         {{ date.day }}
       </div>
+      <p-overlayPanel #op>
+        <div *ngIf="events[dateToString(date)]">
+          <ul>
+            <li *ngFor="let event of events[dateToString(date)]">{{ event.name }}</li>
+          </ul>
+        </div>
+      </p-overlayPanel>
     </ng-template>
   </p-calendar>
 
-  <div *ngIf="showDetails" style="flex: 1; max-width: 400px; margin-top: 20px;">
-    <p-card *ngFor="let event of selectedDateEvents" style="margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); border-radius: 10px; border: none; background-color: #fff; padding: 15px;">
-      <ng-template pTemplate="header">
-        <h3 style="margin-top: 0; font-size: 1.5em; color: #333;">{{ event.name }}</h3>
-      </ng-template>
+  <!-- Details Card -->
+  <div *ngIf="showDetails" style="flex: 1; max-width: 400px; padding: 0;">
+    <p-card>
       <ng-template pTemplate="content">
-        <p style="color: #555; font-size: 1em; line-height: 1.5;"><strong style="color: #333;">Date:</strong> {{ event.date | date:'fullDate' }}</p>
-        <p style="color: #555; font-size: 1em; line-height: 1.5;"><strong style="color: #333;">Time:</strong> {{ event.date | date:'shortTime' }}</p>
-        <p style="color: #555; font-size: 1em; line-height: 1.5;"><strong style="color: #333;">Description:</strong> {{ event.description }}</p>
+        <ul style="list-style: none; padding: 0; margin: 0; overflow-y: auto; max-height: 300px;">
+          <li *ngFor="let event of selectedDateEvents" style="margin-bottom: 15px;">
+            <h4 style="margin: 0; color: #FF6347;">{{ event.name }}</h4>
+            <!-- Display the date in full format -->
+            <p style="color: #555;"><strong>Date:</strong> {{ event.date | date:'fullDate' }}</p>
+            <!-- Display the time in UTC timezone -->
+            <p style="color: #555; margin: 5px 0;"><strong>Time:</strong> {{ event.date | date:'shortTime':'UTC' }}</p>
+            <p style="color: #555;"><strong>Description:</strong> {{ event.description }}</p>
+          </li>
+        </ul>
       </ng-template>
     </p-card>
+    
+    
+    
   </div>
 </div>
