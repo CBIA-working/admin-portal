@@ -1,59 +1,60 @@
-<div style="display: flex; align-items: flex-start; gap: 20px;">
-  <!-- Calendar Component -->
-<!-- Calendar Component with corrected overlay panel usage -->
-<p-calendar 
+<div style="display: flex; align-items: flex-start; gap: 20px; padding: 20px; box-sizing: border-box;">
+  <p-calendar 
     inline="true" 
     (onSelect)="onDateSelect($event)"
     (onMonthChange)="onMonthChange($event)"
     [monthNavigator]="true" 
     [yearNavigator]="true" 
     yearRange="2020:2030"
-    [style]="{width: '100%', maxWidth: '500px', border: '1px solid #ddd', borderRadius: '10px', padding: '10px', backgroundColor: '#f9f9f9'}">
+    [style]="{width: '100%', maxWidth: '500px', border: '1px solid #ddd', borderRadius: '10px', padding: '20px', backgroundColor: 'rgba(255, 255, 255, 0.8)'}">
     <ng-template pTemplate="date" let-date let-locale="locale">
       <div (mouseenter)="op.show($event)" (mouseleave)="op.hide($event)"
-        [ngStyle]="{
-          'border': hasEvents(date) ? '2px solid #FF6347' : 'none',
-          'color': 'black',
-          'border-radius': '50%',
-          'text-align': 'center',
-          'line-height': '1.5',
-          'padding': '5px',
-          'width': '35px',
-          'height': '35px',
-          'display': 'flex',
-          'align-items': 'center',
-          'justify-content': 'center'
-        }">
+      [ngStyle]="{
+        'color': hasEvents(date) ? '#007BFF' : '#333',
+        'font-weight': 'bold',
+        'border-radius': '50%',
+        'text-align': 'center',
+        'line-height': '1.5',
+        'padding': '5px',
+        'width': '40px',
+        'height': '40px',
+        'display': 'flex',
+        'align-items': 'center',
+        'justify-content': 'center',
+        'transition': 'transform 0.3s ease-in-out',
+        'cursor': 'pointer',
+        'background-color': hasEvents(date) ? '#f9f9f9' : 'transparent',
+        'border': hasEvents(date) ? '2px solid #007BFF' : '1px solid #ddd'
+      }"
+        (mouseenter)="this.style.transform = 'scale(1.1)'"
+        (mouseleave)="this.style.transform = 'scale(1)'">
         {{ date.day }}
       </div>
       <p-overlayPanel #op>
-        <div *ngIf="events[dateToString(date)]">
+        <div *ngIf="events[dateToString(date)]" style="padding: 10px; background-color: white; box-shadow: 0 4px 8px rgba(0,0,0,0.25); border-radius: 5px;">
           <ul>
-            <li *ngFor="let event of events[dateToString(date)]">{{ event.name }}</li>
+            <li *ngFor="let event of events[dateToString(date)]" style="list-style-type: none;">
+              <i class="pi pi-calendar-plus" style="color: #007BFF; margin-right: 5px;"></i>
+              {{ event.name }}
+            </li>
           </ul>
         </div>
       </p-overlayPanel>
     </ng-template>
   </p-calendar>
 
-  <!-- Details Card -->
-  <div *ngIf="showDetails" style="flex: 1; max-width: 400px; padding: 0;">
-    <p-card>
+  <div *ngIf="showDetails" style="flex: 1; max-width: 400px; padding: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.12); border-radius: 8px; background-color: '#ffffff';">
+    <p-card style="border: none;">
       <ng-template pTemplate="content">
         <ul style="list-style: none; padding: 0; margin: 0; overflow-y: auto; max-height: 300px;">
-          <li *ngFor="let event of selectedDateEvents" style="margin-bottom: 15px;">
-            <h4 style="margin: 0; color: #FF6347;">{{ event.name }}</h4>
-            <!-- Display the date in full format -->
-            <p style="color: #555;"><strong>Date:</strong> {{ event.date | date:'fullDate' }}</p>
-            <!-- Display the time in UTC timezone -->
-            <p style="color: #555; margin: 5px 0;"><strong>Time:</strong> {{ event.date | date:'shortTime':'UTC' }}</p>
-            <p style="color: #555;"><strong>Description:</strong> {{ event.description }}</p>
+          <li *ngFor="let event of selectedDateEvents" style="margin-bottom: 20px;">
+            <h4 style="margin: 0; color: #007BFF; font-weight: bold;">{{ event.name }}</h4>
+            <p style="color: #666;"><strong>Date:</strong> {{ event.date | date:'fullDate' }}</p>
+            <p style="color: #666; margin: 5px 0;"><strong>Time:</strong> {{ event.date | date:'shortTime':'UTC' }}</p>
+            <p style="color: #666;"><strong>Description:</strong> {{ event.description }}</p>
           </li>
         </ul>
       </ng-template>
     </p-card>
-    
-    
-    
   </div>
 </div>
