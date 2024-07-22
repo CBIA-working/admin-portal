@@ -122,4 +122,7 @@ getKeyProgramDates(month: number): Promise<any> {
     const body = { month };
     return this.http.post(url, body).toPromise();
   }
+  addKeyProgramDates(keyProgramDate: KeyProgramDate): Observable<any> {
+    return this.http.post<any>(`${this.BASE_URL}/AddKeyProgramDates`, keyProgramDate);
+}
 }

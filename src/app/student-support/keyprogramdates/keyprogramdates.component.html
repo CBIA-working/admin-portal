@@ -50,11 +50,16 @@
           <li *ngFor="let event of selectedDateEvents" style="margin-bottom: 20px;">
             <h4 style="margin: 0; color: #007BFF; font-weight: bold;">{{ event.name }}</h4>
             <p style="color: #666;"><strong>Date:</strong> {{ event.date | date:'fullDate' }}</p>
-            <p style="color: #666; margin: 5px 0;"><strong>Time:</strong> {{ event.date | date:'shortTime':'UTC' }}</p>
+            <p style="color: #666; margin: 5px 0;"><strong>Time:</strong> {{ event.time }}</p>
             <p style="color: #666;"><strong>Description:</strong> {{ event.description }}</p>
           </li>
         </ul>
       </ng-template>
     </p-card>
   </div>
+
+  <button pButton type="button" label="Add Key Program Date" icon="pi pi-plus" (click)="addKeyProgramDateOverlay.toggle($event)"></button>
+  <p-overlayPanel #addKeyProgramDateOverlay>
+    <app-addkeyprogramdate (submitSuccess)="addKeyProgramDateOverlay.hide()"></app-addkeyprogramdate>
+  </p-overlayPanel>
 </div>

@@ -47,11 +47,13 @@ export interface Courses {
     events: string;
     agreements: string;
 }
-
+// In your domain/schema.ts file
 export interface KeyProgramDate {
     id: number;
     name: string;
     date: Date;
+    time:string; // Allow date to be either Date or string
     description: string;
   }
+  
   

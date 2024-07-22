@@ -1,0 +1,23 @@
+<div style="padding: 20px;">
+    <h2>Add Key Program Date</h2>
+    <form (ngSubmit)="addKeyProgramDate()" #keyProgramDateForm="ngForm">
+      <div class="p-field">
+        <label for="name">Name</label>
+        <input id="name" type="text" pInputText [(ngModel)]="keyProgramDate.name" name="name" required>
+      </div>
+      <div class="p-field">
+        <label for="date">Date</label>
+        <p-calendar id="date" [(ngModel)]="keyProgramDate.date" name="date" dateFormat="yy-mm-dd" required></p-calendar>
+      </div>
+      <div class="p-field">
+        <label for="time">Time</label>
+        <p-calendar id="time" [(ngModel)]="time" name="time" timeOnly="true" hourFormat="24" required></p-calendar>
+      </div>
+      <div class="p-field">
+        <label for="description">Description</label>
+        <input id="description" type="text" pInputText [(ngModel)]="keyProgramDate.description" name="description" required>
+      </div>
+      <button pButton type="submit" label="Add Key Program Date" [disabled]="!keyProgramDateForm.form.valid"></button>
+    </form>
+  </div>
+  

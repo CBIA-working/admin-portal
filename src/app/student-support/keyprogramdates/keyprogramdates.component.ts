@@ -9,11 +9,13 @@ import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { PrimeTemplate } from 'primeng/api';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { AddKeyProgramDateComponent } from './addkeyprogramdate/addkeyprogramdate.component';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-keyprogramdates',
   standalone: true,
-  imports: [HttpClientModule, CommonModule, FormsModule, CalendarModule, CardModule, ButtonModule, PrimeTemplate,OverlayPanelModule],
+  imports: [HttpClientModule, CommonModule, FormsModule, CalendarModule, CardModule, ButtonModule, PrimeTemplate, OverlayPanelModule, AddKeyProgramDateComponent, ToastModule],
   providers: [Service],
   templateUrl: './keyprogramdates.component.html',
   styleUrls: ['./keyprogramdates.component.scss']
@@ -30,12 +32,12 @@ export class KeyprogramdatesComponent implements OnInit {
     const currentMonth = new Date().getMonth() + 1; // JavaScript months are zero-indexed
     this.loadKeyProgramDates(currentMonth);
   }
-  
+
   loadKeyProgramDates(month: number): void {
     this.service.getKeyProgramDates(month).then(data => {
       // Combine all month data into a single array
       const allDates = [...data.prevMonthDates, ...data.currentMonthDates, ...data.nextMonthDates];
-  
+
       this.currentMonthDates = allDates;
       this.events = allDates.reduce((acc, event) => {
         // Convert UTC date to local date
@@ -55,7 +57,6 @@ export class KeyprogramdatesComponent implements OnInit {
   }
 
   onDateSelect(event: any): void {
-    // Using local date for selection
     const selectedDate = new Date(event).toLocaleDateString();
     this.selectedDateEvents = this.events[selectedDate] || [];
     this.showDetails = this.selectedDateEvents.length > 0;
@@ -72,9 +73,9 @@ export class KeyprogramdatesComponent implements OnInit {
     const dateStr = checkDate.toLocaleDateString();
     return this.events[dateStr] ? true : false;
   }
+
   dateToString(date: any): string {
     const checkDate = new Date(date.year, date.month, date.day);
     return checkDate.toLocaleDateString();  // This should match the format used in loadKeyProgramDates
   }
-  
 }
