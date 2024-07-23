@@ -51,7 +51,7 @@ export interface Courses {
 export interface KeyProgramDate {
     id: number;
     name: string;
-    date: Date;
+    date: Date  | string;
     time:string; // Allow date to be either Date or string
     description: string;
   }

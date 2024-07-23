@@ -12,6 +12,7 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { Service } from '../../service/service';
 import { KeyProgramDate } from '../../domain/schema';
+import { CalendarModule } from 'primeng/calendar';
 
 @Component({
   selector: 'app-editkeyprogramdate',
@@ -25,6 +26,7 @@ import { KeyProgramDate } from '../../domain/schema';
     HttpClientModule,
     CommonModule,
     ToastModule,
+    CalendarModule,
   ],
   providers: [MessageService, Service, DatePipe],
   templateUrl: './editkeyprogramdate.component.html',
@@ -81,8 +83,10 @@ export class EditkeyprogramdateComponent implements OnInit, OnChanges {
     if (this.saveSubscription) {
       this.saveSubscription.unsubscribe();
     }
-  
+
     if (this.keyProgramDate) {
+      const timeString = this.formatTime(this.keyProgramDate.time);
+      this.keyProgramDate.time = timeString;
       this.saveSubscription = this.service.getupdatekeyprogramdates(this.keyProgramDate)
         .subscribe(response => {
           console.log('Event updated successfully:', response);
@@ -96,9 +100,15 @@ export class EditkeyprogramdateComponent implements OnInit, OnChanges {
         });
     }
   }
-  
 
   closeDialog(): void {
     this.dialogClose.emit(null);
+  }
+
+  formatTime(time: Date | string): string {
+    if (time instanceof Date) {
+      return `${time.getHours()}:${time.getMinutes()}`;
+    }
+    return time;
   }
 }
