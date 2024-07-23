@@ -117,12 +117,17 @@ getupdateProfile(formData: FormData): Observable<any> {
       }
 //keyprogramdates
 
-getKeyProgramDates(month: number): Promise<any> {
+    getKeyProgramDates(month: number): Promise<any> {
     const url = `${this.BASE_URL}/KeyProgramDatesAdmin`;
     const body = { month };
     return this.http.post(url, body).toPromise();
-  }
-  addKeyProgramDates(keyProgramDate: KeyProgramDate): Observable<any> {
+    }
+
+    addKeyProgramDates(keyProgramDate: KeyProgramDate): Observable<any> {
     return this.http.post<any>(`${this.BASE_URL}/AddKeyProgramDates`, keyProgramDate);
-}
+    }
+
+    getupdatekeyprogramdates(params?: any): Observable<any>  {
+    return this.http.post<any>(`${this.BASE_URL}/UpdateKeyProgramDates`,params);
+    }
 }

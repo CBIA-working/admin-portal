@@ -1,33 +1,26 @@
 <div style="display: flex; align-items: flex-start; gap: 20px; padding: 20px; box-sizing: border-box;">
-  <p-calendar 
-    inline="true" 
-    (onSelect)="onDateSelect($event)"
-    (onMonthChange)="onMonthChange($event)"
-    [monthNavigator]="true" 
-    [yearNavigator]="true" 
-    yearRange="2020:2030"
+  <p-calendar inline="true" (onSelect)="onDateSelect($event)" (onMonthChange)="onMonthChange($event)" [monthNavigator]="true" 
+    [yearNavigator]="true" yearRange="2020:2030" 
     [style]="{width: '100%', maxWidth: '500px', border: '1px solid #ddd', borderRadius: '10px', padding: '20px', backgroundColor: 'rgba(255, 255, 255, 0.8)'}">
     <ng-template pTemplate="date" let-date let-locale="locale">
       <div (mouseenter)="op.show($event)" (mouseleave)="op.hide($event)"
-      [ngStyle]="{
-        'color': hasEvents(date) ? '#007BFF' : '#333',
-        'font-weight': 'bold',
-        'border-radius': '50%',
-        'text-align': 'center',
-        'line-height': '1.5',
-        'padding': '5px',
-        'width': '40px',
-        'height': '40px',
-        'display': 'flex',
-        'align-items': 'center',
-        'justify-content': 'center',
-        'transition': 'transform 0.3s ease-in-out',
-        'cursor': 'pointer',
-        'background-color': hasEvents(date) ? '#f9f9f9' : 'transparent',
-        'border': hasEvents(date) ? '2px solid #007BFF' : '1px solid #ddd'
-      }"
-        (mouseenter)="this.style.transform = 'scale(1.1)'"
-        (mouseleave)="this.style.transform = 'scale(1)'">
+        [ngStyle]="{
+          'color': hasEvents(date) ? '#007BFF' : '#333',
+          'font-weight': 'bold',
+          'border-radius': '50%',
+          'text-align': 'center',
+          'line-height': '1.5',
+          'padding': '5px',
+          'width': '40px',
+          'height': '40px',
+          'display': 'flex',
+          'align-items': 'center',
+          'justify-content': 'center',
+          'transition': 'transform 0.3s ease-in-out',
+          'cursor': 'pointer',
+          'background-color': hasEvents(date) ? '#f9f9f9' : 'transparent',
+          'border': hasEvents(date) ? '2px solid #007BFF' : '1px solid #ddd'
+        }">
         {{ date.day }}
       </div>
       <p-overlayPanel #op>
@@ -52,6 +45,7 @@
             <p style="color: #666;"><strong>Date:</strong> {{ event.date | date:'fullDate' }}</p>
             <p style="color: #666; margin: 5px 0;"><strong>Time:</strong> {{ event.time }}</p>
             <p style="color: #666;"><strong>Description:</strong> {{ event.description }}</p>
+            <p-button (click)="showEditDialog(event)" icon="pi pi-pencil" [text]="true" [plain]="true"></p-button>
           </li>
         </ul>
       </ng-template>
@@ -62,4 +56,11 @@
   <p-overlayPanel #addKeyProgramDateOverlay>
     <app-addkeyprogramdate (submitSuccess)="addKeyProgramDateOverlay.hide()"></app-addkeyprogramdate>
   </p-overlayPanel>
+  <p-dialog [(visible)]="dialogVisible" [modal]="true" [closable]="false" header="Edit Key program date" [responsive]="true" [style]="{width: '60vw'}">
+    <app-editkeyprogramdate 
+      *ngIf="selectedKeyprogramdate.length > 0" 
+      [keyProgramDate]="selectedKeyprogramdate[0]" 
+      (dialogClose)="onDialogClose($event)">
+    </app-editkeyprogramdate>
+  </p-dialog>
 </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { Service } from '../service/service';
@@ -11,11 +11,16 @@ import { PrimeTemplate } from 'primeng/api';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { AddKeyProgramDateComponent } from './addkeyprogramdate/addkeyprogramdate.component';
 import { ToastModule } from 'primeng/toast';
+import { EditkeyprogramdateComponent } from './editkeyprogramdate/editkeyprogramdate.component';
+import { DialogModule } from 'primeng/dialog';
 
 @Component({
   selector: 'app-keyprogramdates',
   standalone: true,
-  imports: [HttpClientModule, CommonModule, FormsModule, CalendarModule, CardModule, ButtonModule, PrimeTemplate, OverlayPanelModule, AddKeyProgramDateComponent, ToastModule],
+  imports: [HttpClientModule, CommonModule, FormsModule, 
+    CalendarModule, CardModule, ButtonModule, PrimeTemplate, 
+    OverlayPanelModule, AddKeyProgramDateComponent, ToastModule,DialogModule,
+  EditkeyprogramdateComponent],
   providers: [Service],
   templateUrl: './keyprogramdates.component.html',
   styleUrls: ['./keyprogramdates.component.scss']
@@ -25,8 +30,30 @@ export class KeyprogramdatesComponent implements OnInit {
   events: { [date: string]: KeyProgramDate[] } = {};  // Events by date
   selectedDateEvents: KeyProgramDate[] = [];
   showDetails: boolean = false;
+  dialogVisible: boolean = false;
+  keyProgramDate: KeyProgramDate[] = [];
+  selectedKeyprogramdate: KeyProgramDate[] = [];
+  
 
-  constructor(private service: Service) {}
+  constructor(private service: Service,private cdr: ChangeDetectorRef) {}
+
+  showEditDialog(keyProgramDate: KeyProgramDate): void {
+    this.selectedKeyprogramdate = [keyProgramDate];
+    this.dialogVisible = true;
+    this.cdr.detectChanges();
+  }
+
+  onDialogClose(updatedKeyProgramDate: KeyProgramDate | null): void {
+    if (updatedKeyProgramDate && this.selectedKeyprogramdate.length > 0) {
+      const index = this.currentMonthDates.findIndex(s => s.id === updatedKeyProgramDate.id);
+      if (index !== -1) {
+        this.currentMonthDates[index] = updatedKeyProgramDate;
+      }
+    }
+    this.dialogVisible = false;
+    this.selectedKeyprogramdate = [];
+    this.cdr.detectChanges();
+  }
 
   ngOnInit() {
     const currentMonth = new Date().getMonth() + 1; // JavaScript months are zero-indexed
