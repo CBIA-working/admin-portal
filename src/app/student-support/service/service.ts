@@ -127,7 +127,7 @@ getupdateProfile(formData: FormData): Observable<any> {
     return this.http.post<any>(`${this.BASE_URL}/AddKeyProgramDates`, keyProgramDate);
     }
 
-    getupdatekeyprogramdates(params?: any): Observable<any>  {
-    return this.http.post<any>(`${this.BASE_URL}/UpdateKeyProgramDates`,params);
-    }
+    getupdatekeyprogramdates(keyProgramDate: KeyProgramDate): Observable<any> {
+        return this.http.post<any>(`${this.BASE_URL}/UpdateKeyProgramDates`, keyProgramDate);
+      }
 }

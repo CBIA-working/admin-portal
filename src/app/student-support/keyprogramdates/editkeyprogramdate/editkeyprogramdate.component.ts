@@ -81,7 +81,7 @@ export class EditkeyprogramdateComponent implements OnInit, OnChanges {
     if (this.saveSubscription) {
       this.saveSubscription.unsubscribe();
     }
-
+  
     if (this.keyProgramDate) {
       this.saveSubscription = this.service.getupdatekeyprogramdates(this.keyProgramDate)
         .subscribe(response => {
@@ -96,6 +96,7 @@ export class EditkeyprogramdateComponent implements OnInit, OnChanges {
         });
     }
   }
+  
 
   closeDialog(): void {
     this.dialogClose.emit(null);
