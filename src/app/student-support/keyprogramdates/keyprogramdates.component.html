@@ -1,71 +1,114 @@
 <p-confirmDialog></p-confirmDialog>
 <p-toast></p-toast>
-<div style="display: flex; align-items: flex-start; gap: 20px; padding: 20px; box-sizing: border-box;">
-  <p-calendar inline="true" (onSelect)="onDateSelect($event)" (onMonthChange)="onMonthChange($event)" [monthNavigator]="true" 
-    [yearNavigator]="true" yearRange="2020:2030" 
-    [style]="{width: '100%', maxWidth: '500px', border: '1px solid #ddd', borderRadius: '10px', padding: '20px', backgroundColor: 'rgba(255, 255, 255, 0.8)'}">
-    <ng-template pTemplate="date" let-date let-locale="locale">
-      <div (mouseenter)="op.show($event)" (mouseleave)="op.hide($event)"
-        [ngStyle]="{
-          'color': hasEvents(date) ? '#007BFF' : '#333',
-          'font-weight': 'bold',
-          'border-radius': '50%',
-          'text-align': 'center',
-          'line-height': '1.5',
-          'padding': '5px',
-          'width': '40px',
-          'height': '40px',
-          'display': 'flex',
-          'align-items': 'center',
-          'justify-content': 'center',
-          'transition': 'transform 0.3s ease-in-out',
-          'cursor': 'pointer',
-          'background-color': hasEvents(date) ? '#f9f9f9' : 'transparent',
-          'border': hasEvents(date) ? '2px solid #007BFF' : '1px solid #ddd'
-        }">
-        {{ date.day }}
-      </div>
-      <p-overlayPanel #op>
-        <div *ngIf="events[dateToString(date)]" style="padding: 10px; background-color: white; box-shadow: 0 4px 8px rgba(0,0,0,0.25); border-radius: 5px;">
-          <ul>
-            <li *ngFor="let event of events[dateToString(date)]" style="list-style-type: none;">
-              <i class="pi pi-calendar-plus" style="color: #007BFF; margin-right: 5px;"></i>
-              {{ event.name }}
+
+<div style="display: flex; flex-direction: column; align-items: flex-start; gap: 20px; padding: 20px; box-sizing: border-box; background-color: #f4f4f4;">
+
+  <!-- Add Key Program Date Button -->
+  <button 
+    pButton 
+    type="button" 
+    label="Add Key Program Date" 
+    icon="pi pi-plus" 
+    (click)="addKeyProgramDateOverlay.toggle($event)" 
+    style="align-self: flex-start; margin-bottom: 20px;"
+  ></button>
+
+  <!-- Main Container for Calendar and Event Details -->
+  <div style="display: flex; gap: 20px; width: 100%;">
+
+    <!-- Calendar -->
+    <p-calendar 
+      inline="true" 
+      (onSelect)="onDateSelect($event)" 
+      (onMonthChange)="onMonthChange($event)" 
+      [monthNavigator]="true" 
+      [yearNavigator]="true" 
+      yearRange="2020:2030" 
+      [style]="{width: '100%', maxWidth: '500px', border: '1px solid #ddd', borderRadius: '10px', padding: '20px', backgroundColor: 'rgba(255, 255, 255, 0.9)'}"
+    >
+      <ng-template pTemplate="date" let-date let-locale="locale">
+        <div 
+          (mouseenter)="op.show($event)" 
+          (mouseleave)="op.hide($event)"
+          [ngStyle]="{
+            'color': hasEvents(date) ? '#007BFF' : '#333',
+            'font-weight': '600',
+            'border-radius': '50%',
+            'text-align': 'center',
+            'line-height': '1.5',
+            'padding': '8px',
+            'width': '40px',
+            'height': '40px',
+            'display': 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+            'transition': 'transform 0.3s ease-in-out',
+            'cursor': 'pointer',
+            'background-color': hasEvents(date) ? '#eaf4ff' : 'transparent',
+            'border': hasEvents(date) ? '2px solid #007BFF' : '1px solid #ddd'
+          }"
+        >
+          {{ date.day }}
+        </div>
+        <p-overlayPanel #op>
+          <div *ngIf="events[dateToString(date)]" style="padding: 10px; background-color: #fff; box-shadow: 0 4px 8px rgba(0,0,0,0.2); border-radius: 8px;">
+            <ul>
+              <li *ngFor="let event of events[dateToString(date)]" style="list-style-type: none; margin-bottom: 5px;">
+                <i class="pi pi-calendar-plus" style="color: #007BFF; margin-right: 5px;"></i>
+                {{ event.name }}
+              </li>
+            </ul>
+          </div>
+        </p-overlayPanel>
+      </ng-template>
+    </p-calendar>
+
+    <!-- Event Details -->
+    <div *ngIf="showDetails" style="flex: 1; max-width: 400px; padding: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); border-radius: 8px; background-color: #fff;">
+      <p-card style="border: none;">
+        <ng-template pTemplate="content">
+          <ul style="list-style: none; padding: 0; margin: 0; overflow-y: auto; max-height: 300px;">
+            <li *ngFor="let event of selectedDateEvents" style="margin-bottom: 20px; padding: 10px; border-bottom: 1px solid #ddd;">
+              <h4 style="margin: 0; color: #007BFF; font-weight:bolder; font-variant-caps: all-petite-caps; font-size: 1.5rem;">{{ event.name }}</h4>
+              <p style="color: #666; margin: 5px 0;"><strong>Date:</strong> {{ event.date | date:'fullDate' }}</p>
+              <p style="color: #666; margin: 5px 0;"><strong>Time:</strong> {{ event.time }}</p>
+              <p style="color: #666; margin: 5px 0;"><strong>Description:</strong> {{ event.description }}</p>
+              <div style="display: flex; gap: 10px;">
+                <p-button (click)="showEditDialog(event)" icon="pi pi-pencil" label="Edit" class="p-button-text p-button-outlined"></p-button>
+                <p-button (click)="deleteKeyprogramdate(event)" icon="pi pi-trash" label="Delete" class="p-button-text p-button-danger"></p-button>
+              </div>
             </li>
           </ul>
-        </div>
-      </p-overlayPanel>
-    </ng-template>
-  </p-calendar>
+        </ng-template>
+      </p-card>
+    </div>
 
-  <div *ngIf="showDetails" style="flex: 1; max-width: 400px; padding: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.12); border-radius: 8px; background-color: '#ffffff';">
-    <p-card style="border: none;">
-      <ng-template pTemplate="content">
-        <ul style="list-style: none; padding: 0; margin: 0; overflow-y: auto; max-height: 300px;">
-          <li *ngFor="let event of selectedDateEvents" style="margin-bottom: 20px;">
-            <h4 style="margin: 0; color: #007BFF; font-weight:bolder; font-variant-caps: all-petite-caps; font-size:x-large;">{{ event.name }}</h4>
-            <p style="color: #666;"><strong>Date:</strong> {{ event.date | date:'fullDate' }}</p>
-            <p style="color: #666; margin: 5px 0;"><strong>Time:</strong> {{ event.time }}</p>
-            <p style="color: #666;"><strong>Description:</strong> {{ event.description }}</p>
-            <p-button (click)="showEditDialog(event)" icon="pi pi-pencil" [text]="true" [plain]="true"></p-button>
-            <p-button (click)="deleteKeyprogramdate(event)" icon="pi pi-trash" [text]="true" [plain]="true"></p-button>
-          </li>
-        </ul>
-      </ng-template>
-    </p-card>
   </div>
 
-  <button pButton type="button" label="Add Key Program Date" icon="pi pi-plus" (click)="addKeyProgramDateOverlay.toggle($event)"></button>
-  <p-overlayPanel #addKeyProgramDateOverlay>
-    <app-addkeyprogramdate (submitSuccess)="onSubmitSuccess()"></app-addkeyprogramdate>
-  </p-overlayPanel>
-  
-  
-  <p-dialog [(visible)]="dialogVisible" [modal]="true" [closable]="false" header="Edit Key program date" [responsive]="true" [style]="{width: '42.5%',height:'53%'}">
+  <!-- Add Key Program Date Overlay -->
+<!-- Add Key Program Date Overlay -->
+<p-overlayPanel #addKeyProgramDateOverlay [showCloseIcon]="true" [dismissable]="true" header="Add Key Program Date"   [style]="{width: '30%', height: '60%'}">
+  <app-addkeyprogramdate (submitSuccess)="onSubmitSuccess()"></app-addkeyprogramdate>
+</p-overlayPanel>
+
+<!-- Edit Key Program Date Dialog -->
+<p-dialog [(visible)]="dialogVisible" [modal]="true" [closable]="false" header="Edit Key Program Date" [responsive]="true" [style]="{width: '50%', height: '60%'}">
+  <app-editkeyprogramdate 
+    *ngIf="selectedKeyprogramdate.length > 0" 
+    [keyProgramDate]="selectedKeyprogramdate[0]" 
+    (dialogClose)="onDialogClose($event)">
+  </app-editkeyprogramdate>
+</p-dialog>
+
+
+
+  <!-- Edit Key Program Date Dialog -->
+  <p-dialog [(visible)]="dialogVisible" [modal]="true" [closable]="false" header="Edit Key Program Date" [responsive]="true" [style]="{width: '50%', height: '60%'}">
     <app-editkeyprogramdate 
       *ngIf="selectedKeyprogramdate.length > 0" 
       [keyProgramDate]="selectedKeyprogramdate[0]" 
       (dialogClose)="onDialogClose($event)">
     </app-editkeyprogramdate>
   </p-dialog>
+
 </div>

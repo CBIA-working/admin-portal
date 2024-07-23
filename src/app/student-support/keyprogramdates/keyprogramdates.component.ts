@@ -23,12 +23,12 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 @Component({
   selector: 'app-keyprogramdates',
   standalone: true,
-  imports: [HttpClientModule, CommonModule, FormsModule, 
-    CalendarModule, CardModule, ButtonModule, PrimeTemplate, 
-    OverlayPanelModule, AddKeyProgramDateComponent, ToastModule, DialogModule,
-    EditkeyprogramdateComponent,DialogModule,InputTextModule,TagModule, ButtonModule,
-    ToastModule, FormsModule, OverlayPanelModule, InputGroupModule,
-    InputGroupAddonModule, ChipsModule,ConfirmDialogModule,],
+  imports: [
+    HttpClientModule, CommonModule, FormsModule, CalendarModule, CardModule,
+    ButtonModule, PrimeTemplate, OverlayPanelModule, AddKeyProgramDateComponent,
+    ToastModule, DialogModule, EditkeyprogramdateComponent, InputTextModule, TagModule,
+    InputGroupModule, InputGroupAddonModule, ChipsModule, ConfirmDialogModule
+  ],
   providers: [Service, MessageService, ConfirmationService],
   templateUrl: './keyprogramdates.component.html',
   styleUrls: ['./keyprogramdates.component.scss']
@@ -48,7 +48,7 @@ export class KeyprogramdatesComponent implements OnInit {
     private service: Service,
     private cdr: ChangeDetectorRef,
     private messageService: MessageService,
-    private confirmationService: ConfirmationService 
+    private confirmationService: ConfirmationService
   ) {}
 
   showEditDialog(keyProgramDate: KeyProgramDate): void {
@@ -84,11 +84,14 @@ export class KeyprogramdatesComponent implements OnInit {
       accept: () => {
         this.service.deleteKeyProgramDates(keyprogramdate.id).subscribe(
           () => {
-            this.currentMonthDates = this.currentMonthDates.filter(event => event.id !== keyprogramdate.id);
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Success',
-              detail: 'Key Program Date deleted successfully'
+            this.reloadKeyProgramDates().then(() => {
+              // After reloading data, open the card if necessary
+              this.openCardForDeletedDate(new Date(keyprogramdate.date).toLocaleDateString());
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Success',
+                detail: 'Key Program Date deleted successfully'
+              });
             });
           },
           error => {
@@ -110,6 +113,14 @@ export class KeyprogramdatesComponent implements OnInit {
   ngOnInit() {
     const currentMonth = new Date().getMonth() + 1; // JavaScript months are zero-indexed
     this.loadKeyProgramDates(currentMonth);
+  }
+
+  reloadKeyProgramDates(): Promise<void> {
+    const currentMonth = new Date().getMonth() + 1; // JavaScript months are zero-indexed
+    return new Promise((resolve, reject) => {
+      this.loadKeyProgramDates(currentMonth);
+      resolve();
+    });
   }
 
   loadKeyProgramDates(month: number): void {
@@ -156,5 +167,18 @@ export class KeyprogramdatesComponent implements OnInit {
   dateToString(date: any): string {
     const checkDate = new Date(date.year, date.month, date.day);
     return checkDate.toLocaleDateString();  // This should match the format used in loadKeyProgramDates
+  }
+
+  openCardForDeletedDate(date: string): void {
+    // Assuming `date` is already a string in the correct format
+    const eventsForDate = this.events[date] || [];
+    
+    if (eventsForDate.length > 0) {
+      this.selectedDateEvents = eventsForDate;
+      this.showDetails = true;
+    } else {
+      this.showDetails = false;
+    }
+    this.cdr.detectChanges();
   }
 }
