@@ -130,4 +130,9 @@ getupdateProfile(formData: FormData): Observable<any> {
     getupdatekeyprogramdates(keyProgramDate: KeyProgramDate): Observable<any> {
         return this.http.post<any>(`${this.BASE_URL}/UpdateKeyProgramDates`, keyProgramDate);
       }
+      deleteKeyProgramDates(keyProgramDateId: number): Observable<void> {
+        return this.http.delete<void>(`${this.BASE_URL}/DeleteKeyProgramDates`, { 
+          body: { id: keyProgramDateId } 
+    });
+    }
 }

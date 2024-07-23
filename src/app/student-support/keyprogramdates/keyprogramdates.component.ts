@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { Service } from '../service/service';
@@ -7,25 +7,35 @@ import { FormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
-import { PrimeTemplate } from 'primeng/api';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { ConfirmationService, MessageService, PrimeTemplate } from 'primeng/api';
+import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { AddKeyProgramDateComponent } from './addkeyprogramdate/addkeyprogramdate.component';
 import { ToastModule } from 'primeng/toast';
 import { EditkeyprogramdateComponent } from './editkeyprogramdate/editkeyprogramdate.component';
 import { DialogModule } from 'primeng/dialog';
+import { InputTextModule } from 'primeng/inputtext';
+import { TagModule } from 'primeng/tag';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { ChipsModule } from 'primeng/chips';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @Component({
   selector: 'app-keyprogramdates',
   standalone: true,
   imports: [HttpClientModule, CommonModule, FormsModule, 
     CalendarModule, CardModule, ButtonModule, PrimeTemplate, 
-    OverlayPanelModule, AddKeyProgramDateComponent, ToastModule,DialogModule,
-  EditkeyprogramdateComponent],
-  providers: [Service],
+    OverlayPanelModule, AddKeyProgramDateComponent, ToastModule, DialogModule,
+    EditkeyprogramdateComponent,DialogModule,InputTextModule,TagModule, ButtonModule,
+    ToastModule, FormsModule, OverlayPanelModule, InputGroupModule,
+    InputGroupAddonModule, ChipsModule,ConfirmDialogModule,],
+  providers: [Service, MessageService, ConfirmationService],
   templateUrl: './keyprogramdates.component.html',
   styleUrls: ['./keyprogramdates.component.scss']
 })
 export class KeyprogramdatesComponent implements OnInit {
+  @ViewChild('addKeyProgramDateOverlay') addKeyProgramDateOverlay: OverlayPanel;
+
   currentMonthDates: KeyProgramDate[] = [];
   events: { [date: string]: KeyProgramDate[] } = {};  // Events by date
   selectedDateEvents: KeyProgramDate[] = [];
@@ -33,9 +43,13 @@ export class KeyprogramdatesComponent implements OnInit {
   dialogVisible: boolean = false;
   keyProgramDate: KeyProgramDate[] = [];
   selectedKeyprogramdate: KeyProgramDate[] = [];
-  
 
-  constructor(private service: Service,private cdr: ChangeDetectorRef) {}
+  constructor(
+    private service: Service,
+    private cdr: ChangeDetectorRef,
+    private messageService: MessageService,
+    private confirmationService: ConfirmationService 
+  ) {}
 
   showEditDialog(keyProgramDate: KeyProgramDate): void {
     this.selectedKeyprogramdate = [keyProgramDate];
@@ -53,6 +67,44 @@ export class KeyprogramdatesComponent implements OnInit {
     this.dialogVisible = false;
     this.selectedKeyprogramdate = [];
     this.cdr.detectChanges();
+  }
+
+  onSubmitSuccess(): void {
+    // Hide the overlay panel
+    if (this.addKeyProgramDateOverlay) {
+      setTimeout(() => this.addKeyProgramDateOverlay.hide(), 1500);
+    }
+  }
+
+  deleteKeyprogramdate(keyprogramdate: KeyProgramDate): void {
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to delete this Key Program Date?',
+      header: 'Confirm',
+      icon: 'pi pi-info-circle',
+      accept: () => {
+        this.service.deleteKeyProgramDates(keyprogramdate.id).subscribe(
+          () => {
+            this.currentMonthDates = this.currentMonthDates.filter(event => event.id !== keyprogramdate.id);
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: 'Key Program Date deleted successfully'
+            });
+          },
+          error => {
+            console.error('Error deleting Key Program Date', error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Failed to delete Key Program Date'
+            });
+          }
+        );
+      },
+      reject: () => {
+        // Optionally handle rejection (user clicks cancel)
+      }
+    });
   }
 
   ngOnInit() {

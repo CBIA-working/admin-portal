@@ -1,3 +1,5 @@
+<p-confirmDialog></p-confirmDialog>
+<p-toast></p-toast>
 <div style="display: flex; align-items: flex-start; gap: 20px; padding: 20px; box-sizing: border-box;">
   <p-calendar inline="true" (onSelect)="onDateSelect($event)" (onMonthChange)="onMonthChange($event)" [monthNavigator]="true" 
     [yearNavigator]="true" yearRange="2020:2030" 
@@ -41,11 +43,12 @@
       <ng-template pTemplate="content">
         <ul style="list-style: none; padding: 0; margin: 0; overflow-y: auto; max-height: 300px;">
           <li *ngFor="let event of selectedDateEvents" style="margin-bottom: 20px;">
-            <h4 style="margin: 0; color: #007BFF; font-weight: bold;">{{ event.name }}</h4>
+            <h4 style="margin: 0; color: #007BFF; font-weight:bolder; font-variant-caps: all-petite-caps; font-size:x-large;">{{ event.name }}</h4>
             <p style="color: #666;"><strong>Date:</strong> {{ event.date | date:'fullDate' }}</p>
             <p style="color: #666; margin: 5px 0;"><strong>Time:</strong> {{ event.time }}</p>
             <p style="color: #666;"><strong>Description:</strong> {{ event.description }}</p>
             <p-button (click)="showEditDialog(event)" icon="pi pi-pencil" [text]="true" [plain]="true"></p-button>
+            <p-button (click)="deleteKeyprogramdate(event)" icon="pi pi-trash" [text]="true" [plain]="true"></p-button>
           </li>
         </ul>
       </ng-template>
@@ -54,9 +57,11 @@
 
   <button pButton type="button" label="Add Key Program Date" icon="pi pi-plus" (click)="addKeyProgramDateOverlay.toggle($event)"></button>
   <p-overlayPanel #addKeyProgramDateOverlay>
-    <app-addkeyprogramdate (submitSuccess)="addKeyProgramDateOverlay.hide()"></app-addkeyprogramdate>
+    <app-addkeyprogramdate (submitSuccess)="onSubmitSuccess()"></app-addkeyprogramdate>
   </p-overlayPanel>
-  <p-dialog [(visible)]="dialogVisible" [modal]="true" [closable]="false" header="Edit Key program date" [responsive]="true" [style]="{width: '60vw'}">
+  
+  
+  <p-dialog [(visible)]="dialogVisible" [modal]="true" [closable]="false" header="Edit Key program date" [responsive]="true" [style]="{width: '42.5%',height:'53%'}">
     <app-editkeyprogramdate 
       *ngIf="selectedKeyprogramdate.length > 0" 
       [keyProgramDate]="selectedKeyprogramdate[0]" 

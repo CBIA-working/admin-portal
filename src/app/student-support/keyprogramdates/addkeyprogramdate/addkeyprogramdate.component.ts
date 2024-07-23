@@ -58,12 +58,17 @@ export class AddKeyProgramDateComponent implements OnInit {
     console.log("Final Data being sent:", keyProgramDateWithTime);
   
     this.service.addKeyProgramDates(keyProgramDateWithTime).subscribe(() => {
-      this.messageService.add({severity: 'success', summary: 'Success', detail: 'Key Program Date added successfully'});
-      this.resetForm();
-      this.submitSuccess.emit(); // Notify parent component of success
+      // Show success message
+      this.messageService.add({severity: 'success', summary: 'Success', detail: 'Key Program Date added successfully', life: 1500});
+      
+      // Reset the form and close the dialog after 3000 milliseconds
+      setTimeout(() => {
+        this.resetForm();
+        this.submitSuccess.emit(); // Notify parent component of success
+      }, 3000);
     }, error => {
       console.error('Failed to add key program date:', error);
-      this.messageService.add({severity: 'error', summary: 'Error', detail: 'Failed to add Key Program Date'});
+      this.messageService.add({severity: 'error', summary: 'Error', detail: 'Failed to add Key Program Date', life: 1500});
     });
   }
   
