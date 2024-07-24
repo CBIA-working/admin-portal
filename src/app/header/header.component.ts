@@ -89,7 +89,13 @@ export class HeaderComponent implements OnInit {
         routerLink: '/keyprogramdates' 
       });
     }
-
+    else if (path === '/FAQs') {
+      this.items.push({ 
+        label: 'FAQs', 
+        escape: false, 
+        routerLink: '/FAQs' 
+      });
+    }
     // Add more conditions for additional routes as needed
   }
 }

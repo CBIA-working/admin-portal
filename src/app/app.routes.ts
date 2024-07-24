@@ -12,6 +12,7 @@ import { AccomodationComponent } from './student-support/accomodation/accomodati
 import { CoursesComponent } from './student-support/courses/courses.component';
 import { ProfileComponent } from './profile/profile.component';
 import { KeyprogramdatesComponent } from './student-support/keyprogramdates/keyprogramdates.component';
+import { FaqComponent } from './faq/faq.component';
 
 
 export const routes: Routes = [
@@ -22,6 +23,7 @@ export const routes: Routes = [
   { path: 'accomodations', component:AccomodationComponent,canActivate: [AuthGuard]},
   { path: 'keyprogramdates',component:KeyprogramdatesComponent,canActivate:[AuthGuard]},
   { path: 'courses', component:CoursesComponent,canActivate: [AuthGuard]},
+  { path: 'FAQs', component:FaqComponent,canActivate: [AuthGuard]},
   { path: 'profile', component:ProfileComponent,canActivate: [AuthGuard]},
   // { path: 'culturalevents/:id', component:CulturalEventsComponent,canActivate: [AuthGuard]},
   // { path: 'studentservice', component:StudentServicesComponent,canActivate: [AuthGuard]},

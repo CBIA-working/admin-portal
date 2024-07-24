@@ -135,4 +135,10 @@ getupdateProfile(formData: FormData): Observable<any> {
           body: { id: keyProgramDateId } 
     });
     }
+
+//faq
+getFaq(params?: any): Promise<any> {
+    return this.http.get<any>(`${this.BASE_URL}/faqadmin`, { params }).toPromise();
+}
+
 }

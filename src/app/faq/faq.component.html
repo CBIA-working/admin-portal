@@ -1,0 +1,65 @@
+<p-toast></p-toast>
+<div class="card" style="margin: 0 20px; overflow: hidden;">
+  <p-table
+    #dt
+    [value]="faqs"
+    dataKey="id"
+    [rows]="10"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [loading]="loading"
+    [paginator]="true"
+    [globalFilterFields]="['id', 'name', 'description']"
+    [reorderableColumns]="true"
+    styleClass="p-datatable-customers">
+    
+    <ng-template pTemplate="caption">
+      <div class="flex">
+        <p-button 
+          label="Clear" 
+          [outlined]="true" 
+          icon="pi pi-filter-slash" 
+          (click)="clear()">
+        </p-button>
+        <span class="p-input-icon-left ml-auto" style="border: 1px solid #ccc; border-radius: 4px; padding: 2px;">
+          <i class="pi pi-search" style="margin-left: 8px;"></i>
+          <input 
+            pInputText 
+            type="text" 
+            (input)="dt.filterGlobal($event.target.value, 'contains')" 
+            placeholder="Search keyword"
+            class="p-inputtext-sm" 
+            style="width: 15rem; padding-left: 3rem; border: none; outline: none; background: transparent; margin-left: 5px;">
+        </span>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th pReorderableColumn>ID</th>
+        <th pReorderableColumn>Name</th>
+        <th pReorderableColumn>Description</th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-faq>
+      <tr>
+        <td>{{ faq.id }}</td>
+        <td>{{ faq.name }}</td>
+        <td>{{ faq.description }}</td>
+        <td>
+          <div class="button-container" style="display: flex; gap: 0.5rem;">
+            <p-button (click)="showEditDialog(faq)" icon="pi pi-pencil" [text]="true" [plain]="true"></p-button>
+            <p-button (click)="deleteFaq(faq)" icon="pi pi-trash" [text]="true" [plain]="true"></p-button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="4">No FAQs found.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

@@ -56,4 +56,8 @@ export interface KeyProgramDate {
     description: string;
   }
   
-  
+export interface Faq {
+    id:number;
+    name:String;
+    description:String;
+  }
