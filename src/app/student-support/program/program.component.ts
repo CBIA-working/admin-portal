@@ -55,7 +55,10 @@ export class ProgramComponent implements OnInit,AfterViewInit {
   downloadSelectedMode: boolean = false;
   dialogVisible: boolean = false;
   addDialogVisible: boolean = false;
+  archivedPrograms: Program[] = [];
+  archiveDialogVisible: boolean = false;
 
+  
   constructor(
     private route: ActivatedRoute,
     private service: Service,
@@ -67,6 +70,20 @@ export class ProgramComponent implements OnInit,AfterViewInit {
     private datePipe: DatePipe
   ) {}
 
+  archiveProgram(program: Program): void {
+    this.archivedPrograms.push(program);
+    this.program = this.program.filter(p => p.id !== program.id);
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Success',
+      detail: 'Program archived successfully'
+    });
+  }
+
+  showArchiveDialog(): void {
+    this.archiveDialogVisible = true;
+  }
+  
   showAddDialog() {
     this.addDialogVisible = true;
   }

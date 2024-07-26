@@ -19,6 +19,7 @@
           (click)="exitSelectionMode()" 
           *ngIf="downloadSelectedMode">
         </p-button>
+        <p-button label="Archive" icon="pi pi-folder" [raised]="true" severity="secondary" (click)="showArchiveDialog()"></p-button> <!-- Archive button -->
     </div>
 
   <p-table #dt1 [value]="program" [selectionMode]="downloadSelectedMode ? 'checkbox' : null" [(selection)]="selectedprograms" dataKey="id" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]" [loading]="loading" [paginator]="true" [globalFilterFields]="['id', 'name', 'batch']" style="table-layout: fixed;">
@@ -71,6 +72,7 @@
         <td>
           <div class="button-container" style="display: flex; justify-content: center; gap: 0.5rem;">
             <p-button (click)="showEditDialog(program)" icon="pi pi-pencil" [text]="true" [plain]="true"></p-button>
+            <p-button (click)="archiveProgram(program)" icon="pi pi-folder" [text]="true" [plain]="true"></p-button> <!-- Archive button -->
             <p-button (click)="deleteCulturalEvent(program)" icon="pi pi-trash" [text]="true" [plain]="true"></p-button>
             <p-button (click)="op.toggle($event)" icon="pi pi-ellipsis-v" [text]="true" [plain]="true"></p-button>
             <p-overlayPanel #op>
@@ -112,3 +114,29 @@
   <p-dialog [(visible)]="addDialogVisible" [modal]="true" [closable]="false" header="Add program" [responsive]="true" [style]="{width: '40vw' ,height:'53vh'}">
     <app-add-program (dialogClose)="onAddDialogClose()"></app-add-program>
   </p-dialog> 
+  
+  <p-dialog [(visible)]="archiveDialogVisible" [modal]="true" header="Archived Programs" [responsive]="true" [style]="{width: '60vw'}">
+    <ng-template pTemplate="content">
+      <p-table [value]="archivedPrograms" dataKey="id" [paginator]="true" [rows]="10">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Batch</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-program>
+          <tr>
+            <td>{{ program.id }}</td>
+            <td>{{ program.name }}</td>
+            <td>{{ program.batch }}</td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="3">No archived programs found.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </ng-template>
+  </p-dialog>
