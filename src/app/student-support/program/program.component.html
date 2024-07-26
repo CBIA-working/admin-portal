@@ -19,36 +19,15 @@
           (click)="exitSelectionMode()" 
           *ngIf="downloadSelectedMode">
         </p-button>
-      </div>
-    
-  <p-table
-    #dt1
-    [value]="program"
-    dataKey="id"
-    [rows]="10"
-    [rowsPerPageOptions]="[10, 25, 50]"
-    [loading]="loading"
-    [paginator]="true"
-    [globalFilterFields]="['id', 'name', 'batch']"
-    style="table-layout: fixed;">
-    
+    </div>
+
+  <p-table #dt1 [value]="program" [selectionMode]="downloadSelectedMode ? 'checkbox' : null" [(selection)]="selectedprograms" dataKey="id" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]" [loading]="loading" [paginator]="true" [globalFilterFields]="['id', 'name', 'batch']" style="table-layout: fixed;">
     <ng-template pTemplate="caption">
       <div class="flex">
-        <p-button 
-          label="Clear" 
-          [outlined]="true" 
-          icon="pi pi-filter-slash" 
-          (click)="clear(dt1)">
-        </p-button>
+        <p-button label="Clear" [outlined]="true" icon="pi pi-filter-slash" (click)="clear(dt1)"></p-button>
         <span class="p-input-icon-left ml-auto" style="border: 1px solid #ccc; border-radius: 4px; padding: 2px;">
           <i class="pi pi-search" style="margin-left: 8px;"></i>
-          <input 
-            pInputText 
-            type="text" 
-            (input)="dt1.filterGlobal($event.target.value, 'contains')" 
-            placeholder="Search keyword"
-            class="p-inputtext-sm" 
-            style="width: 15rem; padding-left: 3rem; border: none; outline: none; background: transparent; margin-left: 5px;">
+          <input pInputText type="text" (input)="dt1.filterGlobal($event.target.value, 'contains')" placeholder="Search keyword" class="p-inputtext-sm" style="width: 15rem; padding-left: 3rem; border: none; outline: none; background: transparent; margin-left: 5px;">
         </span>
       </div>
     </ng-template>
@@ -92,7 +71,6 @@
         <td>
           <div class="button-container" style="display: flex; justify-content: center; gap: 0.5rem;">
             <p-button (click)="showEditDialog(program)" icon="pi pi-pencil" [text]="true" [plain]="true"></p-button>
-            <p-button (click)="showAssignDialog(program.id)" icon="pi pi-user-plus" [text]="true" [plain]="true"></p-button>
             <p-button (click)="deleteCulturalEvent(program)" icon="pi pi-trash" [text]="true" [plain]="true"></p-button>
             <p-button (click)="op.toggle($event)" icon="pi pi-ellipsis-v" [text]="true" [plain]="true"></p-button>
             <p-overlayPanel #op>
@@ -120,22 +98,17 @@
     </ng-template>
   </p-table>
 </div>
+
 <p-dialog [(visible)]="dialogVisible" [modal]="true" [closable]="false" header="Edit Courses" [responsive]="true" [style]="{width: '60vw'}">
-  <app-edit-courses
+  <app-edit-program
   *ngIf="selectedprogram" 
-  [courses]="selectedprogram" 
+  [program]="selectedprogram" 
   (dialogClose)="onDialogClose($event)">
-  </app-edit-courses>
+  </app-edit-program>
 </p-dialog>
 
 <p-confirmDialog></p-confirmDialog>
 
-
-<!-- <p-dialog header="Assign courses" [(visible)]="assignDialogVisible" [modal]="true" [style]="{'width': '50vw'}" [closable]="false">
-  <app-assign-courses [courseId]="selectedCourseId" (dialogClose)="onAssignDialogClose()"></app-assign-courses>
-</p-dialog>
-
-  <app-add-student *ngIf="!downloadSelectedMode"></app-add-student>
   <p-dialog [(visible)]="addDialogVisible" [modal]="true" [closable]="false" header="Add Event" [responsive]="true" [style]="{width: '60vw' ,height:'68vh'}">
-    <app-add-courses (dialogClose)="onAddDialogClose()"></app-add-courses>
-  </p-dialog> -->
+    <app-add-program (dialogClose)="onAddDialogClose()"></app-add-program>
+  </p-dialog> 

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Accomodation, Courses, CulturalEvent, KeyProgramDate } from '../domain/schema';
+import { Accomodation, Courses, CulturalEvent, KeyProgramDate, Program } from '../domain/schema';
 
 @Injectable()
 export class Service {
@@ -151,5 +151,16 @@ getupdateProfile(formData: FormData): Observable<any> {
     }
     getCourseProgram(data: { Id: number, type: string }): Promise<any> {
         return this.http.post(`${this.BASE_URL}/CourseProgram`, data).toPromise();
+    }
+    getupdateProgram(params?: any): Observable<any>  {
+        return this.http.post<any>(`${this.BASE_URL}/updateProgram`,params);
+    }
+    deleteProgram(ProgramId: number): Observable<void> {
+        return this.http.delete<void>(`${this.BASE_URL}/deleteProgram`, { 
+          body: { id: ProgramId } 
+    });
+    }
+    addProgram(program: Program): Observable<any> {
+        return this.http.post<any>(`${this.BASE_URL}/addProgram`, program);
     }
 }

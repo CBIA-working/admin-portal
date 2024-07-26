@@ -25,6 +25,8 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { EditProgramComponent } from './edit-program/edit-program.component';
+import { AddProgramComponent } from "./add-program/add-program.component";
 
 
 @Component({
@@ -34,8 +36,8 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
     TableModule, RouterModule, HttpClientModule, CommonModule, InputTextModule,
     TagModule, DropdownModule, MultiSelectModule, ProgressBarModule, ButtonModule,
     DownloadComponent, ToastModule, FormsModule, OverlayPanelModule, InputGroupModule,
-    InputGroupAddonModule, ChipsModule,DialogModule,ConfirmDialogModule,
-
+    InputGroupAddonModule, ChipsModule, DialogModule, ConfirmDialogModule, EditProgramComponent,
+    AddProgramComponent
 ],
   providers: [Service, MessageService,ConfirmationService,DatePipe],
   templateUrl: './program.component.html',
@@ -46,14 +48,12 @@ export class ProgramComponent implements OnInit,AfterViewInit {
   @ViewChild('dt1') table!: Table;
 
   program: Program[] = [];
-  selectedprogram: Program[] = [];
+  selectedprograms: Program[] = [];
+  selectedprogram: Program | null = null;
   loading: boolean = true;
   searchValue: string | undefined;
   downloadSelectedMode: boolean = false;
   dialogVisible: boolean = false;
-  currentUser: any = {};
-  assignDialogVisible: boolean = false;
-  selectedCourseId: number | null = null;
   addDialogVisible: boolean = false;
 
   constructor(
@@ -74,60 +74,51 @@ export class ProgramComponent implements OnInit,AfterViewInit {
     this.addDialogVisible = false;
     // Optionally refresh the student list here
   }
-  showAssignDialog(courseId: number) {
-    this.selectedCourseId = courseId;
-    this.assignDialogVisible = true;
+
+  showEditDialog(program: Program): void {
+    this.selectedprogram = program;
+    this.dialogVisible = true;
   }
 
-  onAssignDialogClose() {
-    this.selectedCourseId = null;
-    this.assignDialogVisible = false;
+  onDialogClose(updatedProgram: Program | null): void {
+    if (updatedProgram) {
+      this.selectedprogram = updatedProgram;
+      // Optionally refresh the program list here if necessary
+    }
+    this.dialogVisible = false;
   }
-  // showEditDialog(program: Program): void {
-  //   this.selectedprogram = program;
-  //   this.dialogVisible = true;
-  // }
-  // onDialogClose(updatedCourses: Courses | null): void {
-  //   if (updatedCourses) {
-  //     const index = this.courses.findIndex(s => s.id === updatedCourses.id);
-  //     if (index !== -1) {
-  //       this.courses[index] = updatedCourses;
-  //     }
-  //   }
-  //   this.selectedCourse = null;
-  //   this.dialogVisible = false;
-  // }
 
-  // deleteCulturalEvent(courses: Courses): void {
-  //   this.confirmationService.confirm({
-  //     message: 'Are you sure you want to delete this course?',
-  //     header: 'Confirm',
-  //     icon: 'pi pi-info-circle',
-  //     accept: () => {
-  //       this.service.deleteCourse(courses.id).subscribe(
-  //         () => {
-  //           this.courses = this.courses.filter(courses => courses.id !== courses.id);
-  //           this.messageService.add({
-  //             severity: 'success',
-  //             summary: 'Success',
-  //             detail: 'Cultural event deleted successfully'
-  //           });
-  //         },
-  //         error => {
-  //           console.error('Error deleting course', error);
-  //           this.messageService.add({
-  //             severity: 'error',
-  //             summary: 'Error',
-  //             detail: 'Failed to delete courses'
-  //           });
-  //         }
-  //       );
-  //     },
-  //     reject: () => {
-  //       // Optionally handle rejection (user clicks cancel)
-  //     }
-  //   });
-  // }
+  deleteCulturalEvent(program: Program): void {
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to delete this Program?',
+      header: 'Confirm',
+      icon: 'pi pi-info-circle',
+      accept: () => {
+        this.service.deleteProgram(program.id).subscribe(
+          () => {
+            this.program = this.program.filter(program => program.id !== program.id);
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: 'Program deleted successfully'
+            });
+          },
+          error => {
+            console.error('Error deleting Program', error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Failed to delete Program'
+            });
+          }
+        );
+      },
+      reject: () => {
+        // Optionally handle rejection (user clicks cancel)
+      }
+    });
+  }
+
   exportHeaderMapping = {
     id: 'ID',
     name: 'Name',
@@ -212,7 +203,7 @@ export class ProgramComponent implements OnInit,AfterViewInit {
 
   exitSelectionMode() {
     this.downloadSelectedMode = false;
-    this.selectedprogram = [];
+    this.selectedprograms = [];
   }
 
   downloadAllStudents(format: string) {
@@ -222,14 +213,14 @@ export class ProgramComponent implements OnInit,AfterViewInit {
 
   downloadSelectedStudents() {
     if (this.downloadSelectedMode) {
-      if (this.selectedprogram.length === 0) {
+      if (this.selectedprograms.length === 0) {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
           detail: 'Please select at least one course.'
         });
       } else {
-        const data = this.selectedprogram.map(program => this.mapCustomerToExportFormat(program));
+        const data = this.selectedprograms.map(program => this.mapCustomerToExportFormat(program));
         this.download(this.downloadComponent.format, data, 'selected_courses');
         this.exitSelectionMode();
       }
@@ -294,12 +285,4 @@ export class ProgramComponent implements OnInit,AfterViewInit {
     }
   }
 
-  // filterByUserId(userId: string) {
-  //   const userIdNumber = Number(userId);
-  //   if (!isNaN(userIdNumber)) {
-  //     this.courses = this.courses.filter(course => course.Id === userIdNumber);
-  //   } else {
-  //     console.warn('The provided userId is not a valid number.');
-  //   }
-  // }
 }
