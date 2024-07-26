@@ -1,10 +1,11 @@
 <p-toast></p-toast>
 <div class="card" style="margin: 0 20px; overflow: hidden;">
     <div class="mb-2 ml-auto z-0" style="display: flex; gap: 10px;">
-        <p-button icon="pi pi-plus" (click)="showAddDialog()" [raised]="true" severity="primary"></p-button>
+        <p-button pTooltip="Add Program" icon="pi pi-plus" (click)="showAddDialog()" [raised]="true" severity="primary"></p-button>
     
         <app-download [class.hidden]="downloadSelectedMode" (downloadSelectedStudentsEvent)="downloadSelectedStudents()"></app-download>
         <p-button 
+          pTooltip="Download Selected Students"
           label="Download Selected Students" 
           icon="pi pi-download" 
           [raised]="true" 
@@ -13,13 +14,14 @@
           *ngIf="downloadSelectedMode">
         </p-button>
         <p-button 
+        pTooltip="Cancel"
           icon="pi pi-times" 
           severity="danger" 
           [raised]="true" 
           (click)="exitSelectionMode()" 
           *ngIf="downloadSelectedMode">
         </p-button>
-        <p-button label="Archive" icon="pi pi-refresh " [raised]="true" severity="secondary" (click)="showArchiveDialog()"></p-button> <!-- Archive button -->
+        <p-button pTooltip="Archive" label="Archive" icon="pi pi-refresh " [raised]="true" severity="secondary" (click)="showArchiveDialog()"></p-button> <!-- Archive button -->
     </div>
 
   <p-table #dt1 [value]="program" [selectionMode]="downloadSelectedMode ? 'checkbox' : null" [(selection)]="selectedprograms" dataKey="id" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]" [loading]="loading" [paginator]="true" [globalFilterFields]="['id', 'name', 'batch']" style="table-layout: fixed;">
@@ -71,10 +73,11 @@
         <td>{{ program.batch }}</td>
         <td>
           <div class="button-container" style="display: flex; justify-content: center; gap: 0.5rem;">
-            <p-button (click)="showEditDialog(program)" icon="pi pi-pencil" [text]="true" [plain]="true"></p-button>
-            <p-button (click)="archiveProgram(program)" icon="pi pi-refresh" [text]="true" [plain]="true"></p-button> <!-- Archive button -->
-            <p-button (click)="deleteCulturalEvent(program)" icon="pi pi-trash" [text]="true" [plain]="true"></p-button>
-            <p-button (click)="op.toggle($event)" icon="pi pi-ellipsis-v" [text]="true" [plain]="true"></p-button>
+            
+            <p-button pTooltip="Edit" (click)="showEditDialog(program)" icon="pi pi-pencil" [text]="true" [plain]="true"></p-button>
+            <p-button pTooltip="Archive" (click)="archiveProgram(program)" icon="pi pi-refresh" [text]="true" [plain]="true"></p-button> <!-- Archive button -->
+            <p-button pTooltip="Delete" (click)="deleteCulturalEvent(program)" icon="pi pi-trash" [text]="true" [plain]="true"></p-button>
+            <p-button pTooltip="Navigate to" (click)="op.toggle($event)" icon="pi pi-ellipsis-v" [text]="true" [plain]="true"></p-button>
             <p-overlayPanel #op>
               <div>
                 <ul class="list-none p-0 m-0 flex flex-column gap-3">
@@ -132,7 +135,7 @@
           <td>{{ program.name }}</td>
           <td>{{ program.batch }}</td>
           <td>
-            <p-button label="Unarchive" icon="pi pi-undo" [raised]="true" severity="success" (click)="unarchiveProgram(program)"></p-button> <!-- Unarchive button -->
+            <p-button pTooltip="Unarchive"  icon="pi pi-undo" [raised]="true" [text]="true" [plain]="true" (click)="unarchiveProgram(program)"></p-button> <!-- Unarchive button -->
           </td>
         </tr>
       </ng-template>

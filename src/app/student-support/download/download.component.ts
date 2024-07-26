@@ -9,6 +9,7 @@ import { ToggleButtonModule } from 'primeng/togglebutton';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { ImportsModule } from 'src/app/imports';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-download',
@@ -21,7 +22,8 @@ import { ImportsModule } from 'src/app/imports';
     CommonModule,
     ImportsModule,
     ConfirmDialogModule,
-    DropdownModule
+    DropdownModule,
+    TooltipModule
   ],
   templateUrl: './download.component.html',
   styleUrls: ['./download.component.scss'],

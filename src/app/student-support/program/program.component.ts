@@ -27,6 +27,7 @@ import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { EditProgramComponent } from './edit-program/edit-program.component';
 import { AddProgramComponent } from "./add-program/add-program.component";
+import { TooltipModule } from 'primeng/tooltip';
 
 
 @Component({
@@ -36,7 +37,7 @@ import { AddProgramComponent } from "./add-program/add-program.component";
     TableModule, RouterModule, HttpClientModule, CommonModule, InputTextModule,
     TagModule, DropdownModule, MultiSelectModule, ProgressBarModule, ButtonModule,
     DownloadComponent, ToastModule, FormsModule, OverlayPanelModule, InputGroupModule,
-    InputGroupAddonModule, ChipsModule, DialogModule, ConfirmDialogModule, EditProgramComponent,
+    InputGroupAddonModule, ChipsModule, DialogModule, ConfirmDialogModule, TooltipModule,EditProgramComponent,
     AddProgramComponent
 ],
   providers: [Service, MessageService,ConfirmationService,DatePipe],

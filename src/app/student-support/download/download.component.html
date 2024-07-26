@@ -1,4 +1,4 @@
-<p-button label="Export" icon="pi pi-download" (click)="showDialog()"></p-button>
+<p-button pTooltip="Export" label="Export" icon="pi pi-download" (click)="showDialog()"></p-button>
 
 <p-dialog header="Export Students" [modal]="true" [(visible)]="visible" [style]="{ 'max-width': '600px' }">
   <div class="p-dialog-content">
@@ -13,7 +13,7 @@
     </div>
   </div>
   <div class="p-dialog-footer">
-    <p-button label="Download All Students" icon="pi pi-download" [raised]="true" severity="secondary" (click)="downloadAllStudents()"></p-button>
-    <p-button label="Download Selected Students" icon="pi pi-download" [raised]="true" severity="secondary" (click)="downloadSelectedStudents()"></p-button>
+    <p-button pTooltip="Download All Students"  label="Download All Students" icon="pi pi-download" [raised]="true" severity="secondary" (click)="downloadAllStudents()"></p-button>
+    <p-button pTooltip="Download Selected Students" label="Download Selected Students" icon="pi pi-download" [raised]="true" severity="secondary" (click)="downloadSelectedStudents()"></p-button>
   </div>
 </p-dialog>
