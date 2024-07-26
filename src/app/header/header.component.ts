@@ -11,7 +11,7 @@ import { AvatarModule } from 'primeng/avatar';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterModule, CommonModule, SidebarComponent, BreadcrumbModule,AvatarModule],
+  imports: [RouterModule, CommonModule, SidebarComponent, BreadcrumbModule, AvatarModule],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
@@ -34,10 +34,12 @@ export class HeaderComponent implements OnInit {
       }
     });
   }
+
   logout() {
     this.authService.clearToken(); // Clear token using AuthService
     this.router.navigate(['/login'], { replaceUrl: true });
   }
+
   updateBreadcrumbs(url: string) {
     // Reset breadcrumbs
     this.items = [];
@@ -50,60 +52,73 @@ export class HeaderComponent implements OnInit {
       this.items.push({ 
         label: 'Manage Student', 
         escape: false,
-        routerLink: '/managestudent' 
+        routerLink: '/managestudent',
+        command: () => this.reloadPage('/managestudent')
       });
     }
     else if (path === '/Programs') {
       this.items.push({ 
         label: 'Programs', 
         escape: false, 
-        routerLink: '/Programs' 
+        routerLink: '/Programs',
+        command: () => this.reloadPage('/Programs')
       });
-      
     } 
-     else if (path === '/culturalevents') {
+    else if (path === '/culturalevents') {
       this.items.push({ 
         label: 'Cultural Events', 
         escape: false, 
-        routerLink: '/culturalevents' 
+        routerLink: '/culturalevents',
+        command: () => this.reloadPage('/culturalevents')
       });
-      
     } 
     else if (path === '/accomodations') {
       this.items.push({ 
-        label: 'Accomodations', 
+        label: 'Accommodations', 
         escape: false, 
-        routerLink: '/accomodations' 
+        routerLink: '/accomodations',
+        command: () => this.reloadPage('/accomodations')
       });
     }
     else if (path === '/courses') {
       this.items.push({ 
         label: 'Courses', 
         escape: false, 
-        routerLink: '/courses' 
+        routerLink: '/courses',
+        command: () => this.reloadPage('/courses')
       });
     }
     else if (path === '/profile') {
       this.items.push({ 
         label: 'Profile', 
         escape: false, 
-        routerLink: '/profile' 
+        routerLink: '/profile',
+        command: () => this.reloadPage('/profile')
       });
     }    
     else if (path === '/keyprogramdates') {
       this.items.push({ 
         label: 'Key Program Dates', 
         escape: false, 
-        routerLink: '/keyprogramdates' 
+        routerLink: '/keyprogramdates',
+        command: () => this.reloadPage('/keyprogramdates')
       });
     }
     else if (path === '/FAQs') {
       this.items.push({ 
         label: 'FAQs', 
         escape: false, 
-        routerLink: '/FAQs' 
+        routerLink: '/FAQs',
+        command: () => this.reloadPage('/FAQs')
       });
     }
     // Add more conditions for additional routes as needed
+  }
+
+  reloadPage(route: string) {
+    // Navigate to the route and force reload
+    this.router.navigate([route]).then(() => {
+      window.location.reload();
+    });
   }
 }

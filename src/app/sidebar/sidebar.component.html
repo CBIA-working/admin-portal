@@ -1,149 +1,106 @@
-
-    <p-sidebar #sidebarRef [(visible)]="sidebarVisible">
-        <ng-template pTemplate="headless">
-            <div class="flex flex-column h-full">
-                <div class="flex align-items-center justify-content-between px-4 pt-3 flex-shrink-0">
-                    <span class="inline-flex align-items-center gap-2">
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSy7nFdX1g_CVR4WyP5LgKOGytP0J8PE53_RQ&s" alt="Logo" class="block mx-auto" width="33" height="35">
-                        <span class="font-semibold text-2xl text-primary">Admin Portal</span>
-                    </span>
-                    <span>
-                        <p-button type="button" (click)="closeCallback($event)" icon="pi pi-times" rounded="true" outlined="true" styleClass="h-2rem w-2rem"></p-button>
-                    </span>
-                </div>
-                <div class="overflow-y-auto">
-                    <ul class="list-none p-3 m-0">
-                        <ul class="list-none p-0 m-0 overflow-hidden">
-                            <li>
-                                <a routerLink="/home" routerLinkActive="active-link"
-                                    pRipple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple"
-                                    [ngStyle]="{ 'background-color': isActive('/home') ? '#e0e0e0' : '' }">
-                                    <i class="pi pi-home mr-2"></i>
-                                    <span class="font-medium">Home</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a routerLink="/managestudent" routerLinkActive="active-link"
-                                    pRipple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple"
-                                    [ngStyle]="{ 'background-color': isActive('/managestudent') ? '#e0e0e0' : '' }">
-                                    <i class="pi pi-users mr-2"></i>
-                                    <span class="font-medium">Manage students</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a routerLink="/Programs" routerLinkActive="active-link"
-                                    pRipple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple"
-                                    [ngStyle]="{ 'background-color': isActive('/Programs') ? '#e0e0e0' : '' }">
-                                    <i class="pi pi-graduation-cap mr-2"></i>
-                                    <span class="font-medium">Programs</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a routerLink="/culturalevents" routerLinkActive="active-link"
-                                    pRipple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple"
-                                    [ngStyle]="{ 'background-color': isActive('/culturalevents') ? '#e0e0e0' : '' }">
-                                    <i class="pi pi-calendar-clock mr-2"></i>
-                                    <span class="font-medium">Cultural Events</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a routerLink="/accomodations" routerLinkActive="active-link"
-                                    pRipple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple"
-                                    [ngStyle]="{ 'background-color': isActive('/accomodations') ? '#e0e0e0' : '' }">
-                                    <i class="pi pi-building mr-2"></i>
-                                    <span class="font-medium">Accomodations</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a routerLink="/courses" routerLinkActive="active-link"
-                                    pRipple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple"
-                                    [ngStyle]="{ 'background-color': isActive('/courses') ? '#e0e0e0' : '' }">
-                                    <i class="pi pi-book mr-2"></i>
-                                    <span class="font-medium">Courses</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a routerLink="/keyprogramdates" routerLinkActive="active-link"
-                                    pRipple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple"
-                                    [ngStyle]="{ 'background-color': isActive('/keyprogramdates') ? '#e0e0e0' : '' }">
-                                    <i class="pi pi-calendar mr-2"></i>
-                                    <span class="font-medium">Key Program Dates</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a routerLink="/FAQs" routerLinkActive="active-link"
-                                    pRipple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple"
-                                    [ngStyle]="{ 'background-color': isActive('/FAQs') ? '#e0e0e0' : '' }">
-                                    <i class="pi pi-question-circle mr-2"></i>
-                                    <span class="font-medium">FAQs</span>
-                                </a>
-                            </li>
-                            <!-- <li>
-                                <a pRipple pStyleClass="@next" enterClass="hidden" enterActiveClass="slidedown" leaveToClass="hidden" leaveActiveClass="slideup"
-                                    class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
-                                    <i class="pi pi-handshake mr-2"></i>
-                                    <span class="font-medium">Student Support</span>
-                                    <i class="pi pi-chevron-down ml-auto"></i>
-                                </a>
-                                <ul class="list-none py-0 pl-3 pr-0 m-0 hidden overflow-y-hidden transition-all transition-duration-400 transition-ease-in-out">
-                                    <li>
-                                        <a routerLink="/studentservice" routerLinkActive="active-link"
-                                            pRipple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple"
-                                            [ngStyle]="{ 'background-color': isActive('/studentservice') ? '#e0e0e0' : '' }">
-                                            <i class="pi pi-user mr-2"></i>
-                                            <span class="font-medium">Student Service</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li> -->
-                            <li>
-                                <a routerLink="/settings" routerLinkActive="active-link"
-                                    pRipple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple"
-                                    [ngStyle]="{ 'background-color': isActive('/settings') ? '#e0e0e0' : '' }">
-                                    <i class="pi pi-cog mr-2"></i>
-                                    <span class="font-medium">Settings</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a (click)="logout()"
-                                    pRipple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
-                                    <i class="pi pi-sign-out mr-2"></i>
-                                    <span class="font-medium">Logout</span>
-                                </a>
-                            </li>
-                            
-                        </ul>
-                    </ul>
-                </div>
-                
-                <div class="mt-auto">
-                    <hr class="mb-3 mx-3 border-top-1 border-none surface-border" />
-                    <a routerLink="/profile" routerLinkActive="active-link" pRipple class="m-3 flex align-items-center cursor-pointer p-3 gap-2 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
-                        <!-- Dynamic Avatar based on gender -->
-                        <p-avatar [image]="user.imageUrl" shape="circle"></p-avatar>
-                        <span class="font-bold">{{ user?.fname }} {{ user?.lname }}</span>
-                    </a>
-                </div>
-                
-                  
+<p-sidebar #sidebarRef [(visible)]="sidebarVisible">
+    <ng-template pTemplate="headless">
+        <div class="flex flex-column h-full">
+            <div class="flex align-items-center justify-content-between px-4 pt-3 flex-shrink-0">
+                <span class="inline-flex align-items-center gap-2">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSy7nFdX1g_CVR4WyP5LgKOGytP0J8PE53_RQ&s" alt="Logo" class="block mx-auto" width="33" height="35">
+                    <span class="font-semibold text-2xl text-primary">Admin Portal</span>
+                </span>
+                <span>
+                    <p-button type="button" (click)="closeSidebar()" icon="pi pi-times" rounded="true" outlined="true" styleClass="h-2rem w-2rem"></p-button>
+                </span>
             </div>
-        </ng-template>
-    </p-sidebar>
-    <p-button (click)="sidebarVisible = true" icon="pi pi-bars" ></p-button>
-
-
-
-    <!-- <li>
-        <a pRipple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
-            <i class="pi pi-comments mr-2"></i>
-            <span class="font-medium">Messages</span>
-            <span class="inline-flex align-items-center justify-content-center ml-auto bg-primary border-circle" style="min-width: 1.5rem; height: 1.5rem">3</span>
-        </a>
-    </li>
-    <li>
-        <a pRipple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
-            <i class="pi pi-calendar mr-2"></i>
-            <span class="font-medium">Calendar</span>
-        </a>
-    </li> -->
-
+            <div class="overflow-y-auto">
+                <ul class="list-none p-3 m-0">
+                    <li>
+                        <a (click)="handleRouteClick('/home')"
+                            pRipple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple"
+                            [ngStyle]="{ 'background-color': isActive('/home') ? '#e0e0e0' : '' }">
+                            <i class="pi pi-home mr-2"></i>
+                            <span class="font-medium">Home</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a (click)="handleRouteClick('/managestudent')"
+                            pRipple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple"
+                            [ngStyle]="{ 'background-color': isActive('/managestudent') ? '#e0e0e0' : '' }">
+                            <i class="pi pi-users mr-2"></i>
+                            <span class="font-medium">Manage Students</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a (click)="handleRouteClick('/Programs')"
+                            pRipple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple"
+                            [ngStyle]="{ 'background-color': isActive('/Programs') ? '#e0e0e0' : '' }">
+                            <i class="pi pi-graduation-cap mr-2"></i>
+                            <span class="font-medium">Programs</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a (click)="handleRouteClick('/culturalevents')"
+                            pRipple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple"
+                            [ngStyle]="{ 'background-color': isActive('/culturalevents') ? '#e0e0e0' : '' }">
+                            <i class="pi pi-calendar-clock mr-2"></i>
+                            <span class="font-medium">Cultural Events</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a (click)="handleRouteClick('/accomodations')"
+                            pRipple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple"
+                            [ngStyle]="{ 'background-color': isActive('/accomodations') ? '#e0e0e0' : '' }">
+                            <i class="pi pi-building mr-2"></i>
+                            <span class="font-medium">Accommodations</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a (click)="handleRouteClick('/courses')"
+                            pRipple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple"
+                            [ngStyle]="{ 'background-color': isActive('/courses') ? '#e0e0e0' : '' }">
+                            <i class="pi pi-book mr-2"></i>
+                            <span class="font-medium">Courses</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a (click)="handleRouteClick('/keyprogramdates')"
+                            pRipple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple"
+                            [ngStyle]="{ 'background-color': isActive('/keyprogramdates') ? '#e0e0e0' : '' }">
+                            <i class="pi pi-calendar mr-2"></i>
+                            <span class="font-medium">Key Program Dates</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a (click)="handleRouteClick('/FAQs')"
+                            pRipple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple"
+                            [ngStyle]="{ 'background-color': isActive('/FAQs') ? '#e0e0e0' : '' }">
+                            <i class="pi pi-question-circle mr-2"></i>
+                            <span class="font-medium">FAQs</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a (click)="handleRouteClick('/settings')"
+                            pRipple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple"
+                            [ngStyle]="{ 'background-color': isActive('/settings') ? '#e0e0e0' : '' }">
+                            <i class="pi pi-cog mr-2"></i>
+                            <span class="font-medium">Settings</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a (click)="logout()"
+                            pRipple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
+                            <i class="pi pi-sign-out mr-2"></i>
+                            <span class="font-medium">Logout</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="mt-auto">
+                <hr class="mb-3 mx-3 border-top-1 border-none surface-border" />
+                <a routerLink="/profile" routerLinkActive="active-link" pRipple class="m-3 flex align-items-center cursor-pointer p-3 gap-2 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
+                    <p-avatar [image]="user.imageUrl" shape="circle"></p-avatar>
+                    <span class="font-bold">{{ user?.fname }} {{ user?.lname }}</span>
+                </a>
+            </div>
+        </div>
+    </ng-template>
+</p-sidebar>
+<p-button (click)="sidebarVisible = true" icon="pi pi-bars"></p-button>
