@@ -71,17 +71,64 @@ export class ProgramComponent implements OnInit,AfterViewInit {
   ) {}
 
   archiveProgram(program: Program): void {
-    this.archivedPrograms.push(program);
-    this.program = this.program.filter(p => p.id !== program.id);
-    this.messageService.add({
-      severity: 'success',
-      summary: 'Success',
-      detail: 'Program archived successfully'
-    });
+    this.service.archiveProgram(program.id).subscribe(
+      (updatedProgram) => {
+        this.program = this.program.filter((p) => p.id !== program.id);
+        this.archivedPrograms.push(updatedProgram);
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Program archived successfully',
+        });
+      },
+      (error) => {
+        console.error('Error archiving program', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to archive program',
+        });
+      }
+    );
   }
 
   showArchiveDialog(): void {
     this.archiveDialogVisible = true;
+    this.service.getArchivedPrograms().subscribe(
+      (archivedPrograms) => {
+        this.archivedPrograms = archivedPrograms;
+      },
+      (error) => {
+        console.error('Error fetching archived programs', error);
+      }
+    );
+  }
+  
+  unarchiveProgram(program: Program): void {
+    this.service.unarchiveProgram(program.id).subscribe(
+      () => {
+        // Remove from archived programs and add back to the main list
+        this.archivedPrograms = this.archivedPrograms.filter(p => p.id !== program.id);
+        this.program.push(program);
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Program unarchived successfully'
+        });
+      },
+      error => {
+        console.error('Error unarchiving Program', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to unarchive Program'
+        });
+      }
+    );
+  }
+  closeArchiveDialog(): void {
+    this.archiveDialogVisible = false;
+    this.fetchAllPrograms(); // Fetch programs to update the list
   }
   
   showAddDialog() {

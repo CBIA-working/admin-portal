@@ -163,4 +163,14 @@ getupdateProfile(formData: FormData): Observable<any> {
     addProgram(program: Program): Observable<any> {
         return this.http.post<any>(`${this.BASE_URL}/addProgram`, program);
     }
+    getArchivedPrograms(): Observable<Program[]> {
+        return this.http.get<Program[]>(`${this.BASE_URL}/archived`);
+      }
+    
+    archiveProgram(id: number): Observable<Program> {
+        return this.http.post<Program>(`${this.BASE_URL}/archive`, { id });
+      }
+    unarchiveProgram(programId: number): Observable<any> {
+        return this.http.post(`${this.BASE_URL}/unarchive`, { id: programId });
+      }
 }
