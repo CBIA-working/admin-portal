@@ -137,8 +137,19 @@ getupdateProfile(formData: FormData): Observable<any> {
     }
 
 //faq
-getFaq(params?: any): Promise<any> {
+    getFaq(params?: any): Promise<any> {
     return this.http.get<any>(`${this.BASE_URL}/faqadmin`, { params }).toPromise();
-}
+    }
 
+//Program
+    getProgram(params?: any): Promise<any> {
+    return this.http.get<any>(`${this.BASE_URL}/ProgramAdmin`, { params }).toPromise();
+    }
+
+    getStudentProgram(data: { Id: number, type: string }): Promise<any> {
+    return this.http.post(`${this.BASE_URL}/StudentProgram`, data).toPromise();
+    }
+    getCourseProgram(data: { Id: number, type: string }): Promise<any> {
+        return this.http.post(`${this.BASE_URL}/CourseProgram`, data).toPromise();
+    }
 }

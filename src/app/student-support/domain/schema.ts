@@ -61,3 +61,9 @@ export interface Faq {
     name:String;
     description:String;
   }
+
+  export interface Program {
+    id:number;
+    name:String;
+    batch:String;
+  }

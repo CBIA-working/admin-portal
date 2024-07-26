@@ -1,0 +1,141 @@
+<p-toast></p-toast>
+<div class="card" style="margin: 0 20px; overflow: hidden;">
+    <div class="mb-2 ml-auto z-0" style="display: flex; gap: 10px;">
+        <p-button icon="pi pi-plus" (click)="showAddDialog()" [raised]="true" severity="primary"></p-button>
+    
+        <app-download [class.hidden]="downloadSelectedMode" (downloadSelectedStudentsEvent)="downloadSelectedStudents()"></app-download>
+        <p-button 
+          label="Download Selected Students" 
+          icon="pi pi-download" 
+          [raised]="true" 
+          severity="secondary" 
+          (click)="downloadSelectedStudents()" 
+          *ngIf="downloadSelectedMode">
+        </p-button>
+        <p-button 
+          icon="pi pi-times" 
+          severity="danger" 
+          [raised]="true" 
+          (click)="exitSelectionMode()" 
+          *ngIf="downloadSelectedMode">
+        </p-button>
+      </div>
+    
+  <p-table
+    #dt1
+    [value]="program"
+    dataKey="id"
+    [rows]="10"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [loading]="loading"
+    [paginator]="true"
+    [globalFilterFields]="['id', 'name', 'batch']"
+    style="table-layout: fixed;">
+    
+    <ng-template pTemplate="caption">
+      <div class="flex">
+        <p-button 
+          label="Clear" 
+          [outlined]="true" 
+          icon="pi pi-filter-slash" 
+          (click)="clear(dt1)">
+        </p-button>
+        <span class="p-input-icon-left ml-auto" style="border: 1px solid #ccc; border-radius: 4px; padding: 2px;">
+          <i class="pi pi-search" style="margin-left: 8px;"></i>
+          <input 
+            pInputText 
+            type="text" 
+            (input)="dt1.filterGlobal($event.target.value, 'contains')" 
+            placeholder="Search keyword"
+            class="p-inputtext-sm" 
+            style="width: 15rem; padding-left: 3rem; border: none; outline: none; background: transparent; margin-left: 5px;">
+        </span>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 10%;">
+          <div class="flex align-items-center">
+            ID
+            <p-columnFilter type="text" field="id" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th style="width: 30%;">
+          <div class="flex align-items-center">
+            Name
+            <p-columnFilter type="text" field="name" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th style="width: 40%;">
+          <div class="flex align-items-center">
+            Batch
+            <p-columnFilter type="text" field="batch" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th style="width: 20%; text-align: center;">
+          <div style="display: flex; justify-content: center; align-items: center;">
+            Actions
+          </div>
+        </th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-program>
+      <tr>
+        <td *ngIf="downloadSelectedMode">
+          <p-tableCheckbox [value]="program"></p-tableCheckbox>
+        </td>
+        <td>{{ program.id }}</td>
+        <td>{{ program.name }}</td>
+        <td>{{ program.batch }}</td>
+        <td>
+          <div class="button-container" style="display: flex; justify-content: center; gap: 0.5rem;">
+            <p-button (click)="showEditDialog(program)" icon="pi pi-pencil" [text]="true" [plain]="true"></p-button>
+            <p-button (click)="showAssignDialog(program.id)" icon="pi pi-user-plus" [text]="true" [plain]="true"></p-button>
+            <p-button (click)="deleteCulturalEvent(program)" icon="pi pi-trash" [text]="true" [plain]="true"></p-button>
+            <p-button (click)="op.toggle($event)" icon="pi pi-ellipsis-v" [text]="true" [plain]="true"></p-button>
+            <p-overlayPanel #op>
+              <div>
+                <ul class="list-none p-0 m-0 flex flex-column gap-3">
+                  <li *ngFor="let option of options" class="flex align-items-center gap-2" 
+                    (click)="navigateToMemberPage(option, program.id)"
+                    style="cursor: pointer; transition: background-color 0.3s, transform 0.3s;">
+                    <div style="cursor: pointer; transition: background-color 0.3s, transform 0.3s;">
+                      <span class="font-medium">{{ option.name }}</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </p-overlayPanel>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="4">No Program found.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+<p-dialog [(visible)]="dialogVisible" [modal]="true" [closable]="false" header="Edit Courses" [responsive]="true" [style]="{width: '60vw'}">
+  <app-edit-courses
+  *ngIf="selectedprogram" 
+  [courses]="selectedprogram" 
+  (dialogClose)="onDialogClose($event)">
+  </app-edit-courses>
+</p-dialog>
+
+<p-confirmDialog></p-confirmDialog>
+
+
+<!-- <p-dialog header="Assign courses" [(visible)]="assignDialogVisible" [modal]="true" [style]="{'width': '50vw'}" [closable]="false">
+  <app-assign-courses [courseId]="selectedCourseId" (dialogClose)="onAssignDialogClose()"></app-assign-courses>
+</p-dialog>
+
+  <app-add-student *ngIf="!downloadSelectedMode"></app-add-student>
+  <p-dialog [(visible)]="addDialogVisible" [modal]="true" [closable]="false" header="Add Event" [responsive]="true" [style]="{width: '60vw' ,height:'68vh'}">
+    <app-add-courses (dialogClose)="onAddDialogClose()"></app-add-courses>
+  </p-dialog> -->

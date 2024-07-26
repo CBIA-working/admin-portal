@@ -10,7 +10,7 @@ import { ProgressBarModule } from 'primeng/progressbar';
 import { Table, TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { Service } from '../service/service';
-import { Courses } from '../domain/schema';
+import { Program } from '../domain/schema';
 import { DownloadComponent } from '../download/download.component';
 import * as XLSX from 'xlsx';
 import { jsPDF } from 'jspdf';
@@ -25,33 +25,28 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { EditCoursesComponent } from "./edit-courses/edit-courses.component";
-import { AssignCoursesComponent } from "./assign-courses/assign-courses.component";
-import { AddCoursesComponent } from "./add-courses/add-courses.component";
+
 
 @Component({
-  selector: 'app-courses',
+  selector: 'app-program',
   standalone: true,
   imports: [
     TableModule, RouterModule, HttpClientModule, CommonModule, InputTextModule,
     TagModule, DropdownModule, MultiSelectModule, ProgressBarModule, ButtonModule,
     DownloadComponent, ToastModule, FormsModule, OverlayPanelModule, InputGroupModule,
     InputGroupAddonModule, ChipsModule,DialogModule,ConfirmDialogModule,
-    EditCoursesComponent,
-    AssignCoursesComponent,
-    AddCoursesComponent
+
 ],
   providers: [Service, MessageService,ConfirmationService,DatePipe],
-  templateUrl: './courses.component.html',
-  styleUrls: ['./courses.component.scss']
+  templateUrl: './program.component.html',
+  styleUrl: './program.component.scss'
 })
-export class CoursesComponent implements OnInit, AfterViewInit {
+export class ProgramComponent implements OnInit,AfterViewInit {
   @ViewChild(DownloadComponent) downloadComponent!: DownloadComponent;
   @ViewChild('dt1') table!: Table;
 
-  courses: Courses[] = [];
-  selectedCourses: Courses[] = [];
-  selectedCourse: Courses | null = null;
+  program: Program[] = [];
+  selectedprogram: Program[] = [];
   loading: boolean = true;
   searchValue: string | undefined;
   downloadSelectedMode: boolean = false;
@@ -88,118 +83,112 @@ export class CoursesComponent implements OnInit, AfterViewInit {
     this.selectedCourseId = null;
     this.assignDialogVisible = false;
   }
-  showEditDialog(courses: Courses): void {
-    this.selectedCourse = courses;
-    this.dialogVisible = true;
-  }
-  onDialogClose(updatedCourses: Courses | null): void {
-    if (updatedCourses) {
-      const index = this.courses.findIndex(s => s.id === updatedCourses.id);
-      if (index !== -1) {
-        this.courses[index] = updatedCourses;
-      }
-    }
-    this.selectedCourse = null;
-    this.dialogVisible = false;
-  }
+  // showEditDialog(program: Program): void {
+  //   this.selectedprogram = program;
+  //   this.dialogVisible = true;
+  // }
+  // onDialogClose(updatedCourses: Courses | null): void {
+  //   if (updatedCourses) {
+  //     const index = this.courses.findIndex(s => s.id === updatedCourses.id);
+  //     if (index !== -1) {
+  //       this.courses[index] = updatedCourses;
+  //     }
+  //   }
+  //   this.selectedCourse = null;
+  //   this.dialogVisible = false;
+  // }
 
-  deleteCulturalEvent(courses: Courses): void {
-    this.confirmationService.confirm({
-      message: 'Are you sure you want to delete this course?',
-      header: 'Confirm',
-      icon: 'pi pi-info-circle',
-      accept: () => {
-        this.service.deleteCourse(courses.id).subscribe(
-          () => {
-            this.courses = this.courses.filter(courses => courses.id !== courses.id);
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Success',
-              detail: 'Cultural event deleted successfully'
-            });
-          },
-          error => {
-            console.error('Error deleting course', error);
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: 'Failed to delete courses'
-            });
-          }
-        );
-      },
-      reject: () => {
-        // Optionally handle rejection (user clicks cancel)
-      }
-    });
-  }
+  // deleteCulturalEvent(courses: Courses): void {
+  //   this.confirmationService.confirm({
+  //     message: 'Are you sure you want to delete this course?',
+  //     header: 'Confirm',
+  //     icon: 'pi pi-info-circle',
+  //     accept: () => {
+  //       this.service.deleteCourse(courses.id).subscribe(
+  //         () => {
+  //           this.courses = this.courses.filter(courses => courses.id !== courses.id);
+  //           this.messageService.add({
+  //             severity: 'success',
+  //             summary: 'Success',
+  //             detail: 'Cultural event deleted successfully'
+  //           });
+  //         },
+  //         error => {
+  //           console.error('Error deleting course', error);
+  //           this.messageService.add({
+  //             severity: 'error',
+  //             summary: 'Error',
+  //             detail: 'Failed to delete courses'
+  //           });
+  //         }
+  //       );
+  //     },
+  //     reject: () => {
+  //       // Optionally handle rejection (user clicks cancel)
+  //     }
+  //   });
+  // }
   exportHeaderMapping = {
     id: 'ID',
-    title: 'Title',
-    description: 'Description',
-    startDate: 'Start Date',
-    endDate: 'End Date',
-    keyDates: 'Key Dates',
-    events: 'Events',
-    agreements: 'Agreements',
+    name: 'Name',
+    batch: 'Batch',
   };
 
   options = [
     { name: 'Students', key: 'managestudent' },
-    { name: 'Program', key: 'Programs' }
+    { name: 'Courses', key: 'courses' }
   ];
 
   navigateToMemberPage(option: { name: string, key: string }, id: string) {
     this.navigationService.setSelectedId(id);
     localStorage.setItem('refreshPage', 'true');
-    this.router.navigate([`/${option.key}`], { queryParams: { courseId: id } });
+    this.router.navigate([`/${option.key}`], { queryParams: { programId: id } });
   }
 
   ngOnInit(): void {
     const studentId = this.route.snapshot.queryParamMap.get('Student_Id');
-    const programid = this.route.snapshot.queryParamMap.get('programId');
+    const courseid = this.route.snapshot.queryParamMap.get('courseId');
     if (studentId) {
-      this.fetchStudentCourses(Number(studentId));
-    } else if (programid){
-      this.fetchCourseProgram(Number(programid));
+      this.fetchStudentPrograms(Number(studentId));
+    }else if (courseid){
+      this.fetchCoursePrograms(Number(courseid));
     } else {
-      this.fetchAllCourses();
+      this.fetchAllPrograms();
     }
   }
 
-  fetchStudentCourses(studentId: number) {
+  fetchStudentPrograms(studentId: number) {
     this.loading = true;
-    this.service.getStudentCourse({ Id: studentId, type: 'student' }).then((response) => {
-      this.courses = response.map(item => item.courseDetails);
+    this.service.getStudentProgram({ Id: studentId, type: 'student' }).then((response) => {
+      this.program = response.map(item => item.programDetails);
       this.loading = false;
     }).catch(error => {
-      console.error('Error fetching student events', error);
+      console.error('Error fetching student program', error);
+      this.loading = false;
+    });
+  }
+  fetchCoursePrograms(courseId: number) {
+    this.loading = true;
+    this.service.getCourseProgram({ Id: courseId, type: 'course' }).then((response) => {
+      this.program = response.map(item => item.programDetails);
+      this.loading = false;
+    }).catch(error => {
+      console.error('Error fetching  program', error);
       this.loading = false;
     });
   }
 
-  fetchCourseProgram(programId: number) {
+  fetchAllPrograms() {
     this.loading = true;
-    this.service.getCourseProgram({ Id: programId, type: 'program' }).then((response) => {
-      this.courses = response.map(item => item.courseDetails);
+    this.service.getProgram().then((program) => {
+      this.program = program;
       this.loading = false;
     }).catch(error => {
-      console.error('Error fetching programs', error);
+      console.error('Error fetching all programs', error);
       this.loading = false;
     });
   }
 
-
-fetchAllCourses() {
-    this.loading = true;
-    this.service.getCourse().then((courses) => {
-      this.courses = courses;
-      this.loading = false;
-    }).catch(error => {
-      console.error('Error fetching all students', error);
-      this.loading = false;
-    });
-  }
 
   ngAfterViewInit() {
     if (this.downloadComponent) {
@@ -223,24 +212,24 @@ fetchAllCourses() {
 
   exitSelectionMode() {
     this.downloadSelectedMode = false;
-    this.selectedCourses = [];
+    this.selectedprogram = [];
   }
 
   downloadAllStudents(format: string) {
-    const data = this.courses.map(courses => this.mapCustomerToExportFormat(courses));
+    const data = this.program.map(courses => this.mapCustomerToExportFormat(courses));
     this.download(format, data, 'courses');
   }
 
   downloadSelectedStudents() {
     if (this.downloadSelectedMode) {
-      if (this.selectedCourses.length === 0) {
+      if (this.selectedprogram.length === 0) {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
           detail: 'Please select at least one course.'
         });
       } else {
-        const data = this.selectedCourses.map(courses => this.mapCustomerToExportFormat(courses));
+        const data = this.selectedprogram.map(program => this.mapCustomerToExportFormat(program));
         this.download(this.downloadComponent.format, data, 'selected_courses');
         this.exitSelectionMode();
       }
@@ -249,16 +238,11 @@ fetchAllCourses() {
     }
   }
 
-  mapCustomerToExportFormat(course: Courses) {
+  mapCustomerToExportFormat(program: Program) {
     return {
-      ID: course.id,
-      Title: course.title,
-      Description: course.description,
-      'Start Date': course.startDate,
-      'End Date': course.endDate,
-      'Key Dates': course.keyDates,
-      Events: course.events,
-      Agreements: course.agreements
+      ID: program.id,
+      Name: program.name,
+      Batch: program.batch,
     };
   }
 

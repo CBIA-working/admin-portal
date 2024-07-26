@@ -13,12 +13,14 @@ import { CoursesComponent } from './student-support/courses/courses.component';
 import { ProfileComponent } from './profile/profile.component';
 import { KeyprogramdatesComponent } from './student-support/keyprogramdates/keyprogramdates.component';
 import { FaqComponent } from './faq/faq.component';
+import { ProgramComponent } from './student-support/program/program.component';
 
 
 export const routes: Routes = [
   { path: 'login', component:LoginComponent},
   { path: 'home', component: HomeComponent,canActivate: [AuthGuard] },
   { path: 'managestudent', component:ManageStudentsComponent,canActivate: [AuthGuard]},
+  { path: 'Programs', component:ProgramComponent,canActivate: [AuthGuard]},
   { path: 'culturalevents', component:CulturalEventsComponent,canActivate: [AuthGuard]},
   { path: 'accomodations', component:AccomodationComponent,canActivate: [AuthGuard]},
   { path: 'keyprogramdates',component:KeyprogramdatesComponent,canActivate:[AuthGuard]},
