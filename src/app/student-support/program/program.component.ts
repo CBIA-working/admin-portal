@@ -96,7 +96,8 @@ export class ProgramComponent implements OnInit,AfterViewInit {
       accept: () => {
         this.service.deleteProgram(program.id).subscribe(
           () => {
-            this.program = this.program.filter(program => program.id !== program.id);
+            // Optionally call a method to re-fetch programs after deletion
+            this.fetchAllPrograms();
             this.messageService.add({
               severity: 'success',
               summary: 'Success',

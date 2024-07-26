@@ -1,1 +1,32 @@
-<p>add-program works!</p>
+<div style="background-color: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 10px; border-radius: 8px;">
+    <!-- Course Information -->
+    <div style="padding-left: 20px;">
+        <p-tabView>
+            <p-tabPanel header="Course Details">
+                <form [formGroup]="programForm" (ngSubmit)="saveChanges()">
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; padding: 10px;">
+                        <div>
+                            <label for="name" style="display: block; margin-bottom: 8px; font-weight: bold;">Name:</label>
+                            <input id="name" pInputText type="text" formControlName="name" placeholder="Name" 
+                                   style="border: 1px solid #ccc; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box;">
+                            <p-message *ngIf="programForm.get('name')?.invalid && programForm.get('name')?.touched"
+                                       severity="error" text="Name is required." style="margin-top: 8px;"></p-message>
+                        </div>
+                        <div>
+                            <label for="batch" style="display: block; margin-bottom: 8px; font-weight: bold;">Batch:</label>
+                            <input id="batch" pInputText type="number" formControlName="batch" placeholder="Batch" 
+                                   style="border: 1px solid #ccc; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box;">
+                            <p-message *ngIf="programForm.get('batch')?.invalid && programForm.get('batch')?.touched"
+                                       severity="error" text="Batch are required." style="margin-top: 8px;"></p-message>
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: flex-end; padding: 20px; border-top: 1px solid #eee;">
+                        <button pButton type="submit" label="Save" [disabled]="programForm.invalid" style="margin-right: 10px;"></button>
+                        <button pButton type="button" label="Close" icon="pi pi-times" (click)="onClose()"></button>
+                    </div>
+                </form>
+            </p-tabPanel>
+        </p-tabView>
+    </div>
+</div>
+<p-toast></p-toast>
