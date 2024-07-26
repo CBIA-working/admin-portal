@@ -21,7 +21,15 @@
           (click)="exitSelectionMode()" 
           *ngIf="downloadSelectedMode">
         </p-button>
-        <p-button pTooltip="Archive" label="Archive" icon="pi pi-refresh " [raised]="true" severity="secondary" (click)="showArchiveDialog()"></p-button> <!-- Archive button -->
+        <p-button 
+        pTooltip="Archive" 
+        [label]="'Archive (' + archivedPrograms.length + ')'" 
+        icon="pi pi-refresh" 
+        [raised]="true" 
+        severity="secondary" 
+        (click)="showArchiveDialog()">
+      </p-button>
+      
     </div>
 
   <p-table #dt1 [value]="program" [selectionMode]="downloadSelectedMode ? 'checkbox' : null" [(selection)]="selectedprograms" dataKey="id" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]" [loading]="loading" [paginator]="true" [globalFilterFields]="['id', 'name', 'batch']" style="table-layout: fixed;">

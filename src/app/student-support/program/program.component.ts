@@ -58,7 +58,7 @@ export class ProgramComponent implements OnInit,AfterViewInit {
   addDialogVisible: boolean = false;
   archivedPrograms: Program[] = [];
   archiveDialogVisible: boolean = false;
-
+  totalArchivedPrograms: number = 0;
   
   constructor(
     private route: ActivatedRoute,
@@ -98,6 +98,7 @@ export class ProgramComponent implements OnInit,AfterViewInit {
     this.service.getArchivedPrograms().subscribe(
       (archivedPrograms) => {
         this.archivedPrograms = archivedPrograms;
+        this.totalArchivedPrograms = archivedPrograms.length; // Update the count
       },
       (error) => {
         console.error('Error fetching archived programs', error);
