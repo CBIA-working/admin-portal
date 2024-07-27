@@ -34,6 +34,8 @@ export interface Accomodation {
     isSingleOccupancy:Boolean;
     numberOfRoommates:number;
     roommateNames:String;
+    hostfamily:String;
+    roommateNumber:String;
     userId:number;
 }
 

@@ -138,6 +138,8 @@ export class AccomodationComponent implements OnInit, AfterViewInit {
     isSingleOccupancy:'Is Single Occupancy',
     numberOfRoommates:'Number Of Roommates',
     roommateNames:'Roommate Names',
+    hostfamily:'Host Family',
+    roommateNumber:'Roommate Number',
     userId:'User ID',
   };
   options = [
@@ -242,7 +244,9 @@ export class AccomodationComponent implements OnInit, AfterViewInit {
       'Floor': accomodation.floor,
       'Is Single Occupancy': accomodation.roommateNames ? 'No' : 'Yes',
       'Number Of Roommates': accomodation.numberOfRoommates,
-      'Roommate Names': accomodation.roommateNames || 'N/A'
+      'Roommate Names': accomodation.roommateNames || 'N/A',
+      'Host Family': accomodation.hostfamily || 'N/A',
+      'Roommate Number': accomodation.roommateNumber || 'N/A'
     };
   }
 

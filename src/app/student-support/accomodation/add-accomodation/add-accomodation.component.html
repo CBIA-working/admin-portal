@@ -28,14 +28,15 @@
               </div>
               <div>
                 <label for="isSingleOccupancy" style="display: block; margin-bottom: 8px; font-weight: bold;">Single Occupancy:</label>
-                <p-dropdown 
-                  id="isSingleOccupancy" 
-                  [options]="[{ label: 'Yes', value: true }, { label: 'No', value: false }]" 
-                  formControlName="isSingleOccupancy" 
-                  placeholder="Select an option" 
-                  (onChange)="onSingleOccupancyChange($event)"
-                  style="width: 100%;"
-                ></p-dropdown>
+                <p-dropdown
+                id="isSingleOccupancy"
+                [options]="[{ label: 'Yes', value: true }, { label: 'No', value: false }]"
+                formControlName="isSingleOccupancy"
+                placeholder="Select an option"
+                (onChange)="onSingleOccupancyChange($event)"
+                style="width: 100%;"
+            ></p-dropdown>
+            
               </div>
             </div>
           </p-tabPanel>
@@ -44,11 +45,25 @@
           <p-tabPanel header="Roommate Details" *ngIf="accomodationForm.get('isSingleOccupancy').value === false">
             <div style="display: grid; grid-template-columns: 1fr; gap: 20px; padding: 10px;">
               <div>
-                <label for="numberOfRoommates" style="display: block; margin-bottom: 8px; font-weight: bold;">Number of Roommates:</label>
-                <input id="numberOfRoommates" pInputText type="number" formControlName="numberOfRoommates" placeholder="Number of Roommates" 
+                <label for="hostfamily" style="display: block; margin-bottom: 8px; font-weight: bold;">Host Family:</label>
+                <input id="hostfamily" pInputText type="text" formControlName="hostfamily" placeholder="Host Family" 
                        style="border: 1px solid #ccc; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box;">
-                <p-message *ngIf="accomodationForm.get('numberOfRoommates')?.invalid && accomodationForm.get('numberOfRoommates')?.touched"
-                           severity="error" text="Number of Roommates is required." style="margin-top: 8px;"></p-message>
+                <p-message *ngIf="accomodationForm.get('hostfamily')?.invalid && accomodationForm.get('hostfamily')?.touched"
+                           severity="error" text="Host Family is required." style="margin-top: 8px;"></p-message>
+              </div>
+              <div>
+                <label for="hostfamily" style="display: block; margin-bottom: 8px; font-weight: bold;">Host Family:</label>
+                <input id="hostfamily" pInputText type="text" formControlName="hostfamily" placeholder="Host Family" 
+                       style="border: 1px solid #ccc; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box;">
+                <p-message *ngIf="accomodationForm.get('hostfamily')?.invalid && accomodationForm.get('hostfamily')?.touched"
+                           severity="error" text="Host Family is required." style="margin-top: 8px;"></p-message>
+              </div>
+              <div>
+                <label for="roommateNumber" style="display: block; margin-bottom: 8px; font-weight: bold;">Roommate Number:</label>
+                <input id="roommateNumber" pInputText type="number" formControlName="roommateNumber" placeholder="Roommate Number" 
+                       style="border: 1px solid #ccc; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box;">
+                <p-message *ngIf="accomodationForm.get('roommateNumber')?.invalid && accomodationForm.get('roommateNumber')?.touched"
+                           severity="error" text="Roommate Number is required." style="margin-top: 8px;"></p-message>
               </div>
               <div>
                 <label for="roommateNames" style="display: block; margin-bottom: 8px; font-weight: bold;">Roommate Names:</label>

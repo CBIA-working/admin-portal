@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { Service } from '../../service/service';
@@ -51,7 +51,8 @@ export class AddAccomodationComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private service: Service,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private cd: ChangeDetectorRef 
   ) {}
 
   ngOnInit(): void {
@@ -66,7 +67,9 @@ export class AddAccomodationComponent implements OnInit {
       floor: ['', Validators.required],
       isSingleOccupancy: [false, Validators.required],
       numberOfRoommates: [{ value: '', disabled: true }],
-      roommateNames: [{ value: '', disabled: true }]
+      roommateNames: [{ value: '', disabled: true }],
+      hostfamily: [{ value: '', disabled: true }],
+      roommateNumber: [{ value: '', disabled: true }],
     });
   }
 
@@ -82,30 +85,46 @@ export class AddAccomodationComponent implements OnInit {
     if (isSingle) {
       this.accomodationForm.get('numberOfRoommates').disable();
       this.accomodationForm.get('roommateNames').disable();
+      this.accomodationForm.get('hostfamily').disable();
+      this.accomodationForm.get('roommateNumber').disable();
       this.accomodationForm.get('numberOfRoommates').reset();
       this.accomodationForm.get('roommateNames').reset();
+      this.accomodationForm.get('hostfamily').reset();
+      this.accomodationForm.get('roommateNumber').reset();
     } else {
       this.accomodationForm.get('numberOfRoommates').enable();
       this.accomodationForm.get('roommateNames').enable();
+      this.accomodationForm.get('hostfamily').enable();
+      this.accomodationForm.get('roommateNumber').enable();
       this.accomodationForm.get('numberOfRoommates').setValidators(Validators.required);
       this.accomodationForm.get('roommateNames').setValidators(Validators.required);
+      this.accomodationForm.get('hostfamily').setValidators(Validators.required);
+      this.accomodationForm.get('roommateNumber').setValidators(Validators.required);
     }
     this.accomodationForm.get('numberOfRoommates').updateValueAndValidity();
     this.accomodationForm.get('roommateNames').updateValueAndValidity();
+    this.accomodationForm.get('hostfamily').updateValueAndValidity();
+    this.accomodationForm.get('roommateNumber').updateValueAndValidity();
   }
 
   resetForm(): void {
-    this.accomodationForm.reset({
+    // Manually set the values to ensure UI updates
+    this.accomodationForm.setValue({
       roomNumber: '',
       buildingName: '',
       floor: '',
-      isSingleOccupancy: false,
+      isSingleOccupancy: false,  // Set to false explicitly
       numberOfRoommates: '',
-      roommateNames: ''
+      roommateNames: '',
+      hostfamily: '',
+      roommateNumber: ''
     });
-    this.updateRoommateValidation(false);  // Reset validation for roommates as initially false
+  
+    // Trigger validation updates for dependent controls
+    this.updateRoommateValidation(false);
+    this.cd.detectChanges(); 
   }
-
+  
   saveChanges(): void {
     console.log('Saving Changes:', this.accomodationForm.value);
   
@@ -114,6 +133,8 @@ export class AddAccomodationComponent implements OnInit {
     if (formValue.isSingleOccupancy) {
       formValue.numberOfRoommates = 0;
       formValue.roommateNames = ' ';
+      formValue.hostfamily = ' ';
+      formValue.roommateNumber = ' ';
     }
   
     if (this.accomodationForm.valid) {

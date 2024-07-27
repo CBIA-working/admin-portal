@@ -31,7 +31,7 @@
     [rowsPerPageOptions]="[10, 25, 50]"
     [loading]="loading"
     [paginator]="true"
-    [globalFilterFields]="['id', 'roomNumber', 'buildingName', 'floor', 'isSingleOccupancy', 'numberOfRoommates','roommateNames']">
+    [globalFilterFields]="['id', 'roomNumber', 'buildingName', 'floor', 'isSingleOccupancy', 'numberOfRoommates','roommateNames','hostfamily','roommateNumber']">
     
 
     <ng-template pTemplate="caption">
@@ -102,6 +102,18 @@
             <p-columnFilter type="text" field="roommateNames" display="menu"></p-columnFilter>
           </div>
         </th>
+        <th style="min-width: 15%">
+          <div class="flex align-items-center">
+            Host Family
+            <p-columnFilter type="text" field="hostfamily" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th style="min-width: 15%">
+          <div class="flex align-items-center">
+            Roommate Number
+            <p-columnFilter type="text" field="roommateNumber" display="menu"></p-columnFilter>
+          </div>
+        </th>
         <th style="min-width: 10%; text-align: center;">
           <div style="display: flex; justify-content: center; align-items: center;">
             Actions
@@ -122,8 +134,34 @@
         <td>{{ accomodation.isSingleOccupancy }}</td>
         <td>{{ accomodation.numberOfRoommates}}</td>
         <td>
+          <!-- Check if roommateNames exists and is not empty -->
+          <ng-container *ngIf="accomodation.roommateNames && accomodation.roommateNames.length; else singleOccupancy">
+            <!-- Display each roommate name on a new line -->
+            <div *ngFor="let name of accomodation.roommateNames.split(',')">
+              {{ name }}
+            </div>
+          </ng-container>
+          <!-- Fallback if no roommate names are provided -->
+          <ng-template #singleOccupancy>
+            Single Occupancy
+          </ng-template>
+        </td>
+          <td>
             <!-- Show "It is Single Occupancy" if roommateNames is empty -->
-            {{ accomodation.roommateNames ? accomodation.roommateNames : 'It is Single Occupancy' }}
+            {{ accomodation.hostfamily ? accomodation.hostfamily : 'Single Occupancy' }}
+          </td>
+          <td>
+            <!-- Check if roommateNumber exists and is not empty -->
+            <ng-container *ngIf="accomodation.roommateNumber && accomodation.roommateNumber.length; else singleOccupancy">
+              <!-- Display each roommate name on a new line -->
+              <div *ngFor="let number of accomodation.roommateNumber.split(',')">
+                {{ number }}
+              </div>
+            </ng-container>
+            <!-- Fallback if no roommate names are provided -->
+            <ng-template #singleOccupancy>
+              Single Occupancy
+            </ng-template>
           </td>
           <td>
             <div class="button-container" style="display: flex; gap: 0.5rem;">
