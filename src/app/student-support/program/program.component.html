@@ -90,6 +90,7 @@
           <div class="button-container" style="display: flex; justify-content: center; gap: 0.5rem;">
             <p-button pTooltip="Edit" (click)="showEditDialog(program)" icon="pi pi-pencil" [text]="true" [plain]="true"></p-button>
             <p-button pTooltip="Archive" (click)="archiveProgram(program)" icon="pi pi-refresh" [text]="true" [plain]="true"></p-button>
+            <p-button pTooltip="copy program" (click)="copyProgram(program)" icon="pi pi-copy"  [text]="true" [plain]="true"></p-button>
             <p-button pTooltip="Delete" (click)="deleteCulturalEvent(program)" icon="pi pi-trash" [text]="true" [plain]="true"></p-button>
             <p-button pTooltip="Navigate to" (click)="op.toggle($event)" icon="pi pi-ellipsis-v" [text]="true" [plain]="true"></p-button>
             <p-overlayPanel #op>
@@ -150,6 +151,7 @@
           <td>{{ program.batch }}</td>
           <td>
             <p-button pTooltip="Unarchive" icon="pi pi-undo" [raised]="true" [text]="true" [plain]="true" (click)="unarchiveProgram(program)"></p-button>
+            <p-button pTooltip="copy program" (click)="copyProgram(program)" icon="pi pi-copy"  [text]="true" [plain]="true"></p-button>
           </td>
         </tr>
       </ng-template>

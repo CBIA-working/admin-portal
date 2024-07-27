@@ -135,7 +135,23 @@ export class ProgramComponent implements OnInit,AfterViewInit {
     this.archiveDialogVisible = false;
     this.fetchAllPrograms(); // Fetch programs to update the list
   }
-  
+  copyProgram(program: any) {
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to copy this program?',
+      accept: () => {
+        this.service.copyProgram(program.id).subscribe(response => {
+          this.fetchAllPrograms();
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Program copied successfully!' });
+          // Handle successful copy (e.g., refresh the program list)
+        }, error => {
+          // Show error message
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to copy the program.' });
+          // Handle error
+        });
+      }
+    });
+  }
+
   showAddDialog() {
     this.addDialogVisible = true;
   }

@@ -173,4 +173,7 @@ getupdateProfile(formData: FormData): Observable<any> {
     unarchiveProgram(programId: number): Observable<any> {
         return this.http.post(`${this.BASE_URL}/unarchive`, { id: programId });
       }
+      copyProgram(id: number): Observable<any> {
+        return this.http.post<any>(`${this.BASE_URL}/copyProgram`, { id });
+      }
 }
