@@ -59,6 +59,7 @@ export class ProgramComponent implements OnInit,AfterViewInit {
   archivedPrograms: Program[] = [];
   archiveDialogVisible: boolean = false;
   totalArchivedPrograms: number = 0;
+  showStatusColumn: boolean = false;
   
   constructor(
     private route: ActivatedRoute,
@@ -68,7 +69,7 @@ export class ProgramComponent implements OnInit,AfterViewInit {
     private router: Router,
     private http: HttpClient,
     private confirmationService: ConfirmationService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
   ) {}
 
   archiveProgram(program: Program): void {
@@ -92,9 +93,7 @@ export class ProgramComponent implements OnInit,AfterViewInit {
       }
     );
   }
-
-  showArchiveDialog(): void {
-    this.archiveDialogVisible = true;
+  loadArchiveDialog(): void{
     this.service.getArchivedPrograms().subscribe(
       (archivedPrograms) => {
         this.archivedPrograms = archivedPrograms;
@@ -104,6 +103,10 @@ export class ProgramComponent implements OnInit,AfterViewInit {
         console.error('Error fetching archived programs', error);
       }
     );
+  }
+  showArchiveDialog(): void {
+    this.archiveDialogVisible = true;
+   this.loadArchiveDialog();
   }
   
   unarchiveProgram(program: Program): void {
@@ -206,6 +209,14 @@ export class ProgramComponent implements OnInit,AfterViewInit {
   ngOnInit(): void {
     const studentId = this.route.snapshot.queryParamMap.get('Student_Id');
     const courseid = this.route.snapshot.queryParamMap.get('courseId');
+    const source = this.route.snapshot.queryParamMap.get('source');
+
+    if (studentId || courseid || source) {
+      this.showStatusColumn = true;
+    } else {
+      this.showStatusColumn = false;
+    }
+
     if (studentId) {
       this.fetchStudentPrograms(Number(studentId));
     }else if (courseid){
@@ -213,6 +224,7 @@ export class ProgramComponent implements OnInit,AfterViewInit {
     } else {
       this.fetchAllPrograms();
     }
+    this.loadArchiveDialog();
   }
 
   fetchStudentPrograms(studentId: number) {
@@ -239,13 +251,14 @@ export class ProgramComponent implements OnInit,AfterViewInit {
   fetchAllPrograms() {
     this.loading = true;
     this.service.getProgram().then((program) => {
-      this.program = program;
+      this.program = program.filter(p => !p.archived); // Exclude archived programs
       this.loading = false;
     }).catch(error => {
       console.error('Error fetching all programs', error);
       this.loading = false;
     });
   }
+  
 
 
   ngAfterViewInit() {
