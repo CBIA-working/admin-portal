@@ -147,8 +147,17 @@
           </ng-template>
         </td>
           <td>
-            <!-- Show "It is Single Occupancy" if roommateNames is empty -->
-            {{ accomodation.hostfamily ? accomodation.hostfamily : 'Single Occupancy' }}
+            <!-- Check if roommateNames exists and is not empty -->
+          <ng-container *ngIf="accomodation.roommateNames && accomodation.roommateNames.length; else singleOccupancy">
+            <!-- Display each roommate name on a new line -->
+            <div *ngFor="let name of accomodation.roommateNames.split(',')">
+              {{ name }}
+            </div>
+          </ng-container>
+          <!-- Fallback if no roommate names are provided -->
+          <ng-template #singleOccupancy>
+            Single Occupancy
+          </ng-template>
           </td>
           <td>
             <!-- Check if roommateNumber exists and is not empty -->

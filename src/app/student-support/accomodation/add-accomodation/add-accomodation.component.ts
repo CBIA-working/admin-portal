@@ -134,46 +134,54 @@ export class AddAccomodationComponent implements OnInit {
     this.updateRoommateValidation(false);
     this.cd.detectChanges(); 
   }
-  
   saveChanges(): void {
-  console.log('Saving Changes:', this.accomodationForm.value);
-
-  const formValue = { ...this.accomodationForm.getRawValue() };
-  formValue.floor = formValue.floor.toString();
-  if (formValue.isSingleOccupancy) {
-    formValue.hostfamily = ' ';
-    formValue.numberOfRoommates = 0;
-    formValue.roommates = [];
-  }
-
-  if (this.accomodationForm.valid) {
+    console.log('Saving Changes:', this.accomodationForm.value);
+  
+    const formValue = { ...this.accomodationForm.getRawValue() };
+    formValue.floor = formValue.floor.toString();
+  
+    // Ensure roommates is an empty array if single occupancy is true
+    if (formValue.isSingleOccupancy) {
+      formValue.hostfamily = ' ';
+      formValue.numberOfRoommates = 0;
+      formValue.roommates = [];  // Ensure roommates is an empty array
+    }
+  
+    // Set roommateNames and roommateNumbers based on roommates array
+    const roommateNames = formValue.roommates.map((roommate: any) => roommate.roommateName).join(', ');
+    const roommateNumbers = formValue.roommates.map((roommate: any) => roommate.roommateNumber).join(', ');
+  
+    // Create the updated accommodation object
     const updatedAccomodation: Accomodation = {
       ...formValue,
-      roommateNames: formValue.roommates.map((roommate: any) => `${roommate.roommateName}`).join(', '),
-      roommateNumbers: formValue.roommates.map((roommate: any) => `${roommate.roommateNumber}`).join(', ')
+      roommateNames,  // Ensure this field is properly set
+      roommateNumbers  // Ensure this field is properly set
     };
-    this.service.addAccomodation(updatedAccomodation).subscribe({
-      next: (response) => {
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Accommodation updated successfully.' });
-        setTimeout(() => {
-          this.dialogClose.emit(updatedAccomodation);
-          this.resetForm();  // Reset the form after closing the dialog
-        }, 1000); // Delay for 1 second before closing the dialog
-      },
-      error: (error) => {
-        let errorMessage = 'Failed to update accommodation. Please try again later.';
-        if (error.error && error.error.message) {
-          errorMessage = error.error.message;
+  
+    if (this.accomodationForm.valid) {
+      this.service.addAccomodation(updatedAccomodation).subscribe({
+        next: (response) => {
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Accommodation updated successfully.' });
+          setTimeout(() => {
+            this.dialogClose.emit(updatedAccomodation);
+            this.resetForm();  // Reset the form after closing the dialog
+          }, 1000); // Delay for 1 second before closing the dialog
+        },
+        error: (error) => {
+          let errorMessage = 'Failed to update accommodation. Please try again later.';
+          if (error.error && error.error.message) {
+            errorMessage = error.error.message;
+          }
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: errorMessage });
         }
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: errorMessage });
-      }
-    });
-  } else {
-    this.accomodationForm.markAllAsTouched();
-    this.messageService.add({ severity: 'error', summary: 'Form Error', detail: 'Please fill in all required fields correctly.' });
+      });
+    } else {
+      this.accomodationForm.markAllAsTouched();
+      this.messageService.add({ severity: 'error', summary: 'Form Error', detail: 'Please fill in all required fields correctly.' });
+    }
   }
-  delete formValue.roommates;
-}
+  
+  
 
   
   onClose(): void {
