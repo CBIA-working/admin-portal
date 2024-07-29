@@ -22,7 +22,7 @@ import { DialogModule } from 'primeng/dialog';
   selector: 'app-add-accomodation',
   templateUrl: './add-accomodation.component.html',
   styleUrls: ['./add-accomodation.component.scss'],
-  providers: [Service, MessageService,ConfirmationService],
+  providers: [Service, MessageService, ConfirmationService],
   standalone: true,
   imports: [
     CommonModule,
@@ -39,7 +39,7 @@ import { DialogModule } from 'primeng/dialog';
     InputTextModule,
     InputTextareaModule,
     MessageModule,
-    DialogModule  // Include this only if you are using dialogs
+    DialogModule
   ]
 })
 export class AddAccomodationComponent implements OnInit {
@@ -47,7 +47,10 @@ export class AddAccomodationComponent implements OnInit {
   @Output() dialogClose = new EventEmitter<Accomodation | null>();
 
   accomodationForm!: FormGroup;
-
+  occupancyOptions = [
+    { label: 'Yes', value: true },
+    { label: 'No', value: false }
+  ];
   constructor(
     private fb: FormBuilder,
     private service: Service,
@@ -65,32 +68,37 @@ export class AddAccomodationComponent implements OnInit {
       roomNumber: ['', Validators.required],
       buildingName: ['', Validators.required],
       floor: ['', Validators.required],
-      isSingleOccupancy: [false, Validators.required],
+      isSingleOccupancy: [false, Validators.required], // Ensure initialization here
       hostfamily: [{ value: '', disabled: true }],
       numberOfRoommates: [{ value: '', disabled: true }],
       roommates: this.fb.array([]),
     });
+  
+    // Listen to changes in isSingleOccupancy and update related fields
+    this.accomodationForm.get('isSingleOccupancy')?.valueChanges.subscribe(isSingle => {
+      this.updateRoommateValidation(isSingle);
+    });
   }
+  
 
   onSingleOccupancyChange(event: any): void {
-    console.log('Dropdown Change Event:', event);
     const isSingle = event.value;
-    this.accomodationForm.get('isSingleOccupancy').setValue(isSingle, { emitEvent: false }); // Prevent circular event loops
+    this.accomodationForm.get('isSingleOccupancy')?.setValue(isSingle, { emitEvent: false }); // Prevent circular event loops
     this.updateRoommateValidation(isSingle);
   }
+  
 
   updateRoommateValidation(isSingle: boolean): void {
-    console.log('Updating Roommate Validation, isSingle:', isSingle);
     if (isSingle) {
-      this.accomodationForm.get('hostfamily').disable();
-      this.accomodationForm.get('numberOfRoommates').disable();
+      this.accomodationForm.get('hostfamily')?.disable();
+      this.accomodationForm.get('numberOfRoommates')?.disable();
       this.clearRoommates();
     } else {
-      this.accomodationForm.get('hostfamily').enable();
-      this.accomodationForm.get('numberOfRoommates').enable();
+      this.accomodationForm.get('hostfamily')?.enable();
+      this.accomodationForm.get('numberOfRoommates')?.enable();
     }
-    this.accomodationForm.get('hostfamily').updateValueAndValidity();
-    this.accomodationForm.get('numberOfRoommates').updateValueAndValidity();
+    this.accomodationForm.get('hostfamily')?.updateValueAndValidity();
+    this.accomodationForm.get('numberOfRoommates')?.updateValueAndValidity();
   }
 
   onRoommateCountChange(event: any): void {
@@ -119,45 +127,52 @@ export class AddAccomodationComponent implements OnInit {
   }
 
   resetForm(): void {
-    // Manually set the values to ensure UI updates
-    this.accomodationForm.setValue({
+    // Reset form to initial values
+    this.accomodationForm.reset({
       roomNumber: '',
       buildingName: '',
       floor: '',
-      isSingleOccupancy: false,  // Set to false explicitly
+      isSingleOccupancy: true,  // Set to true explicitly
       hostfamily: '',
-      numberOfRoommates: '',
+      numberOfRoommates: 0,  // Set default value
       roommates: []
     });
+    this.accomodationForm.get('isSingleOccupancy')?.setValue(true);
+
   
-    // Trigger validation updates for dependent controls
-    this.updateRoommateValidation(false);
-    this.cd.detectChanges(); 
+    // Update roommate validation based on the initial single occupancy value
+    this.updateRoommateValidation(true);
+  
+    // Mark all controls as untouched
+    this.accomodationForm.markAsPristine();
+    this.accomodationForm.markAsUntouched();
+    this.accomodationForm.updateValueAndValidity();
+  
+    this.cd.detectChanges();
   }
+  
+
   saveChanges(): void {
     console.log('Saving Changes:', this.accomodationForm.value);
-  
+
     const formValue = { ...this.accomodationForm.getRawValue() };
     formValue.floor = formValue.floor.toString();
-  
+
     // Ensure roommates is an empty array if single occupancy is true
     if (formValue.isSingleOccupancy) {
       formValue.hostfamily = ' ';
       formValue.numberOfRoommates = 0;
       formValue.roommates = [];  // Ensure roommates is an empty array
     }
-  
-    // Set roommateNames and roommateNumbers based on roommates array
-    const roommateNames = formValue.roommates.map((roommate: any) => roommate.roommateName).join(', ');
-    const roommateNumbers = formValue.roommates.map((roommate: any) => roommate.roommateNumber).join(', ');
-  
+
     // Create the updated accommodation object
     const updatedAccomodation: Accomodation = {
       ...formValue,
-      roommateNames,  // Ensure this field is properly set
-      roommateNumbers  // Ensure this field is properly set
+      // Remove roommateNames and roommateNumbers if not needed
+      // roommateNames,  
+      // roommateNumbers  
     };
-  
+
     if (this.accomodationForm.valid) {
       this.service.addAccomodation(updatedAccomodation).subscribe({
         next: (response) => {
@@ -180,10 +195,7 @@ export class AddAccomodationComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: 'Form Error', detail: 'Please fill in all required fields correctly.' });
     }
   }
-  
-  
 
-  
   onClose(): void {
     this.dialogClose.emit(null);
     this.resetForm();

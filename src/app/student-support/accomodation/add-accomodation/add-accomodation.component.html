@@ -28,7 +28,7 @@
             </div>
             <div>
               <label for="isSingleOccupancy" style="display: block; margin-bottom: 8px; font-weight: bold;">Single Occupancy:</label>
-              <p-dropdown id="isSingleOccupancy" [options]="[{label: 'Yes', value: true}, {label: 'No', value: false}]"
+              <p-dropdown id="isSingleOccupancy" [options]="occupancyOptions"
                 formControlName="isSingleOccupancy" (onChange)="onSingleOccupancyChange($event)"
                 style="width: 100%;"></p-dropdown>
               <p-message *ngIf="accomodationForm.get('isSingleOccupancy')?.invalid && accomodationForm.get('isSingleOccupancy')?.touched"
@@ -41,6 +41,7 @@
             <div>
               <label for="hostfamily" style="display: block; margin-bottom: 8px; font-weight: bold;">Host Family:</label>
               <input id="hostfamily" pInputText type="text" formControlName="hostfamily" placeholder="Host Family"
+                [attr.disabled]="accomodationForm.get('isSingleOccupancy')?.value ? true : null"
                 style="border: 1px solid #ccc; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box;">
               <p-message *ngIf="accomodationForm.get('hostfamily')?.invalid && accomodationForm.get('hostfamily')?.touched"
                 severity="error" text="Host Family is required." style="margin-top: 8px;"></p-message>
@@ -48,7 +49,8 @@
             <div>
               <label for="numberOfRoommates" style="display: block; margin-bottom: 8px; font-weight: bold;">Number of Roommates:</label>
               <input id="numberOfRoommates" pInputText type="number" formControlName="numberOfRoommates" (input)="onRoommateCountChange($event)"
-                placeholder="Number of Roommates" style="border: 1px solid #ccc; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box;">
+                placeholder="Number of Roommates" [attr.disabled]="accomodationForm.get('isSingleOccupancy')?.value ? true : null"
+                style="border: 1px solid #ccc; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box;">
               <p-message *ngIf="accomodationForm.get('numberOfRoommates')?.invalid && accomodationForm.get('numberOfRoommates')?.touched"
                 severity="error" text="Number of Roommates is required." style="margin-top: 8px;"></p-message>
             </div>
