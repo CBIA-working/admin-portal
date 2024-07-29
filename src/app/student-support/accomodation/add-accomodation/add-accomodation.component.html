@@ -1,92 +1,85 @@
-<!-- Angular Template Code (add-accomodation.component.html) -->
 <div style="background-color: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 10px; border-radius: 8px;">
-    <form [formGroup]="accomodationForm" (ngSubmit)="saveChanges()">
-      <div style="padding-left: 20px;">
-        <p-tabView>
-          <p-tabPanel header="Accommodation Details">
-            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; padding: 10px;">
-              <div>
-                <label for="roomNumber" style="display: block; margin-bottom: 8px; font-weight: bold;">Room Number:</label>
-                <input id="roomNumber" pInputText type="number" formControlName="roomNumber" placeholder="Room Number" 
-                       style="border: 1px solid #ccc; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box;">
-                <p-message *ngIf="accomodationForm.get('roomNumber')?.invalid && accomodationForm.get('roomNumber')?.touched"
-                           severity="error" text="Room Number is required." style="margin-top: 8px;"></p-message>
-              </div>
-              <div>
-                <label for="buildingName" style="display: block; margin-bottom: 8px; font-weight: bold;">Building Name:</label>
-                <input id="buildingName" pInputText type="text" formControlName="buildingName" placeholder="Building Name" 
-                       style="border: 1px solid #ccc; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box;">
-                <p-message *ngIf="accomodationForm.get('buildingName')?.invalid && accomodationForm.get('buildingName')?.touched"
-                           severity="error" text="Building Name is required." style="margin-top: 8px;"></p-message>
-              </div>
-              <div>
-                <label for="floor" style="display: block; margin-bottom: 8px; font-weight: bold;">Floor:</label>
-                <input id="floor" pInputText type="text" formControlName="floor" placeholder="Floor" 
-                       style="border: 1px solid #ccc; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box;">
-                <p-message *ngIf="accomodationForm.get('floor')?.invalid && accomodationForm.get('floor')?.touched"
-                           severity="error" text="Floor is required." style="margin-top: 8px;"></p-message>
-              </div>
-              <div>
-                <label for="isSingleOccupancy" style="display: block; margin-bottom: 8px; font-weight: bold;">Single Occupancy:</label>
-                <p-dropdown
-                id="isSingleOccupancy"
-                [options]="[{ label: 'Yes', value: true }, { label: 'No', value: false }]"
-                formControlName="isSingleOccupancy"
-                placeholder="Select an option"
-                (onChange)="onSingleOccupancyChange($event)"
-                style="width: 100%;"
-            ></p-dropdown>
-            
+  <form [formGroup]="accomodationForm" (ngSubmit)="saveChanges()">
+    <div style="padding-left: 20px;">
+      <p-tabView>
+        <p-tabPanel header="Accommodation Details">
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; padding: 10px;">
+            <div>
+              <label for="roomNumber" style="display: block; margin-bottom: 8px; font-weight: bold;">Room Number:</label>
+              <input id="roomNumber" pInputText type="number" formControlName="roomNumber" placeholder="Room Number"
+                style="border: 1px solid #ccc; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box;">
+              <p-message *ngIf="accomodationForm.get('roomNumber')?.invalid && accomodationForm.get('roomNumber')?.touched"
+                severity="error" text="Room Number is required." style="margin-top: 8px;"></p-message>
+            </div>
+            <div>
+              <label for="buildingName" style="display: block; margin-bottom: 8px; font-weight: bold;">Building Name:</label>
+              <input id="buildingName" pInputText type="text" formControlName="buildingName" placeholder="Building Name"
+                style="border: 1px solid #ccc; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box;">
+              <p-message *ngIf="accomodationForm.get('buildingName')?.invalid && accomodationForm.get('buildingName')?.touched"
+                severity="error" text="Building Name is required." style="margin-top: 8px;"></p-message>
+            </div>
+            <div>
+              <label for="floor" style="display: block; margin-bottom: 8px; font-weight: bold;">Floor:</label>
+              <input id="floor" pInputText type="number" formControlName="floor" placeholder="Floor"
+                style="border: 1px solid #ccc; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box;">
+              <p-message *ngIf="accomodationForm.get('floor')?.invalid && accomodationForm.get('floor')?.touched"
+                severity="error" text="Floor is required." style="margin-top: 8px;"></p-message>
+            </div>
+            <div>
+              <label for="isSingleOccupancy" style="display: block; margin-bottom: 8px; font-weight: bold;">Single Occupancy:</label>
+              <p-dropdown id="isSingleOccupancy" [options]="[{label: 'Yes', value: true}, {label: 'No', value: false}]"
+                formControlName="isSingleOccupancy" (onChange)="onSingleOccupancyChange($event)"
+                style="width: 100%;"></p-dropdown>
+              <p-message *ngIf="accomodationForm.get('isSingleOccupancy')?.invalid && accomodationForm.get('isSingleOccupancy')?.touched"
+                severity="error" text="Single Occupancy is required." style="margin-top: 8px;"></p-message>
+            </div>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel header="Roommate Details" *ngIf="!accomodationForm.get('isSingleOccupancy')?.value">
+          <div style="padding: 10px;">
+            <div>
+              <label for="hostfamily" style="display: block; margin-bottom: 8px; font-weight: bold;">Host Family:</label>
+              <input id="hostfamily" pInputText type="text" formControlName="hostfamily" placeholder="Host Family"
+                style="border: 1px solid #ccc; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box;">
+              <p-message *ngIf="accomodationForm.get('hostfamily')?.invalid && accomodationForm.get('hostfamily')?.touched"
+                severity="error" text="Host Family is required." style="margin-top: 8px;"></p-message>
+            </div>
+            <div>
+              <label for="numberOfRoommates" style="display: block; margin-bottom: 8px; font-weight: bold;">Number of Roommates:</label>
+              <input id="numberOfRoommates" pInputText type="number" formControlName="numberOfRoommates" (input)="onRoommateCountChange($event)"
+                placeholder="Number of Roommates" style="border: 1px solid #ccc; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box;">
+              <p-message *ngIf="accomodationForm.get('numberOfRoommates')?.invalid && accomodationForm.get('numberOfRoommates')?.touched"
+                severity="error" text="Number of Roommates is required." style="margin-top: 8px;"></p-message>
+            </div>
+            <div formArrayName="roommates" *ngIf="accomodationForm.get('roommates')?.length > 0" style="padding: 10px;">
+              <div *ngFor="let roommate of accomodationForm.get('roommates').controls; let i=index" [formGroupName]="i"
+                style="padding: 10px; border: 1px solid #eee; border-radius: 8px; margin-bottom: 10px;">
+                <h3>Roommate Details {{i + 1}}</h3>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+                  <div>
+                    <label for="roommateName-{{i}}" style="display: block; margin-bottom: 8px; font-weight: bold;">Roommate Name:</label>
+                    <input id="roommateName-{{i}}" pInputText type="text" formControlName="roommateName" placeholder="Roommate Name"
+                      style="border: 1px solid #ccc; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box;">
+                    <p-message *ngIf="roommate.get('roommateName')?.invalid && roommate.get('roommateName')?.touched"
+                      severity="error" text="Roommate Name is required." style="margin-top: 8px;"></p-message>
+                  </div>
+                  <div>
+                    <label for="roommateNumber-{{i}}" style="display: block; margin-bottom: 8px; font-weight: bold;">Roommate Number:</label>
+                    <input id="roommateNumber-{{i}}" pInputText type="text" formControlName="roommateNumber" placeholder="Roommate Number"
+                      style="border: 1px solid #ccc; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box;">
+                    <p-message *ngIf="roommate.get('roommateNumber')?.invalid && roommate.get('roommateNumber')?.touched"
+                      severity="error" text="Roommate Number is required." style="margin-top: 8px;"></p-message>
+                  </div>
+                </div>
               </div>
             </div>
-          </p-tabPanel>
-
-          <!-- Conditional rendering for Roommate Details -->
-          <p-tabPanel header="Roommate Details" *ngIf="accomodationForm.get('isSingleOccupancy').value === false">
-            <div style="display: grid; grid-template-columns: 1fr; gap: 20px; padding: 10px;">
-              <div>
-                <label for="hostfamily" style="display: block; margin-bottom: 8px; font-weight: bold;">Host Family:</label>
-                <input id="hostfamily" pInputText type="text" formControlName="hostfamily" placeholder="Host Family" 
-                       style="border: 1px solid #ccc; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box;">
-                <p-message *ngIf="accomodationForm.get('hostfamily')?.invalid && accomodationForm.get('hostfamily')?.touched"
-                           severity="error" text="Host Family is required." style="margin-top: 8px;"></p-message>
-              </div>
-              <div>
-                <label for="hostfamily" style="display: block; margin-bottom: 8px; font-weight: bold;">Host Family:</label>
-                <input id="hostfamily" pInputText type="text" formControlName="hostfamily" placeholder="Host Family" 
-                       style="border: 1px solid #ccc; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box;">
-                <p-message *ngIf="accomodationForm.get('hostfamily')?.invalid && accomodationForm.get('hostfamily')?.touched"
-                           severity="error" text="Host Family is required." style="margin-top: 8px;"></p-message>
-              </div>
-              <div>
-                <label for="roommateNumber" style="display: block; margin-bottom: 8px; font-weight: bold;">Roommate Number:</label>
-                <input id="roommateNumber" pInputText type="number" formControlName="roommateNumber" placeholder="Roommate Number" 
-                       style="border: 1px solid #ccc; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box;">
-                <p-message *ngIf="accomodationForm.get('roommateNumber')?.invalid && accomodationForm.get('roommateNumber')?.touched"
-                           severity="error" text="Roommate Number is required." style="margin-top: 8px;"></p-message>
-              </div>
-              <div>
-                <label for="roommateNames" style="display: block; margin-bottom: 8px; font-weight: bold;">Roommate Names:</label>
-                <textarea 
-                  id="roommateNames" 
-                  pInputTextarea 
-                  rows="1" 
-                  formControlName="roommateNames" 
-                  placeholder="Roommate Names" 
-                  style="border: 1px solid #ccc; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box;"
-                ></textarea>
-                <p-message *ngIf="accomodationForm.get('roommateNames')?.invalid && accomodationForm.get('roommateNames')?.touched"
-                           severity="error" text="Roommate Names are required." style="margin-top: 8px;"></p-message>
-              </div>
-            </div>
-          </p-tabPanel>
-        </p-tabView>
-      </div>
-
+          </div>
+        </p-tabPanel>
+      </p-tabView>
       <div style="display: flex; justify-content: flex-end; padding: 20px; border-top: 1px solid #eee;">
         <button pButton type="submit" label="Save" [disabled]="accomodationForm.invalid" style="margin-right: 10px;"></button>
         <button pButton type="button" label="Close" icon="pi pi-times" (click)="onClose()"></button>
       </div>
-    </form>
-    <p-toast></p-toast>
+    </div>
+  </form>
 </div>

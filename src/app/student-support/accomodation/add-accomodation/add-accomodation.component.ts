@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { Service } from '../../service/service';
 import { Accomodation } from '../../domain/schema';
@@ -66,45 +66,56 @@ export class AddAccomodationComponent implements OnInit {
       buildingName: ['', Validators.required],
       floor: ['', Validators.required],
       isSingleOccupancy: [false, Validators.required],
-      numberOfRoommates: [{ value: '', disabled: true }],
-      roommateNames: [{ value: '', disabled: true }],
       hostfamily: [{ value: '', disabled: true }],
-      roommateNumber: [{ value: '', disabled: true }],
+      numberOfRoommates: [{ value: '', disabled: true }],
+      roommates: this.fb.array([]),
     });
   }
 
   onSingleOccupancyChange(event: any): void {
     console.log('Dropdown Change Event:', event);
     const isSingle = event.value;
-    this.accomodationForm.get('isSingleOccupancy').setValue(isSingle, {emitEvent: false}); // Prevent circular event loops
+    this.accomodationForm.get('isSingleOccupancy').setValue(isSingle, { emitEvent: false }); // Prevent circular event loops
     this.updateRoommateValidation(isSingle);
   }
 
   updateRoommateValidation(isSingle: boolean): void {
     console.log('Updating Roommate Validation, isSingle:', isSingle);
     if (isSingle) {
-      this.accomodationForm.get('numberOfRoommates').disable();
-      this.accomodationForm.get('roommateNames').disable();
       this.accomodationForm.get('hostfamily').disable();
-      this.accomodationForm.get('roommateNumber').disable();
-      this.accomodationForm.get('numberOfRoommates').reset();
-      this.accomodationForm.get('roommateNames').reset();
-      this.accomodationForm.get('hostfamily').reset();
-      this.accomodationForm.get('roommateNumber').reset();
+      this.accomodationForm.get('numberOfRoommates').disable();
+      this.clearRoommates();
     } else {
-      this.accomodationForm.get('numberOfRoommates').enable();
-      this.accomodationForm.get('roommateNames').enable();
       this.accomodationForm.get('hostfamily').enable();
-      this.accomodationForm.get('roommateNumber').enable();
-      this.accomodationForm.get('numberOfRoommates').setValidators(Validators.required);
-      this.accomodationForm.get('roommateNames').setValidators(Validators.required);
-      this.accomodationForm.get('hostfamily').setValidators(Validators.required);
-      this.accomodationForm.get('roommateNumber').setValidators(Validators.required);
+      this.accomodationForm.get('numberOfRoommates').enable();
     }
-    this.accomodationForm.get('numberOfRoommates').updateValueAndValidity();
-    this.accomodationForm.get('roommateNames').updateValueAndValidity();
     this.accomodationForm.get('hostfamily').updateValueAndValidity();
-    this.accomodationForm.get('roommateNumber').updateValueAndValidity();
+    this.accomodationForm.get('numberOfRoommates').updateValueAndValidity();
+  }
+
+  onRoommateCountChange(event: any): void {
+    const count = event.target.value;
+    this.updateRoommateFields(count);
+  }
+
+  updateRoommateFields(count: number): void {
+    const roommates = this.accomodationForm.get('roommates') as FormArray;
+    while (roommates.length !== 0) {
+      roommates.removeAt(0);
+    }
+    for (let i = 0; i < count; i++) {
+      roommates.push(this.fb.group({
+        roommateName: ['', Validators.required],
+        roommateNumber: ['', Validators.required],
+      }));
+    }
+  }
+
+  clearRoommates(): void {
+    const roommates = this.accomodationForm.get('roommates') as FormArray;
+    while (roommates.length !== 0) {
+      roommates.removeAt(0);
+    }
   }
 
   resetForm(): void {
@@ -114,10 +125,9 @@ export class AddAccomodationComponent implements OnInit {
       buildingName: '',
       floor: '',
       isSingleOccupancy: false,  // Set to false explicitly
-      numberOfRoommates: '',
-      roommateNames: '',
       hostfamily: '',
-      roommateNumber: ''
+      numberOfRoommates: '',
+      roommates: []
     });
   
     // Trigger validation updates for dependent controls
@@ -131,15 +141,16 @@ export class AddAccomodationComponent implements OnInit {
     const formValue = { ...this.accomodationForm.getRawValue() };
   
     if (formValue.isSingleOccupancy) {
-      formValue.numberOfRoommates = 0;
-      formValue.roommateNames = ' ';
       formValue.hostfamily = ' ';
-      formValue.roommateNumber = ' ';
+      formValue.numberOfRoommates = 0;
+      formValue.roommates = [];
     }
   
     if (this.accomodationForm.valid) {
       const updatedAccomodation: Accomodation = {
-        ...formValue
+        ...formValue,
+        roommateNames: formValue.roommates.map((roommate: any) => `${roommate.roommateName}`).join(', '),
+        roommateNumbers: formValue.roommates.map((roommate: any) => `${roommate.roommateNumber}`).join(', ')
       };
       this.service.addAccomodation(updatedAccomodation).subscribe({
         next: (response) => {
@@ -162,8 +173,6 @@ export class AddAccomodationComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: 'Form Error', detail: 'Please fill in all required fields correctly.' });
     }
   }
-  
-  
   
   onClose(): void {
     this.dialogClose.emit(null);
