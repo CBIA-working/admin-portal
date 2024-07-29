@@ -6,6 +6,7 @@ import { Accomodation, Courses, CulturalEvent, KeyProgramDate, Program } from '.
 @Injectable()
 export class Service {
     private readonly BASE_URL: string = 'http://localhost:3000/api';
+    private readonly PDF_URL: string = 'http://localhost:3000/agreement';
 
     constructor(private http: HttpClient) {}
 
@@ -87,6 +88,18 @@ getupdateProfile(formData: FormData): Observable<any> {
           body: { studentId, accomodationId }
         });
       }
+
+//accmodationpdf
+getPdfUrl1(): string {
+    return `${this.PDF_URL}/House_Rules_Agreement.pdf`;
+}
+getPdfUrl2(): string {
+    return `${this.PDF_URL}/Rental_Agreement_Lease_Agreement.pdf`;
+}
+getPdfUrl3(): string {
+    return `${this.PDF_URL}/Security_Deposit_Agreement.pdf`;
+}
+
 //course
     getCourse(params?: any): Promise<any> {
         return this.http.get<any>(`${this.BASE_URL}/CoursesAdmin`, { params }).toPromise();
@@ -176,4 +189,6 @@ getupdateProfile(formData: FormData): Observable<any> {
       copyProgram(id: number): Observable<any> {
         return this.http.post<any>(`${this.BASE_URL}/copyProgram`, { id });
       }
+
+
 }

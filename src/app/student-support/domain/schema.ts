@@ -36,6 +36,9 @@ export interface Accomodation {
     roommateNames:String;
     hostfamily:String;
     roommateNumber:String;
+    agreement1:Boolean;               
+    agreement2:Boolean;               
+    agreement3:Boolean;
     userId:number;
 }
 

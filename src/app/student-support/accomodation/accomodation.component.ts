@@ -18,7 +18,7 @@ import autoTable from 'jspdf-autotable';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { NavigationService } from '../service/navigation.service';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { ChipsModule } from 'primeng/chips';
 import { InputGroupModule } from 'primeng/inputgroup';
@@ -37,7 +37,7 @@ import { AddAccomodationComponent } from './add-accomodation/add-accomodation.co
     TagModule, DropdownModule, MultiSelectModule, ProgressBarModule, ButtonModule,
     DownloadComponent, ToastModule, FormsModule,OverlayPanelModule, InputGroupModule, 
     InputGroupAddonModule, ChipsModule,DialogModule, EditAccomodationComponent,ConfirmDialogModule,
-    AssignAccomodationComponent,AddAccomodationComponent
+    AssignAccomodationComponent,AddAccomodationComponent,ReactiveFormsModule
   ],
   providers: [Service, MessageService,ConfirmationService],
   templateUrl: './accomodation.component.html',
@@ -58,7 +58,21 @@ export class AccomodationComponent implements OnInit, AfterViewInit {
   assignDialogVisible: boolean = false;
   selectedAccomodationId: number | null = null;
   addDialogVisible: boolean = false;
-  
+
+
+  openPdf1InNewTab(): void {
+    const pdfUrl1 = this.service.getPdfUrl1();
+    window.open(pdfUrl1, '_blank');
+  }
+  openPdf2InNewTab(): void {
+    const pdfUrl2 = this.service.getPdfUrl2();
+    window.open(pdfUrl2, '_blank');
+  }
+  openPdf3InNewTab(): void {
+    const pdfUrl3 = this.service.getPdfUrl3();
+    window.open(pdfUrl3, '_blank');
+  }
+
   constructor(
     private route: ActivatedRoute,
     private service: Service,
@@ -143,6 +157,9 @@ export class AccomodationComponent implements OnInit, AfterViewInit {
     roommateNames:'Roommate Names',
     hostfamily:'Host Family',
     roommateNumber:'Roommate Number',
+    // agreement1 :'House_Rules_Agreement',       
+    // agreement2 : 'Rental_Agreement_Lease_Agreement',
+    // agreement3 :'Security_Deposit_Agreement',         
     userId:'User ID',
   };
   options = [
@@ -249,7 +266,10 @@ export class AccomodationComponent implements OnInit, AfterViewInit {
       'Number Of Roommates': accomodation.numberOfRoommates,
       'Roommate Names': accomodation.roommateNames || 'N/A',
       'Host Family': accomodation.hostfamily || 'N/A',
-      'Roommate Number': accomodation.roommateNumber || 'N/A'
+      'Roommate Number': accomodation.roommateNumber || 'N/A',
+      // 'Agreemet 1':accomodation.agreement1,
+      // 'Agreemet 2':accomodation.agreement2,
+      // 'Agreemet 3':accomodation.agreement3,
     };
   }
 

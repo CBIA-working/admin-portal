@@ -116,6 +116,11 @@
         </th>
         <th style="min-width: 10%; text-align: center;">
           <div style="display: flex; justify-content: center; align-items: center;">
+            Agreements
+          </div>
+        </th>
+        <th style="min-width: 10%; text-align: center;">
+          <div style="display: flex; justify-content: center; align-items: center;">
             Actions
           </div>
         </th>
@@ -171,6 +176,31 @@
             <ng-template #singleOccupancy>
               Single Occupancy
             </ng-template>
+          </td>
+          <td style="text-align: center;">
+            <p-button (click)="op.toggle($event)" icon="pi pi-file-pdf"  [text]="true" [plain]="true">
+              <p-overlayPanel #op [dismissable]="true">
+                <div style="margin-bottom: 10px; display: flex; align-items: center; justify-content: start;">
+                  <p-button label="House Rules Agreement" (click)="openPdf1InNewTab()" icon="pi pi-file-pdf" [rounded]="true" [text]="true" [plain]="true" tooltip="View the house rules agreement." style="margin-right: 10px;"></p-button>
+                  <p-button *ngIf="accomodation.agreement1" icon="pi pi-check" [rounded]="true" [text]="true" [raised]="true" tooltip="Agreement accepted." style="margin-right: 10px;"></p-button>
+                  <p-button *ngIf="!accomodation.agreement1" icon="pi pi-times" [rounded]="true" [text]="true" [raised]="true" severity="danger" tooltip="Agreement not accepted." style="margin-right: 10px;"></p-button>
+                </div>
+                <div style="margin-bottom: 10px; display: flex; align-items: center; justify-content: start;">
+                  <p-button label="Rental/Lease Agreement" (click)="openPdf2InNewTab()" icon="pi pi-file-pdf" [rounded]="true" [text]="true" [plain]="true" tooltip="View the rental/lease agreement." style="margin-right: 10px;"></p-button>
+                  <p-button *ngIf="accomodation.agreement2" icon="pi pi-check" [rounded]="true" [text]="true" [raised]="true" tooltip="Agreement accepted." style="margin-right: 10px;"></p-button>
+                  <p-button *ngIf="!accomodation.agreement2" icon="pi pi-times" [rounded]="true" [text]="true" [raised]="true" severity="danger" tooltip="Agreement not accepted." style="margin-right: 10px;"></p-button>
+                </div>
+                <div style="margin-bottom: 10px; display: flex; align-items: center; justify-content: start;">
+                  <p-button label="Security Deposit Agreement" (click)="openPdf3InNewTab()" icon="pi pi-file-pdf" [rounded]="true" [text]="true" [plain]="true" tooltip="View the security deposit agreement." style="margin-right: 10px;"></p-button>
+                  <p-button *ngIf="accomodation.agreement3" icon="pi pi-check" [rounded]="true" [text]="true" [raised]="true" tooltip="Agreement accepted." style="margin-right: 10px;"></p-button>
+                  <p-button *ngIf="!accomodation.agreement3" icon="pi pi-times" [rounded]="true" [text]="true" [raised]="true" severity="danger" tooltip="Agreement not accepted." style="margin-right: 10px;"></p-button>
+                </div>
+              </p-overlayPanel>
+              
+              
+              
+              
+            </p-button>            
           </td>
           <td>
             <div class="button-container" style="display: flex; gap: 0.5rem;">
