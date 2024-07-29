@@ -153,6 +153,11 @@ getPdfUrl3(): string {
     getFaq(params?: any): Promise<any> {
     return this.http.get<any>(`${this.BASE_URL}/faqadmin`, { params }).toPromise();
     }
+    deleteFaq(FaqId: number): Observable<void> {
+        return this.http.delete<void>(`${this.BASE_URL}/deleteFaq`, { 
+          body: { id: FaqId } 
+    });
+    }
 
 //Program
     getProgram(params?: any): Promise<any> {

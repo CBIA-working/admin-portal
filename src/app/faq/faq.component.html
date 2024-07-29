@@ -1,56 +1,83 @@
 <p-toast></p-toast>
 <div class="card" style="margin: 0 20px; overflow: hidden;">
-  <p-table
-    #dt
-    [value]="faqs"
-    dataKey="id"
-    [rows]="10"
-    [rowsPerPageOptions]="[10, 25, 50]"
-    [loading]="loading"
-    [paginator]="true"
-    [globalFilterFields]="['id', 'name', 'description']"
-    [reorderableColumns]="true"
-    styleClass="p-datatable-customers">
-    
+  <div class="mb-2 ml-auto z-0" style="display: flex; gap: 10px;">
+    <p-button pTooltip="Add Program" icon="pi pi-plus" (click)="showAddDialog()" [raised]="true" severity="primary"></p-button>
+
+    <app-download [class.hidden]="downloadSelectedMode" (downloadSelectedStudentsEvent)="downloadSelectedStudents()"></app-download>
+    <p-button 
+      pTooltip="Download Selected Students"
+      label="Download Selected Students" 
+      icon="pi pi-download" 
+      [raised]="true" 
+      severity="secondary" 
+      (click)="downloadSelectedStudents()" 
+      *ngIf="downloadSelectedMode">
+    </p-button>
+    <p-button 
+      pTooltip="Cancel"
+      icon="pi pi-times" 
+      severity="danger" 
+      [raised]="true" 
+      (click)="exitSelectionMode()" 
+      *ngIf="downloadSelectedMode">
+    </p-button>
+  </div>
+
+  <p-table #dt1 [value]="faqs" [selectionMode]="downloadSelectedMode ? 'checkbox' : null" 
+  [(selection)]="selectedFaqs" dataKey="id" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]" [loading]="loading" [paginator]="true" 
+  [globalFilterFields]="['id', 'name', 'description']" style="table-layout: fixed;">
     <ng-template pTemplate="caption">
       <div class="flex">
-        <p-button 
-          label="Clear" 
-          [outlined]="true" 
-          icon="pi pi-filter-slash" 
-          (click)="clear()">
-        </p-button>
+        <p-button label="Clear" [outlined]="true" icon="pi pi-filter-slash" (click)="clear(dt1)"></p-button>
         <span class="p-input-icon-left ml-auto" style="border: 1px solid #ccc; border-radius: 4px; padding: 2px;">
           <i class="pi pi-search" style="margin-left: 8px;"></i>
-          <input 
-            pInputText 
-            type="text" 
-            (input)="dt.filterGlobal($event.target.value, 'contains')" 
-            placeholder="Search keyword"
-            class="p-inputtext-sm" 
-            style="width: 15rem; padding-left: 3rem; border: none; outline: none; background: transparent; margin-left: 5px;">
+          <input pInputText type="text" (input)="dt1.filterGlobal($event.target.value, 'contains')" 
+          placeholder="Search keyword" class="p-inputtext-sm" 
+          style="width: 15rem; padding-left: 3rem; border: none; outline: none; background: transparent; margin-left: 5px;">
         </span>
       </div>
     </ng-template>
 
-    <ng-template pTemplate="header" let-columns>
+    <ng-template pTemplate="header">
       <tr>
-        <th pReorderableColumn>ID</th>
-        <th pReorderableColumn>Name</th>
-        <th pReorderableColumn>Description</th>
-        <th>Actions</th>
+        <th style="width: 10%;">
+          <div class="flex align-items-center">
+            ID
+            <p-columnFilter type="text" field="id" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th style="width: 30%;">
+          <div class="flex align-items-center">
+            Name
+            <p-columnFilter type="text" field="name" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th style="width: 30%;">
+          <div class="flex align-items-center">
+            Description
+            <p-columnFilter type="text" field="description" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th style="width: 20%; text-align: center;">
+          <div style="display: flex; justify-content: center; align-items: center;">
+            Actions
+          </div>
+        </th>
       </tr>
     </ng-template>
 
     <ng-template pTemplate="body" let-faq>
       <tr>
+        <td *ngIf="downloadSelectedMode">
+          <p-tableCheckbox [value]="faq"></p-tableCheckbox>
+        </td>
         <td>{{ faq.id }}</td>
         <td>{{ faq.name }}</td>
         <td>{{ faq.description }}</td>
         <td>
-          <div class="button-container" style="display: flex; gap: 0.5rem;">
-            <p-button (click)="showEditDialog(faq)" icon="pi pi-pencil" [text]="true" [plain]="true"></p-button>
-            <p-button (click)="deleteFaq(faq)" icon="pi pi-trash" [text]="true" [plain]="true"></p-button>
+          <div class="button-container" style="display: flex; justify-content: center; gap: 0.5rem;">
+            <p-button pTooltip="Edit" (click)="showEditDialog(program)" icon="pi pi-pencil" [text]="true" [plain]="true"></p-button>
+            <p-button pTooltip="Delete" (click)="deleteCulturalEvent(program)" icon="pi pi-trash" [text]="true" [plain]="true"></p-button> 
           </div>
         </td>
       </tr>
@@ -58,8 +85,23 @@
 
     <ng-template pTemplate="emptymessage">
       <tr>
-        <td colspan="4">No FAQs found.</td>
+        <td colspan="5">No Program found.</td>
       </tr>
     </ng-template>
   </p-table>
 </div>
+
+<p-dialog [(visible)]="dialogVisible" [modal]="true" [closable]="false" header="Edit Faq" [responsive]="true" [style]="{width: '60vw'}">
+  <app-edit-program
+    *ngIf="selectedFaq" 
+    [program]="selectedFaq" 
+    (dialogClose)="onDialogClose($event)">
+  </app-edit-program>
+</p-dialog>
+
+<p-confirmDialog></p-confirmDialog>
+
+<p-dialog [(visible)]="addDialogVisible" [modal]="true" [closable]="false" header="Add program" [responsive]="true" [style]="{width: '40vw' ,height:'53vh'}">
+  <app-add-program (dialogClose)="onAddDialogClose()"></app-add-program>
+</p-dialog> 
+
