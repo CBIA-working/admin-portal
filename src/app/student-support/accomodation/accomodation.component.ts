@@ -73,6 +73,7 @@ export class AccomodationComponent implements OnInit, AfterViewInit {
   }
   onAddDialogClose() {
     this.addDialogVisible = false;
+    this.fetchAllAccomodation();
     // Optionally refresh the student list here
   }
   showAssignDialog(accomodationId: number) {
@@ -83,6 +84,7 @@ export class AccomodationComponent implements OnInit, AfterViewInit {
   onAssignDialogClose() {
     this.selectedAccomodationId = null;
     this.assignDialogVisible = false;
+    this.fetchAllAccomodation();
   }
   showEditDialog(accomodation: Accomodation): void {
     this.selectedAccomodations = accomodation;
@@ -98,6 +100,7 @@ export class AccomodationComponent implements OnInit, AfterViewInit {
     }
     this.selectedAccomodations = null;
     this.dialogVisible = false;
+    this.fetchAllAccomodation();
   }
 
   deleteAccomodation(accomodation: Accomodation): void {

@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { Service } from '../../service/service';
 import { Accomodation } from '../../domain/schema';
 import { CommonModule } from '@angular/common';
@@ -22,7 +22,7 @@ import { DialogModule } from 'primeng/dialog';
   selector: 'app-add-accomodation',
   templateUrl: './add-accomodation.component.html',
   styleUrls: ['./add-accomodation.component.scss'],
-  providers: [MessageService],
+  providers: [Service, MessageService,ConfirmationService],
   standalone: true,
   imports: [
     CommonModule,
@@ -136,43 +136,45 @@ export class AddAccomodationComponent implements OnInit {
   }
   
   saveChanges(): void {
-    console.log('Saving Changes:', this.accomodationForm.value);
-  
-    const formValue = { ...this.accomodationForm.getRawValue() };
-  
-    if (formValue.isSingleOccupancy) {
-      formValue.hostfamily = ' ';
-      formValue.numberOfRoommates = 0;
-      formValue.roommates = [];
-    }
-  
-    if (this.accomodationForm.valid) {
-      const updatedAccomodation: Accomodation = {
-        ...formValue,
-        roommateNames: formValue.roommates.map((roommate: any) => `${roommate.roommateName}`).join(', '),
-        roommateNumbers: formValue.roommates.map((roommate: any) => `${roommate.roommateNumber}`).join(', ')
-      };
-      this.service.addAccomodation(updatedAccomodation).subscribe({
-        next: (response) => {
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Accommodation updated successfully.' });
-          setTimeout(() => {
-            this.dialogClose.emit(updatedAccomodation);
-            this.resetForm();  // Reset the form after closing the dialog
-          }, 1000); // Delay for 1 second before closing the dialog
-        },
-        error: (error) => {
-          let errorMessage = 'Failed to update accommodation. Please try again later.';
-          if (error.error && error.error.message) {
-            errorMessage = error.error.message;
-          }
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: errorMessage });
-        }
-      });
-    } else {
-      this.accomodationForm.markAllAsTouched();
-      this.messageService.add({ severity: 'error', summary: 'Form Error', detail: 'Please fill in all required fields correctly.' });
-    }
+  console.log('Saving Changes:', this.accomodationForm.value);
+
+  const formValue = { ...this.accomodationForm.getRawValue() };
+  formValue.floor = formValue.floor.toString();
+  if (formValue.isSingleOccupancy) {
+    formValue.hostfamily = ' ';
+    formValue.numberOfRoommates = 0;
+    formValue.roommates = [];
   }
+
+  if (this.accomodationForm.valid) {
+    const updatedAccomodation: Accomodation = {
+      ...formValue,
+      roommateNames: formValue.roommates.map((roommate: any) => `${roommate.roommateName}`).join(', '),
+      roommateNumbers: formValue.roommates.map((roommate: any) => `${roommate.roommateNumber}`).join(', ')
+    };
+    this.service.addAccomodation(updatedAccomodation).subscribe({
+      next: (response) => {
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Accommodation updated successfully.' });
+        setTimeout(() => {
+          this.dialogClose.emit(updatedAccomodation);
+          this.resetForm();  // Reset the form after closing the dialog
+        }, 1000); // Delay for 1 second before closing the dialog
+      },
+      error: (error) => {
+        let errorMessage = 'Failed to update accommodation. Please try again later.';
+        if (error.error && error.error.message) {
+          errorMessage = error.error.message;
+        }
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: errorMessage });
+      }
+    });
+  } else {
+    this.accomodationForm.markAllAsTouched();
+    this.messageService.add({ severity: 'error', summary: 'Form Error', detail: 'Please fill in all required fields correctly.' });
+  }
+  delete formValue.roommates;
+}
+
   
   onClose(): void {
     this.dialogClose.emit(null);
