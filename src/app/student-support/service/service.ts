@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Accomodation, Courses, CulturalEvent, KeyProgramDate, Program } from '../domain/schema';
+import { Accomodation, Courses, CulturalEvent, Faq, KeyProgramDate, Program } from '../domain/schema';
 
 @Injectable()
 export class Service {
@@ -152,6 +152,12 @@ getPdfUrl3(): string {
 //faq
     getFaq(params?: any): Promise<any> {
     return this.http.get<any>(`${this.BASE_URL}/faqadmin`, { params }).toPromise();
+    }
+    addFaq(faq: Faq): Observable<any> {
+        return this.http.post<any>(`${this.BASE_URL}/addFaq`, faq);
+    }
+    getupdateFaq(params?: any): Observable<any>  {
+        return this.http.post<any>(`${this.BASE_URL}/updateFaq`,params);
     }
     deleteFaq(FaqId: number): Observable<void> {
         return this.http.delete<void>(`${this.BASE_URL}/deleteFaq`, { 

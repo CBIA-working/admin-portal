@@ -76,8 +76,8 @@
         <td>{{ faq.description }}</td>
         <td>
           <div class="button-container" style="display: flex; justify-content: center; gap: 0.5rem;">
-            <p-button pTooltip="Edit" (click)="showEditDialog(program)" icon="pi pi-pencil" [text]="true" [plain]="true"></p-button>
-            <p-button pTooltip="Delete" (click)="deleteCulturalEvent(program)" icon="pi pi-trash" [text]="true" [plain]="true"></p-button> 
+            <p-button pTooltip="Edit" (click)="showEditDialog(faq)" icon="pi pi-pencil" [text]="true" [plain]="true"></p-button>
+            <p-button pTooltip="Delete" (click)="deleteFaq(faq)" icon="pi pi-trash" [text]="true" [plain]="true"></p-button> 
           </div>
         </td>
       </tr>
@@ -92,16 +92,16 @@
 </div>
 
 <p-dialog [(visible)]="dialogVisible" [modal]="true" [closable]="false" header="Edit Faq" [responsive]="true" [style]="{width: '60vw'}">
-  <app-edit-program
+  <app-edit-faq
     *ngIf="selectedFaq" 
-    [program]="selectedFaq" 
+    [faq]="selectedFaq" 
     (dialogClose)="onDialogClose($event)">
-  </app-edit-program>
+  </app-edit-faq>
 </p-dialog>
 
 <p-confirmDialog></p-confirmDialog>
 
-<p-dialog [(visible)]="addDialogVisible" [modal]="true" [closable]="false" header="Add program" [responsive]="true" [style]="{width: '40vw' ,height:'53vh'}">
-  <app-add-program (dialogClose)="onAddDialogClose()"></app-add-program>
+<p-dialog [(visible)]="addDialogVisible" [modal]="true" [closable]="false" header="Add Faq" [responsive]="true" [style]="{width: '40vw' ,height:'53vh'}">
+  <app-add-faq (dialogClose)="onAddDialogClose()"></app-add-faq>
 </p-dialog> 
 

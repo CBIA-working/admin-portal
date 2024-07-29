@@ -24,7 +24,8 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { AddProgramComponent } from "../student-support/program/add-program/add-program.component";
+import { AddFaqComponent } from "./add-faq/add-faq.component";
+import { EditFaqComponent } from "./edit-faq/edit-faq.component";
 
 @Component({
   selector: 'app-faq',
@@ -34,8 +35,7 @@ import { AddProgramComponent } from "../student-support/program/add-program/add-
     InputTextModule, MultiSelectModule, ProgressBarModule, TagModule,
     ToastModule, FormsModule, OverlayPanelModule, InputGroupModule,
     InputGroupAddonModule, ChipsModule, DialogModule, ConfirmDialogModule,
-    AddProgramComponent,
-    DownloadComponent
+    DownloadComponent,AddFaqComponent,EditFaqComponent
 ],
   templateUrl: './faq.component.html',
   styleUrls: ['./faq.component.scss'],
@@ -69,6 +69,7 @@ export class FaqComponent implements OnInit {
   }
   onAddDialogClose() {
     this.addDialogVisible = false;
+    this.fetchAllFaq();
     // Optionally refresh the student list here
   }
 
@@ -84,9 +85,10 @@ export class FaqComponent implements OnInit {
     }
     this.dialogVisible = false;
   }
-  deleteCulturalEvent(faq: Faq): void {
+
+  deleteFaq(faq: Faq): void {
     this.confirmationService.confirm({
-      message: 'Are you sure you want to delete this Program?',
+      message: 'Are you sure you want to delete this Faq?',
       header: 'Confirm',
       icon: 'pi pi-info-circle',
       accept: () => {
@@ -97,15 +99,15 @@ export class FaqComponent implements OnInit {
             this.messageService.add({
               severity: 'success',
               summary: 'Success',
-              detail: 'Program deleted successfully'
+              detail: 'Faq deleted successfully'
             });
           },
           error => {
-            console.error('Error deleting Program', error);
+            console.error('Error deleting Faq', error);
             this.messageService.add({
               severity: 'error',
               summary: 'Error',
-              detail: 'Failed to delete Program'
+              detail: 'Failed to delete Faq'
             });
           }
         );
