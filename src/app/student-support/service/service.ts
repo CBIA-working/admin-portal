@@ -164,7 +164,11 @@ getPdfUrl3(): string {
           body: { id: FaqId } 
     });
     }
-
+    saveFaqOrder(faqs: { id: number; order: number }[]): Observable<any> {
+        return this.http.post<any>(`${this.BASE_URL}/updateOrder`, faqs);
+      }
+      
+      
 //Program
     getProgram(params?: any): Promise<any> {
     return this.http.get<any>(`${this.BASE_URL}/ProgramAdmin`, { params }).toPromise();

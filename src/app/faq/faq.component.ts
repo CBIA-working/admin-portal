@@ -27,6 +27,11 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { AddFaqComponent } from "./add-faq/add-faq.component";
 import { EditFaqComponent } from "./edit-faq/edit-faq.component";
 
+interface Column {
+  field: string;
+  header: string;
+}
+
 @Component({
   selector: 'app-faq',
   standalone: true,
@@ -53,7 +58,12 @@ export class FaqComponent implements OnInit {
   downloadSelectedMode: boolean = false;
   dialogVisible: boolean = false;
   addDialogVisible: boolean = false;
-
+  reorderMode: boolean = false;
+  cols: Column[] = [
+    { field: 'id', header: 'ID' },
+    { field: 'name', header: 'Name' },
+    { field: 'description', header: 'Description' }
+  ];
 
   constructor(
     private route: ActivatedRoute,
@@ -118,6 +128,32 @@ export class FaqComponent implements OnInit {
     });
   }
 
+  toggleReorderMode() {
+    this.reorderMode = !this.reorderMode;
+  }
+  
+  saveOrder() {
+    // Capture the current order of FAQs
+    const reorderedFaqs = this.faqs.map((faq, index) => ({
+      id: faq.id,
+      order: index + 1 // or any logic to determine order
+    }));
+  
+    this.service.saveFaqOrder(reorderedFaqs).subscribe({
+      next: (response) => {
+        this.messageService.add({ severity: 'success', summary: 'Order saved', detail: 'FAQ order has been updated.' });
+        this.reorderMode = false;
+      },
+      error: (err) => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to save FAQ order.' });
+      }
+    });
+  }
+  
+  exitReorderMode() {
+    this.toggleReorderMode(); // Call the method to toggle the state
+  }
+  
   ngOnInit(): void {
     this.fetchAllFaq();
   }
