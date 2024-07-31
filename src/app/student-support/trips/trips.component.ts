@@ -86,7 +86,7 @@ export class TripsComponent implements OnInit, AfterViewInit {
   onAssignDialogClose() {
     this.selectedTripId = null;
     this.assignDialogVisible = false;
-    this.fetchAllTrips();
+    
   }
   showEditDialog(trips: Trip): void {
     this.selectedTrips = trips;
