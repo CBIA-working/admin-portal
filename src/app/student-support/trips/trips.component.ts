@@ -75,6 +75,7 @@ export class TripsComponent implements OnInit, AfterViewInit {
   }
   onAddDialogClose() {
     this.addDialogVisible = false;
+    this.fetchAllTrips();
     // Optionally refresh the student list here
   }
   showAssignDialog(tripId: number) {
@@ -85,6 +86,7 @@ export class TripsComponent implements OnInit, AfterViewInit {
   onAssignDialogClose() {
     this.selectedTripId = null;
     this.assignDialogVisible = false;
+    this.fetchAllTrips();
   }
   showEditDialog(trips: Trip): void {
     this.selectedTrips = trips;
@@ -99,6 +101,7 @@ export class TripsComponent implements OnInit, AfterViewInit {
     }
     this.selectedTrip = null;
     this.dialogVisible = false;
+    this.fetchAllTrips();
   }
 
   deleteTrip(trip: Trip): void {
