@@ -60,7 +60,20 @@ export interface KeyProgramDate {
     time:string; // Allow date to be either Date or string
     description: string;
   }
-  
+
+  export interface Trip {
+    id:number;
+    TripName:String;
+    Location:String;
+    DepartureDate:Date;
+    ReturnDate:Date;
+    FullName:String;
+    StudentId:String;
+    PhoneNumber:String;
+    Purpose:String;
+    GoingFormFilled:Boolean;
+  }
+
 export interface Faq {
     id:number;
     name:String;

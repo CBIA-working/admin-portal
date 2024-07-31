@@ -104,6 +104,14 @@ export class HeaderComponent implements OnInit {
         command: () => this.reloadPage('/keyprogramdates')
       });
     }
+    else if (path === '/trips') {
+      this.items.push({ 
+        label: 'Trips', 
+        escape: false, 
+        routerLink: '/trips',
+        command: () => this.reloadPage('/trips')
+      });
+    }
     else if (path === '/FAQs') {
       this.items.push({ 
         label: 'FAQs', 

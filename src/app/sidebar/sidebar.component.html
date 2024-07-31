@@ -32,7 +32,7 @@
                         <a (click)="handleRouteClick('/Programs')"
                             pRipple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple"
                             [ngStyle]="{ 'background-color': isActive('/Programs') ? '#e0e0e0' : '' }">
-                            <i class="pi pi-graduation-cap mr-2"></i>
+                            <i class="fa fa-graduation-cap mr-2"></i>
                             <span class="font-medium">Programs</span>
                         </a>
                     </li>
@@ -40,7 +40,7 @@
                         <a (click)="handleRouteClick('/culturalevents')"
                             pRipple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple"
                             [ngStyle]="{ 'background-color': isActive('/culturalevents') ? '#e0e0e0' : '' }">
-                            <i class="pi pi-calendar-clock mr-2"></i>
+                            <i class="fa fa-calendar-alt mr-2"></i>
                             <span class="font-medium">Cultural Events</span>
                         </a>
                     </li>
@@ -64,8 +64,16 @@
                         <a (click)="handleRouteClick('/keyprogramdates')"
                             pRipple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple"
                             [ngStyle]="{ 'background-color': isActive('/keyprogramdates') ? '#e0e0e0' : '' }">
-                            <i class="pi pi-calendar mr-2"></i>
+                            <i class="fa fa-calendar-check mr-2"></i>
                             <span class="font-medium">Key Program Dates</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a (click)="handleRouteClick('/trips')"
+                            pRipple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple"
+                            [ngStyle]="{ 'background-color': isActive('/trips') ? '#e0e0e0' : '' }">
+                            <i class="fa fa-plane mr-2"></i>
+                            <span class="font-medium">Trips</span>
                         </a>
                     </li>
                     <li>
@@ -84,6 +92,8 @@
                             <span class="font-medium">Settings</span>
                         </a>
                     </li>
+
+            
                     <li>
                         <a (click)="logout()"
                             pRipple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">

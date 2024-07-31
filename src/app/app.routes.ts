@@ -14,6 +14,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { KeyprogramdatesComponent } from './student-support/keyprogramdates/keyprogramdates.component';
 import { FaqComponent } from './faq/faq.component';
 import { ProgramComponent } from './student-support/program/program.component';
+import { TripsComponent } from './student-support/trips/trips.component';
 
 
 export const routes: Routes = [
@@ -21,14 +22,13 @@ export const routes: Routes = [
   { path: 'home', component: HomeComponent,canActivate: [AuthGuard] },
   { path: 'managestudent', component:ManageStudentsComponent,canActivate: [AuthGuard]},
   { path: 'Programs', component:ProgramComponent,canActivate: [AuthGuard]},
+  { path: 'courses', component:CoursesComponent,canActivate: [AuthGuard]},
   { path: 'culturalevents', component:CulturalEventsComponent,canActivate: [AuthGuard]},
   { path: 'accomodations', component:AccomodationComponent,canActivate: [AuthGuard]},
   { path: 'keyprogramdates',component:KeyprogramdatesComponent,canActivate:[AuthGuard]},
-  { path: 'courses', component:CoursesComponent,canActivate: [AuthGuard]},
+  { path: 'trips', component:TripsComponent,canActivate: [AuthGuard]},
   { path: 'FAQs', component:FaqComponent,canActivate: [AuthGuard]},
   { path: 'profile', component:ProfileComponent,canActivate: [AuthGuard]},
-  // { path: 'culturalevents/:id', component:CulturalEventsComponent,canActivate: [AuthGuard]},
-  // { path: 'studentservice', component:StudentServicesComponent,canActivate: [AuthGuard]},
   { path: 'settings', component:SettingsComponent,canActivate: [AuthGuard]},
   { path: '**', redirectTo: '/login', pathMatch: 'full' } // Redirect any unknown route to auth
 ];

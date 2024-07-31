@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Accomodation, Courses, CulturalEvent, Faq, KeyProgramDate, Program } from '../domain/schema';
+import { Accomodation, Courses, CulturalEvent, Faq, KeyProgramDate, Program, Trip } from '../domain/schema';
 
 @Injectable()
 export class Service {
@@ -62,6 +62,7 @@ getupdateProfile(formData: FormData): Observable<any> {
           body: { studentId, eventId }
         });
       }
+
 //accomodation
     getAccomodation(params?: any): Promise<any> {
         return this.http.get<any>(`${this.BASE_URL}/AccomodationAdmin`, { params }).toPromise();
@@ -128,6 +129,7 @@ getPdfUrl3(): string {
           body: { studentId, courseId }
         });
       }
+
 //keyprogramdates
 
     getKeyProgramDates(month: number): Promise<any> {
@@ -148,6 +150,35 @@ getPdfUrl3(): string {
           body: { id: keyProgramDateId } 
     });
     }
+
+//trips
+getTrip(params?: any): Promise<any> {
+    return this.http.get<any>(`${this.BASE_URL}/TripsAdmin`, { params }).toPromise();
+}
+
+getStudentTrips(data: { Id: number, type: string }): Promise<any> {
+    return this.http.post(`${this.BASE_URL}/StudentTrips`, data).toPromise();
+}
+
+getupdateTrips(params?: any): Observable<any>  {
+    return this.http.post<any>(`${this.BASE_URL}/updateTrips`,params);
+}
+deleteTrip(tripId: number): Observable<void> {
+    return this.http.delete<void>(`${this.BASE_URL}/deleteTrips`, { 
+      body: { id: tripId } 
+});
+}
+addTrip(trip: Trip): Observable<any> {
+    return this.http.post<any>(`${this.BASE_URL}/addTrips`, trip);
+}
+assignTrip(studentId: number, tripId: number): Observable<any> {
+    return this.http.post<any>(`${this.BASE_URL}/assignTrips`, { studentId, tripId });
+}
+deleteAssignmentTrip(studentId: number, tripId: number): Observable<any> {
+    return this.http.request('DELETE', `${this.BASE_URL}/deleteTrips`, {
+      body: { studentId, tripId }
+    });
+  }
 
 //faq
     getFaq(params?: any): Promise<any> {

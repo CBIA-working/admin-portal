@@ -1,0 +1,200 @@
+<p-toast></p-toast>
+<div class="card" style="margin: 0 20px; overflow: hidden;">
+  <div class="mb-2 ml-auto z-0" style="display: flex; gap: 10px;">
+    <p-button icon="pi pi-plus" (click)="showAddDialog()" [raised]="true" severity="primary"></p-button>
+
+    <app-download [class.hidden]="downloadSelectedMode" (downloadSelectedStudentsEvent)="downloadSelectedStudents()"></app-download>
+    <p-button 
+      label="Download Selected Students" 
+      icon="pi pi-download" 
+      [raised]="true" 
+      severity="secondary" 
+      (click)="downloadSelectedStudents()" 
+      *ngIf="downloadSelectedMode">
+    </p-button>
+    <p-button 
+      icon="pi pi-times" 
+      severity="danger" 
+      [raised]="true" 
+      (click)="exitSelectionMode()" 
+      *ngIf="downloadSelectedMode">
+    </p-button>
+  </div>
+
+  <p-table
+    #dt1
+    [value]="trips"
+    [selectionMode]="downloadSelectedMode ? 'checkbox' : null"
+    [(selection)]="selectedTrip"
+    dataKey="id"
+    [rows]="10"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [loading]="loading"
+    [paginator]="true"
+    [globalFilterFields]="['id', 'TripName', 'Location', 'DepartureDate', 'ReturnDate','FullName','StudentId','PhoneNumber','Purpose','GoingFormFilled']">
+    
+
+    <ng-template pTemplate="caption">
+      <div class="flex">
+        <p-button 
+          label="Clear" 
+          [outlined]="true" 
+          icon="pi pi-filter-slash" 
+          (click)="clear(dt1)">
+        </p-button>
+        <span class="p-input-icon-left ml-auto" style="border: 1px solid #ccc; border-radius: 4px; padding: 2px;">
+          <i class="pi pi-search" style="margin-left: 8px;"></i>
+          <input 
+            pInputText 
+            type="text" 
+            (input)="dt1.filterGlobal($event.target.value, 'contains')" 
+            placeholder="Search keyword"
+            class="p-inputtext-sm" 
+            style="width: 15rem; padding-left: 3rem; border: none; outline: none; background: transparent; margin-left: 5px;">
+        </span>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th *ngIf="downloadSelectedMode">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
+        <th style="min-width: 12%">
+          <div class="flex align-items-center">
+            ID
+            <p-columnFilter type="text" field="id" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th style="min-width: 12%">
+          <div class="flex align-items-center">
+            Trip Name
+            <p-columnFilter type="text" field="TripName" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th style="min-width: 12%">
+            <div class="flex align-items-center">
+            Location
+              <p-columnFilter type="text" field="Location" display="menu"></p-columnFilter>
+            </div>
+          </th>
+        <th style="min-width: 10%">
+          <div class="flex align-items-center">
+            Departure Date
+            <p-columnFilter type="date" field="DepartureDate" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th style="min-width: 10%">
+            <div class="flex align-items-center">
+            Return Date
+              <p-columnFilter type="date" field="ReturnDate" display="menu"></p-columnFilter>
+            </div>
+          </th>
+          <th style="min-width: 12%">
+            <div class="flex align-items-center">
+            Full Name
+              <p-columnFilter type="text" field="FullName" display="menu"></p-columnFilter>
+            </div>
+          </th>
+          <th style="min-width: 12%">
+            <div class="flex align-items-center">
+            Student Id
+              <p-columnFilter type="text" field="StudentId" display="menu"></p-columnFilter>
+            </div>
+          </th>
+          <th style="min-width: 12%">
+            <div class="flex align-items-center">
+            Phone Number
+              <p-columnFilter type="text" field="PhoneNumber" display="menu"></p-columnFilter>
+            </div>
+          </th>
+          <th style="min-width: 12%">
+            <div class="flex align-items-center">
+            Purpose
+              <p-columnFilter type="text" field="Purpose" display="menu"></p-columnFilter>
+            </div>
+          </th>
+          <th style="min-width: 12%">
+            <div class="flex align-items-center">
+            Going Form Filled
+              <p-columnFilter type="text" field="GoingFormFilled" display="menu"></p-columnFilter>
+            </div>
+          </th>
+
+        <th style="min-width: 10%; text-align: center;">
+          <div style="display: flex; justify-content: center; align-items: center;">
+            Actions
+          </div>
+        </th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-trips>
+      <tr>
+        <td *ngIf="downloadSelectedMode">
+          <p-tableCheckbox [value]="trips"></p-tableCheckbox>
+        </td>
+        <td>{{ trips.id }}</td>
+        <td>{{ trips.TripName }}</td>
+        <td>{{ trips.Location }}</td>
+        <td>{{ trips.DepartureDate | date: 'dd-MM-yyyy' }}</td>
+        <td>{{ trips.ReturnDate | date: 'dd-MM-yyyy' }}</td>
+        <td>{{ trips.FullName }}</td>
+        <td>{{ trips.StudentId }}</td>
+        <td>{{ trips.PhoneNumber }}</td>
+        <td>{{ trips.Purpose }}</td>
+        <td>
+        <div style="margin-bottom: 10px; display: flex; align-items: center; justify-content: start;">
+            <p-button *ngIf="trips.GoingFormFilled" icon="pi pi-check" [rounded]="true" [text]="true" [raised]="true"  pTooltip="Going Form Filled." style="margin-right: 10px;"></p-button>
+            <p-button *ngIf="!trips.GoingFormFilled" icon="pi pi-times" [rounded]="true" [text]="true" [raised]="true" severity="danger"  pTooltip="Going Form Not Filled." style="margin-right: 10px;"></p-button>
+        </div>
+        </td>
+        <td>
+          <div class="button-container" style="display: flex; gap: 0.5rem;">
+            <p-button pTooltip="Edit" (click)="showEditDialog(trips)" icon="pi pi-pencil" [text]="true" [plain]="true"></p-button>
+            <p-button pTooltip="Assign" (click)="showAssignDialog(trips.id)" icon="pi pi-user-plus" [text]="true" [plain]="true"></p-button>
+            <p-button pTooltip="Delete" (click)="deleteCulturalEvent(trips)" icon="pi pi-trash" [text]="true" [plain]="true"></p-button>
+            <p-button pTooltip="Navigate to" (click)="op.toggle($event)" icon="pi pi-ellipsis-v"  [text]="true" [plain]="true"></p-button>
+            <p-overlayPanel #op>
+              <div>
+                <ul class="list-none p-0 m-0 flex flex-column gap-3">
+                  <li *ngFor="let option of options" class="flex align-items-center gap-2" 
+                  (click)="navigateToMemberPage(option, trips.id)"
+                  style="cursor: pointer; transition: background-color 0.3s, transform 0.3s;">
+
+                    <div>
+                      <span class="font-medium">{{ option.name }}</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </p-overlayPanel>
+          </div>
+          
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="6">No Trips found.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+<!-- <p-dialog [(visible)]="dialogVisible" [modal]="true" [closable]="false" header="Edit cultural Event" [responsive]="true" [style]="{width: '60vw'}">
+  <app-edit-events 
+  *ngIf="selectedCulturalEvents" 
+  [culturalEvent]="selectedCulturalEvents" 
+  (dialogClose)="onDialogClose($event)">
+</app-edit-events>
+</p-dialog>
+<p-dialog header="Assign Event" [(visible)]="assignDialogVisible" [modal]="true" [style]="{'width': '50vw'}" [closable]="false">
+  <app-assign-events [eventId]="selectedEventId" (dialogClose)="onAssignDialogClose()"></app-assign-events>
+</p-dialog> -->
+
+  <!-- <app-add-student *ngIf="!downloadSelectedMode"></app-add-student> -->
+  <!-- <p-dialog [(visible)]="addDialogVisible" [modal]="true" [closable]="false" header="Add Event" [responsive]="true" [style]="{width: '60vw' ,height:'68vh'}">
+    <app-add-events (dialogClose)="onAddDialogClose()"></app-add-events>
+  </p-dialog> -->
+<p-confirmDialog></p-confirmDialog>
