@@ -1,1 +1,58 @@
-<p>edit-trips works!</p>
+
+<p-toast></p-toast>
+<div style="background-color: #fff; box-shadow: 0 0 10px rgba(0,0,0,0.1); display: flex; padding: 20px;">
+    <div style="flex: 2; padding-left: 20px;">
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 10px;">
+            <div>
+                <strong>Trip Name</strong>
+                <input pInputText type="text" [(ngModel)]="trips.TripName" (ngModelChange)="onFieldChange()" placeholder="Trip Name"
+                       style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;">
+            </div>
+            <div>
+                <strong>Location</strong>
+                <input pInputText type="text" [(ngModel)]="trips.Location" (ngModelChange)="onFieldChange()" placeholder="Location"
+                       style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;">
+            </div>
+            <div>
+                <strong>Departure Date:</strong>
+                <input type="date" [(ngModel)]="trips.DepartureDate" (ngModelChange)="onFieldChange()" placeholder="Departure Date"
+                     style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;">
+            </div>
+            <div>
+                <strong>Return Date:</strong>
+                <input type="date" [(ngModel)]="trips.ReturnDate" (ngModelChange)="onFieldChange()" placeholder="Return Date"
+                     style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;">
+            </div>
+            <div>
+                <strong>Full Name</strong>
+                <input pInputText type="text" [(ngModel)]="trips.FullName" (ngModelChange)="onFieldChange()" placeholder="Full Name"
+                       style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;">
+            </div>
+            <div>
+                <strong>Student Id</strong>
+                <input pInputText type="text" [(ngModel)]="trips.StudentId" (ngModelChange)="onFieldChange()" placeholder="Student Id"
+                       style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;">
+            </div>
+            <div>
+                <strong>Phone Number</strong>
+                <input pInputText type="text" [(ngModel)]="trips.PhoneNumber" (ngModelChange)="onFieldChange()" placeholder="Phone Number"
+                       style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;">
+            </div>
+            <div>
+                <strong>Purpose</strong>
+                <input pInputText type="text" [(ngModel)]="trips.Purpose" (ngModelChange)="onFieldChange()" placeholder="Purpose"
+                       style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;">
+            </div>
+            <div>
+                <strong>Going Form Filled</strong>
+                <input pInputText type="text" [(ngModel)]="trips.GoingFormFilled" (ngModelChange)="onFieldChange()" placeholder="Going Form Filled"
+                       style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;">
+            </div>
+        </div>
+    </div>
+</div>
+
+<p-footer style="display: flex; justify-content: flex-end; padding: 0 20px; margin-top: 20px;">
+    <button *ngIf="showSaveButton" pButton type="button" label="Save Changes" (click)="saveChanges()" style="margin-right: 10px;"></button>
+    <button pButton type="button" label="Close" icon="pi pi-times" (click)="closeDialog()" style="margin-right: 10px;"></button>
+</p-footer>

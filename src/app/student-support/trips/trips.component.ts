@@ -86,8 +86,8 @@ export class TripsComponent implements OnInit, AfterViewInit {
     this.selectedTripId = null;
     this.assignDialogVisible = false;
   }
-  showEditDialog(trip: Trip): void {
-    this.selectedTrips = trip;
+  showEditDialog(trips: Trip): void {
+    this.selectedTrips = trips;
     this.dialogVisible = true;
   }
   onDialogClose(updatedTrip: Trip | null): void {
@@ -109,12 +109,14 @@ export class TripsComponent implements OnInit, AfterViewInit {
       accept: () => {
         this.service.deleteTrip(trip.id).subscribe(
           () => {
-            this.trips = this.trips.filter(trip => trip.id !== trip.id);
+            // Corrected the filtering logic
+            this.trips = this.trips.filter(t => t.id !== trip.id);
             this.messageService.add({
               severity: 'success',
               summary: 'Success',
               detail: 'Trip deleted successfully'
             });
+            this.fetchAllTrips(); // Fetch the latest list of trips
           },
           error => {
             console.error('Error deleting Trip', error);
@@ -131,6 +133,7 @@ export class TripsComponent implements OnInit, AfterViewInit {
       }
     });
   }
+  
 
   exportHeaderMapping = {
     id: 'ID',
@@ -160,16 +163,16 @@ export class TripsComponent implements OnInit, AfterViewInit {
 
     const studentId = this.route.snapshot.queryParamMap.get('Student_Id');
     if (studentId) {
-      this.fetchStudentEvents(Number(studentId));
+      this.fetchStudentTrips(Number(studentId));
     } else {
-      this.fetchAllEvents();
+      this.fetchAllTrips();
     }
   }
 
-  fetchStudentEvents(studentId: number) {
+  fetchStudentTrips(studentId: number) {
     this.loading = true;
-    this.service.getStudentEvents({ Id: studentId, type: 'student' }).then((events) => {
-      this.trips = events.map(event => event.eventDetails);
+    this.service.getStudentTrips({ Id: studentId, type: 'student' }).then((trips) => {
+      this.trips = trips.map(trips => trips.tripDetails);
       this.loading = false;
     }).catch(error => {
       console.error('Error fetching student events', error);
@@ -177,13 +180,13 @@ export class TripsComponent implements OnInit, AfterViewInit {
     });
   }
 
-  fetchAllEvents() {
+  fetchAllTrips() {
     this.loading = true;
-    this.service.getTrip().then((events) => {
-      this.trips = events;
+    this.service.getTrip().then((trips) => {
+      this.trips = trips;
       this.loading = false;
     }).catch(error => {
-      console.error('Error fetching all events', error);
+      console.error('Error fetching all trips', error);
       this.loading = false;
     });
   }
