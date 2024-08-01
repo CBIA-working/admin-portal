@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { GoogleMapsModule } from '@angular/google-maps';
+import { GoogleMap, GoogleMapsModule, MapInfoWindow, MapMarker } from '@angular/google-maps';
 
 @Component({
   selector: 'app-city-handbook',
@@ -10,7 +10,10 @@ import { GoogleMapsModule } from '@angular/google-maps';
   templateUrl: './city-handbook.component.html',
   styleUrl: './city-handbook.component.scss'
 })
-export class CityHandbookComponent {
+export class CityHandbookComponent implements OnInit {
+  @ViewChild(GoogleMap) map: GoogleMap;
+  @ViewChild(MapInfoWindow) infoWindow: MapInfoWindow;
+
   center: google.maps.LatLngLiteral = { lat: 51.5074, lng: -0.1278 }; // Central London
   zoom = 10;
   markers = [
@@ -29,6 +32,15 @@ export class CityHandbookComponent {
       label: 'Big Ben',
       info: 'Westminster, London SW1A 0AA, United Kingdom'
     }
+    // Add other markers...
   ];
-  
+  selectedMarkerInfo: string;
+
+  ngOnInit(): void {
+  }
+
+  openInfoWindow(marker: MapMarker) {
+    this.selectedMarkerInfo = `<strong>${marker.getLabel()}</strong><div>${marker.getTitle()}</div>`;
+    this.infoWindow.open(marker);
+  }
 }

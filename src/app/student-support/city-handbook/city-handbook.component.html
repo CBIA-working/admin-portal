@@ -2,13 +2,13 @@
     <ng-container *ngFor="let marker of markers">
       <map-marker [position]="marker.position"
                   [label]="marker.label"
+                  [title]="marker.info"
                   #markerRef="mapMarker"
-                  (mapClick)="openInfoWindow(infoWindow, markerRef)">
+                  (mapClick)="openInfoWindow(markerRef)">
       </map-marker>
-      <map-info-window #infoWindow>
-        <strong>{{ marker.label }}</strong>
-        <div>{{ marker.info }}</div>
-      </map-info-window>
     </ng-container>
+    <map-info-window #infoWindow>
+      <div [innerHTML]="selectedMarkerInfo"></div>
+    </map-info-window>
   </google-map>
   
