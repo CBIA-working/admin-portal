@@ -15,6 +15,7 @@ import { KeyprogramdatesComponent } from './student-support/keyprogramdates/keyp
 import { FaqComponent } from './faq/faq.component';
 import { ProgramComponent } from './student-support/program/program.component';
 import { TripsComponent } from './student-support/trips/trips.component';
+import { CityHandbookComponent } from './student-support/city-handbook/city-handbook.component';
 
 
 export const routes: Routes = [
@@ -25,6 +26,7 @@ export const routes: Routes = [
   { path: 'courses', component:CoursesComponent,canActivate: [AuthGuard]},
   { path: 'culturalevents', component:CulturalEventsComponent,canActivate: [AuthGuard]},
   { path: 'accomodations', component:AccomodationComponent,canActivate: [AuthGuard]},
+  { path: 'cityHandbook', component:CityHandbookComponent,canActivate: [AuthGuard]},
   { path: 'keyprogramdates',component:KeyprogramdatesComponent,canActivate:[AuthGuard]},
   { path: 'trips', component:TripsComponent,canActivate: [AuthGuard]},
   { path: 'FAQs', component:FaqComponent,canActivate: [AuthGuard]},
