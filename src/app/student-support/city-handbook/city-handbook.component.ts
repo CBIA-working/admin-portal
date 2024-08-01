@@ -20,17 +20,17 @@ export class CityHandbookComponent implements OnInit {
     {
       position: { lat: 51.5194, lng: -0.1270 },
       label: 'British Museum',
-      info: 'Great Russell St, Bloomsbury, London WC1B 3DG, United Kingdom'
+      info: 'Great Russell St,<br>Bloomsbury,<br>London WC1B 3DG,<br>United Kingdom'
     },
     {
       position: { lat: 51.5033, lng: -0.1195 },
       label: 'London Eye',
-      info: 'The Queen’s Walk, Bishop’s, London SE1 7PB, United Kingdom'
+      info: 'The Queen’s Walk,<br> Bishop’s,<br> London SE1 7PB, United Kingdom'
     },
     {
       position: { lat: 51.5007, lng: -0.1246 },
       label: 'Big Ben',
-      info: 'Westminster, London SW1A 0AA, United Kingdom'
+      info: 'Westminster,<br> London SW1A 0AA,<br> United Kingdom'
     }
     // Add other markers...
   ];
@@ -39,8 +39,12 @@ export class CityHandbookComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  openInfoWindow(marker: MapMarker) {
-    this.selectedMarkerInfo = `<strong>${marker.getLabel()}</strong><div>${marker.getTitle()}</div>`;
-    this.infoWindow.open(marker);
+  openInfoWindow(markerRef: MapMarker) {
+    const markerData = this.markers.find(marker => marker.position.lat === markerRef.getPosition().lat() && marker.position.lng === markerRef.getPosition().lng());
+    if (markerData) {
+      this.selectedMarkerInfo = `<strong>${markerData.label}</strong><div>${markerData.info}</div>`;
+    }
+    this.infoWindow.open(markerRef);
   }
+
 }
