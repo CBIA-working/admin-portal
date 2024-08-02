@@ -1,6 +1,7 @@
 <google-map [center]="center" [zoom]="zoom" height="400px" width="100%">
   <ng-container *ngFor="let marker of markers">
-    <map-marker [position]="marker.position" [label]="marker.label"
+    <map-marker [position]="marker.position" 
+                [label]="marker.label"
                 #markerRef="mapMarker"
                 (mapClick)="openInfoWindow(markerRef)">
     </map-marker>
