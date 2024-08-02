@@ -1,5 +1,3 @@
-
-
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -21,7 +19,7 @@ export class CityHandbookComponent implements OnInit, AfterViewInit {
   @ViewChild(MapInfoWindow) infoWindow: MapInfoWindow;
 
   center: google.maps.LatLngLiteral = { lat: 51.5074, lng: -0.1278 }; // Central London
-  zoom = 10;
+  zoom = 13;
   markers: any[] = [
     {
       position: { lat: 51.5194, lng: -0.1270 },
@@ -39,6 +37,7 @@ export class CityHandbookComponent implements OnInit, AfterViewInit {
       info: 'Westminster,<br> London SW1A 0AA,<br> United Kingdom'
     }
   ];
+  nearbyMarkers: any[] = []; // Store nearby markers separately
   circles: google.maps.Circle[] = [];
   selectedMarkerInfo: string;
   nearbyPlaces: any[] = [];
@@ -61,6 +60,8 @@ export class CityHandbookComponent implements OnInit, AfterViewInit {
   }
   
   fetchNearbyPlaces(location: google.maps.LatLng, placeType: string = 'university') {
+    this.clearNearbyMarkers(); // Clear old nearby markers
+
     this.placesService.searchNearby(location.lat(), location.lng(), 500, placeType).subscribe(
       (response) => {
         console.log('API Response:', response); // Log the response
@@ -109,6 +110,7 @@ export class CityHandbookComponent implements OnInit, AfterViewInit {
                   label: place.displayName?.text || 'Unknown Place',
                   info: place.formattedAddress || 'No address available'
                 };
+                this.nearbyMarkers.push(marker); // Add to nearbyMarkers array
                 this.markers.push(marker);
               }
             } else {
@@ -123,6 +125,22 @@ export class CityHandbookComponent implements OnInit, AfterViewInit {
         console.error('Missing formattedAddress for place:', place);
       }
     });
+  }
+
+  clearNearbyMarkers() {
+    // Remove nearby markers from the map and the markers array
+    this.nearbyMarkers.forEach(marker => {
+      const index = this.markers.indexOf(marker);
+      if (index !== -1) {
+        this.markers.splice(index, 1);
+      }
+    });
+
+    // Clear the nearbyMarkers array
+    this.nearbyMarkers = [];
+
+    // Clear the circles or other visual elements related to the nearby markers
+    this.clearCircles();
   }
 
   clearCircles() {
@@ -147,4 +165,3 @@ export class CityHandbookComponent implements OnInit, AfterViewInit {
     });
   }
 }
-
