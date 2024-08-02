@@ -7,5 +7,14 @@
   </ng-container>
   <map-info-window #infoWindow>
     <div [innerHTML]="selectedMarkerInfo"></div>
+    <div>
+      <p-button label="Restaurants" [rounded]="true" (onClick)="loadNearbyPlaces('restaurant')"></p-button>
+      <p-button label="Hotels" [rounded]="true" (onClick)="loadNearbyPlaces('lodging')"></p-button>
+      <p-button label="Pubs" [rounded]="true" (onClick)="loadNearbyPlaces('bar')"></p-button>
+      <p-button label="ATMs" [rounded]="true" (onClick)="loadNearbyPlaces('atm')"></p-button>
+      <p-button label="Pharmacies" [rounded]="true" (onClick)="loadNearbyPlaces('pharmacy')"></p-button>
+      <p-button label="Parking" [rounded]="true" (onClick)="loadNearbyPlaces('parking')"></p-button>
+      <p-button label="Transit Stations" [rounded]="true" (onClick)="loadNearbyPlaces('transit_station')"></p-button>
+    </div>
   </map-info-window>
 </google-map>

@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { GoogleMap, GoogleMapsModule, MapInfoWindow, MapMarker } from '@angular/google-maps';
 import { PlacesService } from '../service/places.service';
 import { HttpClientModule } from '@angular/common/http';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-city-handbook',
   standalone: true,
-  imports: [GoogleMapsModule, CommonModule, FormsModule, HttpClientModule],
+  imports: [GoogleMapsModule, CommonModule, FormsModule, HttpClientModule,ButtonModule],
   providers: [PlacesService],
   templateUrl: './city-handbook.component.html',
   styleUrls: ['./city-handbook.component.scss']
@@ -41,6 +42,7 @@ export class CityHandbookComponent implements OnInit, AfterViewInit {
   circles: google.maps.Circle[] = [];
   selectedMarkerInfo: string;
   nearbyPlaces: any[] = [];
+  currentMarkerRef: MapMarker; // Store reference to the current marker
 
   constructor(private placesService: PlacesService) {}
 
@@ -51,14 +53,21 @@ export class CityHandbookComponent implements OnInit, AfterViewInit {
   }
 
   openInfoWindow(markerRef: MapMarker) {
+    this.currentMarkerRef = markerRef; // Store the marker reference
     const markerData = this.markers.find(marker => marker.position.lat === markerRef.getPosition().lat() && marker.position.lng === markerRef.getPosition().lng());
     if (markerData) {
       this.selectedMarkerInfo = `<strong>${markerData.label}</strong><div>${markerData.info}</div>`;
-      this.fetchNearbyPlaces(markerRef.getPosition(), 'university'); // or any other type you want
     }
     this.infoWindow.open(markerRef);
   }
   
+  loadNearbyPlaces(placeType: string) {
+    if (this.currentMarkerRef) {
+      const position = this.currentMarkerRef.getPosition();
+      this.fetchNearbyPlaces(position, placeType);
+    }
+  }
+
   fetchNearbyPlaces(location: google.maps.LatLng, placeType: string = 'university') {
     this.clearNearbyMarkers(); // Clear old nearby markers
 
