@@ -38,13 +38,13 @@ export class CityHandbookComponent implements OnInit {
     const markerData = this.markers.find(marker => marker.position.lat === markerRef.getPosition().lat() && marker.position.lng === markerRef.getPosition().lng());
     if (markerData) {
       this.selectedMarkerInfo = `<strong>${markerData.label}</strong><div>${markerData.info}</div>`;
-      this.fetchNearbyPlaces(markerRef.getPosition());
+      this.fetchNearbyPlaces(markerRef.getPosition(), 'university'); // or any other type you want
     }
     this.infoWindow.open(markerRef);
   }
-
-  fetchNearbyPlaces(location: google.maps.LatLng) {
-    this.placesService.searchNearby(location.lat(), location.lng(), 500, 'restaurant').subscribe(
+  
+  fetchNearbyPlaces(location: google.maps.LatLng, placeType: string = 'university') {
+    this.placesService.searchNearby(location.lat(), location.lng(), 500, placeType).subscribe(
       (response) => {
         console.log('API Response:', response); // Log the response
         this.nearbyPlaces = response.places || [];
@@ -56,6 +56,7 @@ export class CityHandbookComponent implements OnInit {
       }
     );
   }
+  
 
   addNearbyMarkers() {
     this.nearbyPlaces.forEach(place => {
@@ -86,4 +87,5 @@ export class CityHandbookComponent implements OnInit {
       }
     });
   }
+  
 }

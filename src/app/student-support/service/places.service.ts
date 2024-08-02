@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 export class PlacesService {
   private apiKey = 'AIzaSyBuaF5AtlcvqvOQdzO14DgIx4aaNyIBuuo'; // Replace with your Google API key
   private apiUrl = 'https://places.googleapis.com/v1/places:searchNearby';
-  private geocodingUrl = 'https://maps.googleapis.com/maps/api/geocode/json';
+  private geocodeUrl = 'https://maps.googleapis.com/maps/api/geocode/json';
 
   constructor(private http: HttpClient) { }
 
@@ -38,7 +38,7 @@ export class PlacesService {
   }
 
   geocodeAddress(address: string): Observable<any> {
-    const url = `${this.geocodingUrl}?address=${encodeURIComponent(address)}&key=${this.apiKey}`;
+    const url = `${this.geocodeUrl}?address=${encodeURIComponent(address)}&key=${this.apiKey}`;
     return this.http.get(url);
   }
 }
