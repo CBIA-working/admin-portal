@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Accomodation, Courses, CulturalEvent, Faq, KeyProgramDate, Program, Trip } from '../domain/schema';
+import { Accomodation, Courses, CulturalEvent, Faq, KeyProgramDate, Marker, Program, Trip } from '../domain/schema';
 
 @Injectable()
 export class Service {
@@ -236,5 +236,9 @@ deleteAssignmentTrip(studentId: number, tripId: number): Observable<any> {
         return this.http.post<any>(`${this.BASE_URL}/copyProgram`, { id });
       }
 
+//cityhandbook
 
+getMarkers(params?: any): Promise<Marker[]> {
+    return this.http.get<Marker[]>(`${this.BASE_URL}/markersAdmin`, { params }).toPromise();
+  }
 }

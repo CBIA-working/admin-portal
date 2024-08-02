@@ -85,3 +85,14 @@ export interface Faq {
     name:String;
     batch:String;
   }
+
+  export interface Marker {
+    id: number;
+    position: {
+      lat: number;
+      lng: number;
+    };
+    label: string;
+    info: string;
+  }
+  

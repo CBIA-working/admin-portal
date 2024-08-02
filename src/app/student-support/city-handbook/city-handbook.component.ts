@@ -6,12 +6,15 @@ import { PlacesService } from '../service/places.service';
 import { HttpClientModule } from '@angular/common/http';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
+import { Marker } from '../domain/schema';
+import { Service } from '../service/service';
+import { MapMarker as GoogleMapMarker } from '@angular/google-maps';
 
 @Component({
   selector: 'app-city-handbook',
   standalone: true,
   imports: [GoogleMapsModule, CommonModule, FormsModule, HttpClientModule, ButtonModule, TooltipModule],
-  providers: [PlacesService],
+  providers: [PlacesService,Service],
   templateUrl: './city-handbook.component.html',
   styleUrls: ['./city-handbook.component.scss']
 })
@@ -22,33 +25,42 @@ export class CityHandbookComponent implements OnInit, AfterViewInit {
 
   center: google.maps.LatLngLiteral = { lat: 51.5074, lng: -0.1278 }; // Central London
   zoom = 13;
-  markers: any[] = [
-    {
-      position: { lat: 51.5194, lng: -0.1270 },
-      label: 'British Museum',
-      info: 'Great Russell St,<br>Bloomsbury,<br>London WC1B 3DG,<br>United Kingdom'
-    },
-    {
-      position: { lat: 51.5033, lng: -0.1195 },
-      label: 'London Eye',
-      info: 'The Queen’s Walk,<br> Bishop’s,<br> London SE1 7PB, United Kingdom'
-    },
-    {
-      position: { lat: 51.5007, lng: -0.1246 },
-      label: 'Big Ben',
-      info: 'Westminster,<br> London SW1A 0AA,<br> United Kingdom'
-    }
-  ];
+  markers: any[] = [];
   nearbyMarkers: any[] = []; // Store nearby markers separately
   circles: google.maps.Circle[] = [];
   selectedMarkerInfo: string;
   nearbyPlaces: any[] = [];
   currentMarkerRef: MapMarker; // Store reference to the current marker
 
-  constructor(private placesService: PlacesService) {}
+  constructor(private placesService: PlacesService,
+    private service:Service,
+  ) {}
 
-  ngOnInit(): void {}
-
+  ngOnInit(): void {
+    this.loadMarkers();
+  }
+  loadMarkers() {
+    this.service.getMarkers().then(markers => {
+      this.markers = markers;
+      this.addMarkersToMap();
+    }).catch(error => {
+      console.error('Error fetching markers:', error);
+    });
+  }
+  addMarkersToMap() {
+    this.markers.forEach(markerData => {
+      const marker = new google.maps.Marker({
+        position: markerData.position,
+        map: this.map.googleMap,
+        label: markerData.label
+      });
+  
+      marker.addListener('click', () => {
+        this.infoWindow.open(); // Use the local marker variable instead of markerRef
+      });
+    });
+  }
+  
   ngAfterViewInit(): void {
     this.addInitialCircles(); // Add initial circles if needed
   }
