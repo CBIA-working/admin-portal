@@ -5,11 +5,12 @@ import { GoogleMap, GoogleMapsModule, MapInfoWindow, MapMarker } from '@angular/
 import { PlacesService } from '../service/places.service';
 import { HttpClientModule } from '@angular/common/http';
 import { ButtonModule } from 'primeng/button';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-city-handbook',
   standalone: true,
-  imports: [GoogleMapsModule, CommonModule, FormsModule, HttpClientModule,ButtonModule],
+  imports: [GoogleMapsModule, CommonModule, FormsModule, HttpClientModule, ButtonModule, TooltipModule],
   providers: [PlacesService],
   templateUrl: './city-handbook.component.html',
   styleUrls: ['./city-handbook.component.scss']
@@ -60,7 +61,11 @@ export class CityHandbookComponent implements OnInit, AfterViewInit {
     }
     this.infoWindow.open(markerRef);
   }
-  
+
+  onMarkerMouseOver(markerRef: MapMarker) {
+    this.openInfoWindow(markerRef); // Open info window on hover
+  }
+
   loadNearbyPlaces(placeType: string) {
     if (this.currentMarkerRef) {
       const position = this.currentMarkerRef.getPosition();

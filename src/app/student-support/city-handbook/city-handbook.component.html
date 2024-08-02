@@ -1,20 +1,44 @@
 <google-map [center]="center" [zoom]="zoom" height="400px" width="100%">
   <ng-container *ngFor="let marker of markers">
-    <map-marker [position]="marker.position" 
+    <map-marker [position]="marker.position"
                 #markerRef="mapMarker"
-                (mapClick)="openInfoWindow(markerRef)">
+                (mapClick)="openInfoWindow(markerRef)"
+                (mouseover)="showLabel(markerRef, marker.label)"
+                (mouseout)="hideLabel(markerRef)">
     </map-marker>
   </ng-container>
   <map-info-window #infoWindow>
     <div [innerHTML]="selectedMarkerInfo"></div>
-    <div>
-      <p-button label="Restaurants" [rounded]="true" (onClick)="loadNearbyPlaces('restaurant')"></p-button>
-      <p-button label="Hotels" [rounded]="true" (onClick)="loadNearbyPlaces('lodging')"></p-button>
-      <p-button label="Pubs" [rounded]="true" (onClick)="loadNearbyPlaces('bar')"></p-button>
-      <p-button label="ATMs" [rounded]="true" (onClick)="loadNearbyPlaces('atm')"></p-button>
-      <p-button label="Pharmacies" [rounded]="true" (onClick)="loadNearbyPlaces('pharmacy')"></p-button>
-      <p-button label="Parking" [rounded]="true" (onClick)="loadNearbyPlaces('parking')"></p-button>
-      <p-button label="Transit Stations" [rounded]="true" (onClick)="loadNearbyPlaces('transit_station')"></p-button>
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;">
+      <p-button icon="fa fa-cutlery" [rounded]="true" [raised]="true" [outlined]="true"
+                pTooltip="Restaurants" tooltipPosition="top"
+                (onClick)="loadNearbyPlaces('restaurant')"
+                style="max-width: 80px; height: 40px;"></p-button>
+      <p-button icon="pi pi-building" [rounded]="true" [raised]="true" [outlined]="true"
+                pTooltip="Hotels" tooltipPosition="top"
+                (onClick)="loadNearbyPlaces('lodging')"
+                style="max-width: 80px; height: 40px;"></p-button>
+      <p-button icon="fa fa-beer" [rounded]="true" [raised]="true" [outlined]="true"
+                pTooltip="Pubs" tooltipPosition="top"
+                (onClick)="loadNearbyPlaces('bar')"
+                style="max-width: 80px; height: 40px;"></p-button>
+      <p-button icon="pi pi-money-bill" [rounded]="true" [raised]="true" [outlined]="true"
+                pTooltip="ATMs" tooltipPosition="top"
+                (onClick)="loadNearbyPlaces('atm')"
+                style="max-width: 80px; height: 40px;"></p-button>
+      <p-button icon="pi pi-heart" [rounded]="true" [raised]="true" [outlined]="true"
+                pTooltip="Pharmacies" tooltipPosition="top"
+                (onClick)="loadNearbyPlaces('pharmacy')"
+                style="max-width: 80px; height: 40px;"></p-button>
+      <p-button icon="pi pi-car" [rounded]="true" [raised]="true" [outlined]="true"
+                pTooltip="Parking" tooltipPosition="top"
+                (onClick)="loadNearbyPlaces('parking')"
+                style="max-width: 80px; height: 40px;"></p-button>
+      <p-button icon="fa fa-train" [rounded]="true" [raised]="true" [outlined]="true"
+                pTooltip="Transit Stations" tooltipPosition="top"
+                (onClick)="loadNearbyPlaces('transit_station')"
+                style="max-width: 80px; height: 40px;"></p-button>
+      <p-button style="display: none;"></p-button>
     </div>
   </map-info-window>
 </google-map>
