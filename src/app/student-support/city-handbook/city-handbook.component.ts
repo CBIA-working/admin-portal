@@ -11,7 +11,7 @@ import { HttpClientModule } from '@angular/common/http';
   imports: [GoogleMapsModule, CommonModule, FormsModule, HttpClientModule],
   providers: [PlacesService],
   templateUrl: './city-handbook.component.html',
-  styleUrl: './city-handbook.component.scss'
+  styleUrls: ['./city-handbook.component.scss']
 })
 
 export class CityHandbookComponent implements OnInit {
@@ -59,40 +59,31 @@ export class CityHandbookComponent implements OnInit {
 
   addNearbyMarkers() {
     this.nearbyPlaces.forEach(place => {
-      // Assuming you get latitude and longitude from a different property or need to derive them
-      const location = this.extractLocationFromPlace(place); // A method to derive location
-  
-      if (location && location.lat && location.lng) {
-        const marker = {
-          position: {
-            lat: Number(location.lat),  // Ensure latitude is a number
-            lng: Number(location.lng)   // Ensure longitude is a number
+      if (place.formattedAddress) {
+        this.placesService.geocodeAddress(place.formattedAddress).subscribe(
+          (response) => {
+            if (response.results && response.results.length > 0) {
+              const location = response.results[0].geometry.location;
+              const marker = {
+                position: {
+                  lat: location.lat,
+                  lng: location.lng
+                },
+                label: place.displayName?.text || 'Unknown Place',
+                info: place.formattedAddress || 'No address available'
+              };
+              this.markers.push(marker);
+            } else {
+              console.error('No geocoding results for address:', place.formattedAddress);
+            }
           },
-          label: place.displayName?.name || 'Unknown Place',  // Fallback label
-          info: place.formattedAddress || 'No address available'
-        };
-        this.markers.push(marker);
+          (error) => {
+            console.error('Error geocoding address:', error);
+          }
+        );
       } else {
-        console.error('Invalid place data:', place);
+        console.error('Missing formattedAddress for place:', place);
       }
     });
-    this.nearbyPlaces.forEach(place => {
-      console.log('Place Data:', place);
-      console.log('Display Name:', place.displayName);
-    });
-    
   }
-  
-  // Example method to extract location - modify based on your actual data structure
-  extractLocationFromPlace(place: any): { lat: number, lng: number } | null {
-    // Replace with actual extraction logic
-    // This is just an example assuming location could be nested
-    return place.location ? {
-      lat: place.location.lat,
-      lng: place.location.lng
-    } : null;
-    
-  }
-  
-  
 }
