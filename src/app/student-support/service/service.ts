@@ -241,4 +241,10 @@ deleteAssignmentTrip(studentId: number, tripId: number): Observable<any> {
 getMarkers(params?: any): Promise<Marker[]> {
     return this.http.get<Marker[]>(`${this.BASE_URL}/markersAdmin`, { params }).toPromise();
   }
+  deleteMarkers(markerId: number): Observable<void> {
+    return this.http.delete<void>(`${this.BASE_URL}/deleteMarkers`, { 
+      body: { id: markerId } 
+});
+}
+  
 }

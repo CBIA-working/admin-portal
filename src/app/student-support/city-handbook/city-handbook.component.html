@@ -50,6 +50,25 @@
 
 <p-toast></p-toast>
 <div class="card" style="margin: 0 20px; overflow: hidden;">
+  <div class="mb-2 ml-auto z-0" style="display: flex; gap: 10px;"></div>
+  <app-download [class.hidden]="downloadSelectedMode" (downloadSelectedStudentsEvent)="downloadSelectedStudents()"></app-download>
+  <p-button 
+    label="Download Selected Students" 
+    icon="pi pi-download" 
+    [raised]="true" 
+    severity="secondary" 
+    (click)="downloadSelectedStudents()" 
+    *ngIf="downloadSelectedMode">
+  </p-button>
+  <p-button 
+    icon="pi pi-times" 
+    severity="danger" 
+    [raised]="true" 
+    (click)="exitSelectionMode()" 
+    *ngIf="downloadSelectedMode">
+  </p-button>
+  </div>
+
   <p-table
     #dt1
     [value]="marker"
@@ -139,22 +158,7 @@
         <td>
           <div class="button-container" style="display: flex; gap: 0.5rem;">
           <p-button (click)="showEditDialog(courses)" icon="pi pi-pencil" [text]="true" [plain]="true"></p-button>
-            <p-button (click)="showAssignDialog(courses.id)" icon="pi pi-user-plus" [text]="true" [plain]="true"></p-button>
-            <p-button (click)="deleteCulturalEvent(courses)" icon="pi pi-trash" [text]="true" [plain]="true"></p-button>
-          <p-button (click)="op.toggle($event)" icon="pi pi-ellipsis-v" [text]="true" [plain]="true"></p-button>
-          <p-overlayPanel #op>
-            <div>
-              <ul class="list-none p-0 m-0 flex flex-column gap-3">
-                <li *ngFor="let option of options" class="flex align-items-center gap-2" 
-                  (click)="navigateToMemberPage(option, courses.id)"
-                  style="cursor: pointer; transition: background-color 0.3s, transform 0.3s;">
-                  <div style="cursor: pointer; transition: background-color 0.3s, transform 0.3s;">
-                    <span class="font-medium">{{ option.name }}</span>
-                  </div>
-                </li>
-              </ul>
-            </div>
-          </p-overlayPanel>
+            <p-button (click)="deleteCulturalEvent(marker)" icon="pi pi-trash" [text]="true" [plain]="true"></p-button>
         </div>
         </td>
       </tr>
@@ -166,5 +170,5 @@
       </tr>
     </ng-template>
   </p-table>
-</div>
+
 <p-confirmDialog></p-confirmDialog>

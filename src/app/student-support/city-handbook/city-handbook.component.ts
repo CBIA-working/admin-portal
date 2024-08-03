@@ -54,7 +54,7 @@ export class CityHandbookComponent implements OnInit, AfterViewInit {
 
   marker: Marker[] = [];
   selectedMarker: Marker[] = [];
-  selectedCourse: Marker | null = null;
+  selectedMarkers: Marker | null = null;
   loading: boolean = true;
   searchValue: string | undefined;
   downloadSelectedMode: boolean = false;
@@ -81,6 +81,8 @@ export class CityHandbookComponent implements OnInit, AfterViewInit {
     private confirmationService: ConfirmationService,
   ) {}
 
+
+//table
   exportHeaderMapping = {
     id: 'id',
     position: {
@@ -113,9 +115,145 @@ export class CityHandbookComponent implements OnInit, AfterViewInit {
     this.searchValue = '';
   }
 
+  deleteCulturalEvent(marker: Marker): void {
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to delete this marker?',
+      header: 'Confirm',
+      icon: 'pi pi-info-circle',
+      accept: () => {
+        this.service.deleteMarkers(marker.id).subscribe(
+          () => {
+            this.markers = this.markers.filter(markers => markers.id !== markers.id);
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: 'Markers deleted successfully'
+            });
+            this.ngOnInit();
+          },
+          error => {
+            console.error('Error deleting Markers', error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Failed to delete Markers'
+            });
+          }
+        );
+      },
+      reject: () => {
+        // Optionally handle rejection (user clicks cancel)
+      }
+    });
+  }
+
+
+  enterSelectionMode() {
+    this.downloadSelectedMode = true;
+  }
+
+  exitSelectionMode() {
+    this.downloadSelectedMode = false;
+    this.selectedMarker = [];
+  }
+
+  downloadAllStudents(format: string) {
+    const data = this.marker.map(Markers => this.mapCustomerToExportFormat(Markers));
+    this.download(format, data, 'Markers');
+  }
+
+  downloadSelectedStudents() {
+    if (this.downloadSelectedMode) {
+      if (this.selectedMarker.length === 0) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Please select at least one course.'
+        });
+      } else {
+        const data = this.selectedMarker.map(Markers => this.mapCustomerToExportFormat(Markers));
+        this.download(this.downloadComponent.format, data, 'selected_Markers');
+        this.exitSelectionMode();
+      }
+    } else {
+      console.warn('Download selected Markers called but not in selection mode.');
+    }
+  }
+
+  mapCustomerToExportFormat(marker: Marker) {
+    return {
+      ID: marker.id,
+      latitude: marker.position.lat,
+      longitude: marker.position.lng,
+      label: marker.label,
+      info: marker.info,
+
+    };
+  }
+
+  download(format: string, data: any[], filename: string) {
+    if (format === 'excel') {
+      const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
+      const workbook: XLSX.WorkBook = {
+        Sheets: { 'Markers': worksheet },
+        SheetNames: ['Markers']
+      };
+      XLSX.writeFile(workbook, `${filename}.xlsx`);
+    } else if (format === 'pdf') {
+      const doc = new jsPDF();
+
+      // Set document properties
+      doc.setProperties({
+        title: `${filename}`,
+        author: 'Your Name',
+        creator: 'Your App'
+      });
+
+      doc.setFont('helvetica');
+
+      // Set margins
+      const margin = {
+        top: 20,
+        left: 20,
+        right: 20,
+        bottom: 20
+      };
+
+      doc.text('Markers List', margin.left, margin.top);
+      const columns = Object.values(this.exportHeaderMapping);
+      const rows = data.map(course => Object.keys(this.exportHeaderMapping).map(key => course[key]));
+
+      autoTable(doc, {
+        margin: { top: 30 },
+        headStyles: {
+          fillColor: [41, 128, 185],
+          textColor: 255,
+          fontStyle: 'bold'
+        },
+        bodyStyles: { textColor: 50 },
+        head: [],
+        body: rows
+      });
+
+      doc.save(`${filename}.pdf`);
+    }
+  }
+
+
+  //maps
   ngAfterViewInit(): void {
+    if (this.downloadComponent) {
+      this.downloadComponent.downloadAllStudentsEvent.subscribe((format: string) => {
+        this.downloadAllStudents(format);
+      });
+      this.downloadComponent.downloadSelectedStudentsEvent.subscribe((format: string) => {
+        this.enterSelectionMode();
+      });
+    }
+
     this.addMarkersToMap();
     this.addInitialCircles(); // Add initial circles if needed
+    
   }
 
   loadMarkers() {
@@ -264,4 +402,6 @@ export class CityHandbookComponent implements OnInit, AfterViewInit {
       this.circles.push(circle);
     });
   }
+
+  
 }
