@@ -8,17 +8,16 @@ import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { Marker } from '../domain/schema';
 import { Service } from '../service/service';
-import { MapMarker as GoogleMapMarker } from '@angular/google-maps';
+import { MapAnchorPoint } from '@angular/google-maps';
 
 @Component({
   selector: 'app-city-handbook',
   standalone: true,
   imports: [GoogleMapsModule, CommonModule, FormsModule, HttpClientModule, ButtonModule, TooltipModule],
-  providers: [PlacesService,Service],
+  providers: [PlacesService, Service],
   templateUrl: './city-handbook.component.html',
   styleUrls: ['./city-handbook.component.scss']
 })
-
 export class CityHandbookComponent implements OnInit, AfterViewInit {
   @ViewChild(GoogleMap) map: GoogleMap;
   @ViewChild(MapInfoWindow) infoWindow: MapInfoWindow;
@@ -32,21 +31,28 @@ export class CityHandbookComponent implements OnInit, AfterViewInit {
   nearbyPlaces: any[] = [];
   currentMarkerRef: MapMarker; // Store reference to the current marker
 
-  constructor(private placesService: PlacesService,
-    private service:Service,
+  constructor(
+    private placesService: PlacesService,
+    private service: Service
   ) {}
 
   ngOnInit(): void {
     this.loadMarkers();
   }
+
+  ngAfterViewInit(): void {
+    this.addMarkersToMap();
+    this.addInitialCircles(); // Add initial circles if needed
+  }
+
   loadMarkers() {
     this.service.getMarkers().then(markers => {
       this.markers = markers;
-      this.addMarkersToMap();
     }).catch(error => {
       console.error('Error fetching markers:', error);
     });
   }
+
   addMarkersToMap() {
     this.markers.forEach(markerData => {
       const marker = new google.maps.Marker({
@@ -54,15 +60,11 @@ export class CityHandbookComponent implements OnInit, AfterViewInit {
         map: this.map.googleMap,
         label: markerData.label
       });
-  
+
       marker.addListener('click', () => {
-        this.infoWindow.open(); // Use the local marker variable instead of markerRef
+        this.infoWindow.open(marker as unknown as MapAnchorPoint); // Cast to MapAnchorPoint
       });
     });
-  }
-  
-  ngAfterViewInit(): void {
-    this.addInitialCircles(); // Add initial circles if needed
   }
 
   openInfoWindow(markerRef: MapMarker) {
