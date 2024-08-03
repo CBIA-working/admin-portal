@@ -60,8 +60,9 @@
     <div class="search-and-add-container" style="margin-bottom: 20px;">
       <span class="p-input-icon-left">
         <i class="pi pi-search"></i>
-        <input pInputText type="text" [(ngModel)]="searchAddress" placeholder="Search location" class="p-inputtext-sm">
+        <input #auto pInputText type="text" [(ngModel)]="searchAddress" placeholder="Search location" class="p-inputtext-sm">
       </span>
+    
       <p-button label="Add Marker" icon="pi pi-map-marker" (click)="addMarkerBySearch()" class="p-button-raised p-button-success"></p-button>
     </div>
   <app-download [class.hidden]="downloadSelectedMode" (downloadSelectedStudentsEvent)="downloadSelectedStudents()"></app-download>

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef, ElementRef, NgZone } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { GoogleMap, GoogleMapsModule, MapInfoWindow, MapMarker } from '@angular/google-maps';
 import { PlacesService } from '../service/places.service';
@@ -52,7 +52,9 @@ export class CityHandbookComponent implements OnInit, AfterViewInit {
   @ViewChild(MapInfoWindow) infoWindow: MapInfoWindow;
   @ViewChild(DownloadComponent) downloadComponent!: DownloadComponent;
   @ViewChild('dt1') table!: Table;
+  @ViewChild('auto') autoCompleteInput: ElementRef;
 
+  searchAddress: string;
   marker: Marker[] = [];
   selectedMarker: Marker[] = [];
   selectedMarkers: Marker | null = null;
@@ -70,7 +72,7 @@ export class CityHandbookComponent implements OnInit, AfterViewInit {
   selectedMarkerInfo: string;
   nearbyPlaces: any[] = [];
   currentMarkerRef: MapMarker; // Store reference to the current marker
-  searchAddress: string = '';
+  selectedLocation: google.maps.LatLngLiteral;
   
 
   constructor(
@@ -82,7 +84,8 @@ export class CityHandbookComponent implements OnInit, AfterViewInit {
     private router: Router,
     private http: HttpClient,
     private confirmationService: ConfirmationService,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private ngZone: NgZone
   ) {}
 
 
@@ -262,26 +265,14 @@ export class CityHandbookComponent implements OnInit, AfterViewInit {
   //maps
 
   addMarkerBySearch(): void {
-    if (this.searchAddress.trim()) {
-      this.placesService.geocodeAddress(this.searchAddress).subscribe(
-        (response) => {
-          if (response.results && response.results.length > 0) {
-            const location = response.results[0].geometry.location;
-            this.addMarker(location.lat, location.lng, this.searchAddress);
-            this.center = { lat: location.lat, lng: location.lng }; // Center the map on the new marker
-            this.zoom = 15; // Zoom in to the marker
-          } else {
-            this.messageService.add({
-              severity: 'warn',
-              summary: 'No Results',
-              detail: 'No locations found for the given address'
-            });
-          }
-        },
-        (error) => {
-          console.error('Geocoding error:', error);
-        }
-      );
+    if (this.searchAddress.trim() && this.selectedLocation) {
+      this.addMarker(this.selectedLocation.lat, this.selectedLocation.lng, this.searchAddress);
+    } else {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'No Selection',
+        detail: 'Please select a valid location from the suggestions'
+      });
     }
   }
 
@@ -294,6 +285,7 @@ export class CityHandbookComponent implements OnInit, AfterViewInit {
       detail: 'A new marker has been added to the map'
     });
   }
+  
 
   placeDraggableMarker(): void {
     // Check if google maps is loaded
@@ -306,44 +298,49 @@ export class CityHandbookComponent implements OnInit, AfterViewInit {
       return;
     }
   
-    // Set a default location to place the marker initially, e.g., the map's center
-    const defaultLocation = new google.maps.LatLng(this.center.lat, this.center.lng);
+    // Use the current center of the map
+    const currentCenter = this.map.googleMap.getCenter();
   
-    // Initialize the map if it's not already initialized
+    // Check if the map is initialized
     if (!this.map.googleMap) {
       this.map.googleMap = new google.maps.Map(document.getElementById('map'), {
-        center: defaultLocation,
+        center: currentCenter,
         zoom: 14,
       });
     }
   
+    // Place a draggable marker at the map's current center
     const draggableMarker = new google.maps.Marker({
       map: this.map.googleMap,
-      position: defaultLocation,
+      position: currentCenter,
       draggable: true,
-      title: 'This marker is draggable.'
+      title: 'Drag me to your desired location'
     });
   
+    // Add a listener for the dragend event to capture the new location
     google.maps.event.addListener(draggableMarker, 'dragend', (event) => this.onMarkerDragEnd(draggableMarker, event));
-    
+  
     this.messageService.add({
       severity: 'success',
-      summary: 'Draggable Marker Added',
+      summary: 'Draggable Marker Placed',
       detail: 'You can drag this marker to a new location.'
     });
   }
   
   onMarkerDragEnd(marker: any, event: any): void {
-    const position = event.latLng; // Directly use the latLng from the event
+    const position = event.latLng;
     this.messageService.add({
       severity: 'info',
       summary: 'Marker Moved',
       detail: `Marker position has been updated to: ${position.lat()}, ${position.lng()}`
     });
   
-    // Force update if needed
-    this.changeDetectorRef.detectChanges();
+    // Update internal state as necessary
+    // For example, update the form field or state variable
+    this.selectedLocation = { lat: position.lat(), lng: position.lng() };
+    this.changeDetectorRef.detectChanges();  // Update the view if necessary
   }
+  
   
 
   ngAfterViewInit(): void {
@@ -359,6 +356,31 @@ export class CityHandbookComponent implements OnInit, AfterViewInit {
     this.addMarkersToMap();
     this.addInitialCircles(); // Add initial circles if needed
     
+    const autocomplete = new google.maps.places.Autocomplete(this.autoCompleteInput.nativeElement);
+    autocomplete.addListener('place_changed', () => {
+      this.ngZone.run(() => {
+        const place = autocomplete.getPlace();
+        if (place.geometry) {
+          this.searchAddress = place.formatted_address;
+          this.selectedLocation = {
+            lat: place.geometry.location.lat(),
+            lng: place.geometry.location.lng()
+          };
+
+          // Center the map on the new location immediately
+          if (!this.map.googleMap) {
+            this.map.googleMap = new google.maps.Map(document.getElementById('map'), {
+              center: new google.maps.LatLng(this.selectedLocation.lat, this.selectedLocation.lng),
+              zoom: 14,
+            });
+          } else {
+            this.map.googleMap.setCenter(new google.maps.LatLng(this.selectedLocation.lat, this.selectedLocation.lng));
+          }
+          
+        }
+      });
+    });
+
   }
 
   loadMarkers() {
