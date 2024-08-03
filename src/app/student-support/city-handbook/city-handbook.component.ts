@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { GoogleMap, GoogleMapsModule, MapInfoWindow, MapMarker } from '@angular/google-maps';
 import { PlacesService } from '../service/places.service';
@@ -41,7 +41,8 @@ import { EditMarkerComponent } from "./edit-marker/edit-marker.component";
     ButtonModule, TooltipModule, TableModule, RouterModule, InputTextModule,
     TagModule, DropdownModule, MultiSelectModule, ProgressBarModule,
     DownloadComponent, ToastModule, OverlayPanelModule, InputGroupModule,
-    InputGroupAddonModule, ChipsModule, DialogModule, ConfirmDialogModule, EditMarkerComponent],
+    InputGroupAddonModule, ChipsModule, DialogModule, ConfirmDialogModule, EditMarkerComponent,
+  ],
   providers: [PlacesService, Service, MessageService,ConfirmationService],
   templateUrl: './city-handbook.component.html',
   styleUrls: ['./city-handbook.component.scss']
@@ -69,6 +70,8 @@ export class CityHandbookComponent implements OnInit, AfterViewInit {
   selectedMarkerInfo: string;
   nearbyPlaces: any[] = [];
   currentMarkerRef: MapMarker; // Store reference to the current marker
+  searchAddress: string = '';
+  
 
   constructor(
     private placesService: PlacesService,
@@ -79,6 +82,7 @@ export class CityHandbookComponent implements OnInit, AfterViewInit {
     private router: Router,
     private http: HttpClient,
     private confirmationService: ConfirmationService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {}
 
 
@@ -256,6 +260,92 @@ export class CityHandbookComponent implements OnInit, AfterViewInit {
 
 
   //maps
+
+  addMarkerBySearch(): void {
+    if (this.searchAddress.trim()) {
+      this.placesService.geocodeAddress(this.searchAddress).subscribe(
+        (response) => {
+          if (response.results && response.results.length > 0) {
+            const location = response.results[0].geometry.location;
+            this.addMarker(location.lat, location.lng, this.searchAddress);
+            this.center = { lat: location.lat, lng: location.lng }; // Center the map on the new marker
+            this.zoom = 15; // Zoom in to the marker
+          } else {
+            this.messageService.add({
+              severity: 'warn',
+              summary: 'No Results',
+              detail: 'No locations found for the given address'
+            });
+          }
+        },
+        (error) => {
+          console.error('Geocoding error:', error);
+        }
+      );
+    }
+  }
+
+  addMarker(lat: number, lng: number, label: string): void {
+    const newMarker = { position: { lat, lng }, label: label, info: 'User added marker', draggable: true };
+    this.markers.push(newMarker);
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Marker Added',
+      detail: 'A new marker has been added to the map'
+    });
+  }
+
+  placeDraggableMarker(): void {
+    // Check if google maps is loaded
+    if (!google || !google.maps) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Google Maps Error',
+        detail: 'Google Maps API is not loaded.'
+      });
+      return;
+    }
+  
+    // Set a default location to place the marker initially, e.g., the map's center
+    const defaultLocation = new google.maps.LatLng(this.center.lat, this.center.lng);
+  
+    // Initialize the map if it's not already initialized
+    if (!this.map.googleMap) {
+      this.map.googleMap = new google.maps.Map(document.getElementById('map'), {
+        center: defaultLocation,
+        zoom: 14,
+      });
+    }
+  
+    const draggableMarker = new google.maps.Marker({
+      map: this.map.googleMap,
+      position: defaultLocation,
+      draggable: true,
+      title: 'This marker is draggable.'
+    });
+  
+    google.maps.event.addListener(draggableMarker, 'dragend', (event) => this.onMarkerDragEnd(draggableMarker, event));
+    
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Draggable Marker Added',
+      detail: 'You can drag this marker to a new location.'
+    });
+  }
+  
+  onMarkerDragEnd(marker: any, event: any): void {
+    const position = event.latLng; // Directly use the latLng from the event
+    this.messageService.add({
+      severity: 'info',
+      summary: 'Marker Moved',
+      detail: `Marker position has been updated to: ${position.lat()}, ${position.lng()}`
+    });
+  
+    // Force update if needed
+    this.changeDetectorRef.detectChanges();
+  }
+  
+
   ngAfterViewInit(): void {
     if (this.downloadComponent) {
       this.downloadComponent.downloadAllStudentsEvent.subscribe((format: string) => {

@@ -1,11 +1,15 @@
 <google-map [center]="center" [zoom]="zoom" height="400px" width="100%">
   <ng-container *ngFor="let marker of markers">
-    <map-marker [position]="marker.position"
-                #markerRef="mapMarker"
-                (mapClick)="openInfoWindow(markerRef)"
-                (mouseover)="showLabel(markerRef, marker.label)"
-                (mouseout)="hideLabel(markerRef)">
-    </map-marker>
+    <map-marker *ngFor="let marker of markers" 
+    [position]="marker.position"
+    [title]="marker.label"
+    [draggable]="marker.draggable"
+    (dragend)="onMarkerDragEnd(marker, $event)"
+    #markerRef="mapMarker"
+    (mapClick)="openInfoWindow(markerRef)">
+</map-marker>
+
+
   </ng-container>
   <map-info-window #infoWindow>
     <div style="padding: 10px;">
@@ -50,7 +54,16 @@
 
 <p-toast></p-toast>
 <div class="card" style="margin: 0 20px; overflow: hidden;">
-  <div class="mb-2 ml-auto z-0" style="display: flex; gap: 10px;"></div>
+  <div class="mb-2 ml-auto z-0" style="display: flex; gap: 10px;">
+    <p-button label="Place Draggable Marker" icon="pi pi-map-marker" (click)="placeDraggableMarker()" class="p-button-raised p-button-warning"></p-button>
+
+    <div class="search-and-add-container" style="margin-bottom: 20px;">
+      <span class="p-input-icon-left">
+        <i class="pi pi-search"></i>
+        <input pInputText type="text" [(ngModel)]="searchAddress" placeholder="Search location" class="p-inputtext-sm">
+      </span>
+      <p-button label="Add Marker" icon="pi pi-map-marker" (click)="addMarkerBySearch()" class="p-button-raised p-button-success"></p-button>
+    </div>
   <app-download [class.hidden]="downloadSelectedMode" (downloadSelectedStudentsEvent)="downloadSelectedStudents()"></app-download>
   <p-button 
     label="Download Selected Students" 
@@ -177,4 +190,5 @@
     (dialogClose)="onDialogClose($event)">
     </app-edit-marker>
   </p-dialog>
+  </div>
 <p-confirmDialog></p-confirmDialog>
