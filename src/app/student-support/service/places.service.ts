@@ -41,4 +41,9 @@ export class PlacesService {
     const url = `${this.geocodeUrl}?address=${encodeURIComponent(address)}&key=${this.apiKey}`;
     return this.http.get(url);
   }
+  geocodeLatLng(lat: number, lng: number): Observable<any> {
+    const url = `${this.geocodeUrl}?latlng=${lat},${lng}&key=${this.apiKey}`;
+    return this.http.get(url);
+  }
+  
 }

@@ -362,46 +362,73 @@ export class CityHandbookComponent implements OnInit, AfterViewInit {
 
   saveMarker(): void {
     const position = this.draggableMarker.getPosition();
-    const markerData = {
-      position: { lat: position.lat(), lng: position.lng() },
-      label: 'Your Label Here', // You might want to make this dynamic
-      info: 'Marker information', // This too
-    };
-
-    // API call to save the marker
-    this.service.addMarker(markerData).subscribe({
+    this.placesService.geocodeLatLng(position.lat(), position.lng()).subscribe({
       next: (response) => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Marker Saved',
-          detail: 'The new marker has been saved.'
+        const address = response.results[0]?.formatted_address || 'Unknown location';
+        const markerData = {
+          position: { lat: position.lat(), lng: position.lng() },
+          label: address, // Dynamic label based on location
+          info: 'Marker information' // You can customize this further
+        };
+  
+        this.service.addMarker(markerData).subscribe({
+          next: (res) => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Marker Saved',
+              detail: 'The new marker has been saved at ' + address
+            });
+            this.isMarkerPlaced = false; // Reset the state
+          },
+          error: (err) => {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Save Failed',
+              detail: 'Failed to save the marker.'
+            });
+          }
         });
-        this.isMarkerPlaced = false; // Reset the state
       },
       error: (err) => {
         this.messageService.add({
           severity: 'error',
-          summary: 'Save Failed',
-          detail: 'Failed to save the marker.'
+          summary: 'Geocoding Failed',
+          detail: 'Failed to retrieve address.'
         });
       }
     });
   }
+  
+  
+// Assuming you have a class property to store the address
+address: string;
 
-  
-  onMarkerDragEnd(marker: any, event: any): void {
-    const position = event.latLng;
-    this.messageService.add({
-      severity: 'info',
-      summary: 'Marker Moved',
-      detail: `Marker position has been updated to: ${position.lat()}, ${position.lng()}`
-    });
-  
-    // Update internal state as necessary
-    // For example, update the form field or state variable
-    this.selectedLocation = { lat: position.lat(), lng: position.lng() };
-    this.changeDetectorRef.detectChanges();  // Update the view if necessary
-  }
+// And update it in your method
+onMarkerDragEnd(marker: any, event: any): void {
+  const position = event.latLng;
+  this.placesService.geocodeLatLng(position.lat(), position.lng()).subscribe({
+    next: (response) => {
+      this.address = response.results[0]?.formatted_address || 'Unknown location'; // Store address separately
+      this.messageService.add({
+        severity: 'info',
+        summary: 'Marker Moved',
+        detail: `Marker position has been updated to: ${this.address}`
+      });
+
+      // Only update lat and lng in selectedLocation
+      this.selectedLocation = { lat: position.lat(), lng: position.lng() };
+      this.changeDetectorRef.detectChanges();  // Update the view if necessary
+    },
+    error: (err) => {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Geocoding Failed',
+        detail: 'Failed to retrieve updated address.'
+      });
+    }
+  });
+}
+
   
   
 
