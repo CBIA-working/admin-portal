@@ -29,6 +29,7 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { EditMarkerComponent } from "./edit-marker/edit-marker.component";
 
 
 
@@ -37,11 +38,10 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
   selector: 'app-city-handbook',
   standalone: true,
   imports: [GoogleMapsModule, CommonModule, FormsModule, HttpClientModule,
-    ButtonModule, TooltipModule,TableModule, RouterModule, InputTextModule,
+    ButtonModule, TooltipModule, TableModule, RouterModule, InputTextModule,
     TagModule, DropdownModule, MultiSelectModule, ProgressBarModule,
     DownloadComponent, ToastModule, OverlayPanelModule, InputGroupModule,
-    InputGroupAddonModule, ChipsModule,DialogModule,ConfirmDialogModule,
-  ],
+    InputGroupAddonModule, ChipsModule, DialogModule, ConfirmDialogModule, EditMarkerComponent],
   providers: [PlacesService, Service, MessageService,ConfirmationService],
   templateUrl: './city-handbook.component.html',
   styleUrls: ['./city-handbook.component.scss']
@@ -93,6 +93,23 @@ export class CityHandbookComponent implements OnInit, AfterViewInit {
     info: 'info',
   };
 
+  showEditDialog(marker:Marker ): void {
+    this.selectedMarkers = marker;
+    this.dialogVisible = true;
+  }
+  onDialogClose(updatedMarkers: Marker | null): void {
+    if (updatedMarkers) {
+      const index = this.marker.findIndex(s => s.id === updatedMarkers.id);
+      if (index !== -1) {
+        this.marker[index] = updatedMarkers;
+      }
+    }
+    this.selectedMarkers = null;
+    this.dialogVisible = false;
+    window.location.reload();
+  }
+  
+  
 
   ngOnInit(): void {
     this.loadMarkers()
@@ -146,8 +163,6 @@ export class CityHandbookComponent implements OnInit, AfterViewInit {
       }
     });
   }
-
-
   enterSelectionMode() {
     this.downloadSelectedMode = true;
   }

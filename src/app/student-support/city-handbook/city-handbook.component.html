@@ -157,7 +157,7 @@
         <td>{{ marker.info }}</td>
         <td>
           <div class="button-container" style="display: flex; gap: 0.5rem;">
-          <p-button (click)="showEditDialog(courses)" icon="pi pi-pencil" [text]="true" [plain]="true"></p-button>
+          <p-button (click)="showEditDialog(marker)" icon="pi pi-pencil" [text]="true" [plain]="true"></p-button>
             <p-button (click)="deleteCulturalEvent(marker)" icon="pi pi-trash" [text]="true" [plain]="true"></p-button>
         </div>
         </td>
@@ -166,9 +166,15 @@
 
     <ng-template pTemplate="emptymessage">
       <tr>
-        <td colspan="9">No Courses found.</td>
+        <td colspan="9">No Markers found.</td>
       </tr>
     </ng-template>
   </p-table>
-
+  <p-dialog [(visible)]="dialogVisible" [modal]="true" [closable]="false" header="Edit Markers" [responsive]="true" [style]="{width: '60vw'}">
+    <app-edit-marker
+    *ngIf="selectedMarkers" 
+    [marker]="selectedMarkers" 
+    (dialogClose)="onDialogClose($event)">
+    </app-edit-marker>
+  </p-dialog>
 <p-confirmDialog></p-confirmDialog>
