@@ -31,6 +31,10 @@
                     pTooltip="ATMs" tooltipPosition="top"
                     (onClick)="loadNearbyPlaces('atm')"
                     style="width: 70px; height: 40px; font-size: 18px;"></p-button>
+                    <p-button icon="pi pi-info-circle" [rounded]="true" [raised]="true" [outlined]="true"
+                    pTooltip="Key Things to Know" tooltipPosition="top"
+                    (onClick)="loadNearbyPlaces('tourist_attraction')"
+                    style="width: 70px; height: 40px; font-size: 18px;"></p-button>
           <p-button icon="pi pi-heart" [rounded]="true" [raised]="true" [outlined]="true"
                     pTooltip="Pharmacies" tooltipPosition="top"
                     (onClick)="loadNearbyPlaces('pharmacy')"
