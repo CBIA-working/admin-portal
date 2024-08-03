@@ -73,7 +73,8 @@ export class CityHandbookComponent implements OnInit, AfterViewInit {
   nearbyPlaces: any[] = [];
   currentMarkerRef: MapMarker; // Store reference to the current marker
   selectedLocation: google.maps.LatLngLiteral;
-  
+  isMarkerPlaced = false; // State to track if the marker is placed
+  draggableMarker: google.maps.Marker; 
 
   constructor(
     private placesService: PlacesService,
@@ -266,7 +267,33 @@ export class CityHandbookComponent implements OnInit, AfterViewInit {
 
   addMarkerBySearch(): void {
     if (this.searchAddress.trim() && this.selectedLocation) {
-      this.addMarker(this.selectedLocation.lat, this.selectedLocation.lng, this.searchAddress);
+      const markerData = {
+        position: {
+          lat: this.selectedLocation.lat,
+          lng: this.selectedLocation.lng
+        },
+        label: this.searchAddress,
+        info: 'User added marker',
+        draggable: true
+      };
+  
+      this.service.addMarker(markerData).subscribe({
+        next: (response) => {
+          this.markers.push(response);
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Marker Added',
+            detail: 'A new marker has been added to the map'
+          });
+        },
+        error: (err) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to add marker'
+          });
+        }
+      });
     } else {
       this.messageService.add({
         severity: 'warn',
@@ -275,6 +302,7 @@ export class CityHandbookComponent implements OnInit, AfterViewInit {
       });
     }
   }
+  
 
   addMarker(lat: number, lng: number, label: string): void {
     const newMarker = { position: { lat, lng }, label: label, info: 'User added marker', draggable: true };
@@ -287,8 +315,15 @@ export class CityHandbookComponent implements OnInit, AfterViewInit {
   }
   
 
+  toggleMarkerPlacement(): void {
+    if (!this.isMarkerPlaced) {
+      this.placeDraggableMarker();
+    } else {
+      this.saveMarker();
+    }
+  }
+
   placeDraggableMarker(): void {
-    // Check if google maps is loaded
     if (!google || !google.maps) {
       this.messageService.add({
         severity: 'error',
@@ -297,35 +332,62 @@ export class CityHandbookComponent implements OnInit, AfterViewInit {
       });
       return;
     }
-  
-    // Use the current center of the map
+
     const currentCenter = this.map.googleMap.getCenter();
-  
-    // Check if the map is initialized
+
     if (!this.map.googleMap) {
       this.map.googleMap = new google.maps.Map(document.getElementById('map'), {
         center: currentCenter,
         zoom: 14,
       });
     }
-  
-    // Place a draggable marker at the map's current center
-    const draggableMarker = new google.maps.Marker({
+
+    this.draggableMarker = new google.maps.Marker({
       map: this.map.googleMap,
       position: currentCenter,
       draggable: true,
       title: 'Drag me to your desired location'
     });
-  
-    // Add a listener for the dragend event to capture the new location
-    google.maps.event.addListener(draggableMarker, 'dragend', (event) => this.onMarkerDragEnd(draggableMarker, event));
-  
+
+    google.maps.event.addListener(this.draggableMarker, 'dragend', (event) => this.onMarkerDragEnd(this.draggableMarker, event));
+
     this.messageService.add({
       severity: 'success',
       summary: 'Draggable Marker Placed',
       detail: 'You can drag this marker to a new location.'
     });
+
+    this.isMarkerPlaced = true; // Update the state to indicate the marker is now placed
   }
+
+  saveMarker(): void {
+    const position = this.draggableMarker.getPosition();
+    const markerData = {
+      position: { lat: position.lat(), lng: position.lng() },
+      label: 'Your Label Here', // You might want to make this dynamic
+      info: 'Marker information', // This too
+    };
+
+    // API call to save the marker
+    this.service.addMarker(markerData).subscribe({
+      next: (response) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Marker Saved',
+          detail: 'The new marker has been saved.'
+        });
+        this.isMarkerPlaced = false; // Reset the state
+      },
+      error: (err) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Save Failed',
+          detail: 'Failed to save the marker.'
+        });
+      }
+    });
+  }
+
   
   onMarkerDragEnd(marker: any, event: any): void {
     const position = event.latLng;

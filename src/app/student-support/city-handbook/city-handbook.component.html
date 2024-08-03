@@ -1,70 +1,75 @@
-<google-map [center]="center" [zoom]="zoom" height="400px" width="100%">
-  <ng-container *ngFor="let marker of markers">
-    <map-marker *ngFor="let marker of markers" 
-    [position]="marker.position"
-    [title]="marker.label"
-    [draggable]="marker.draggable"
-    (dragend)="onMarkerDragEnd(marker, $event)"
-    #markerRef="mapMarker"
-    (mapClick)="openInfoWindow(markerRef)">
-</map-marker>
-
-
-  </ng-container>
-  <map-info-window #infoWindow>
-    <div style="padding: 10px;">
-      <div [innerHTML]="selectedMarkerInfo" style="font-size: 16px; margin-bottom: 8px;"></div>
-      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; max-width: 320px; padding: 8px;">
-        <p-button icon="fa fa-cutlery" [rounded]="true" [raised]="true" [outlined]="true"
-                  pTooltip="Restaurants" tooltipPosition="top"
-                  (onClick)="loadNearbyPlaces('restaurant')"
-                  style="width: 70px; height: 40px; font-size: 18px;"></p-button>
-        <p-button icon="pi pi-building" [rounded]="true" [raised]="true" [outlined]="true"
-                  pTooltip="Hotels" tooltipPosition="top"
-                  (onClick)="loadNearbyPlaces('lodging')"
-                  style="width: 70px; height: 40px; font-size: 18px;"></p-button>
-        <p-button icon="fa fa-beer" [rounded]="true" [raised]="true" [outlined]="true"
-                  pTooltip="Pubs" tooltipPosition="top"
-                  (onClick)="loadNearbyPlaces('bar')"
-                  style="width: 70px; height: 40px; font-size: 18px;"></p-button>
-        <p-button icon="pi pi-money-bill" [rounded]="true" [raised]="true" [outlined]="true"
-                  pTooltip="ATMs" tooltipPosition="top"
-                  (onClick)="loadNearbyPlaces('atm')"
-                  style="width: 70px; height: 40px; font-size: 18px;"></p-button>
-        <p-button icon="pi pi-heart" [rounded]="true" [raised]="true" [outlined]="true"
-                  pTooltip="Pharmacies" tooltipPosition="top"
-                  (onClick)="loadNearbyPlaces('pharmacy')"
-                  style="width: 70px; height: 40px; font-size: 18px;"></p-button>
-        <p-button icon="pi pi-car" [rounded]="true" [raised]="true" [outlined]="true"
-                  pTooltip="Parking" tooltipPosition="top"
-                  (onClick)="loadNearbyPlaces('parking')"
-                  style="width: 70px; height: 40px; font-size: 18px;"></p-button>
-        <p-button icon="fa fa-train" [rounded]="true" [raised]="true" [outlined]="true"
-                  pTooltip="Transit Stations" tooltipPosition="top"
-                  (onClick)="loadNearbyPlaces('transit_station')"
-                  style="width: 70px; height: 40px; font-size: 18px;"></p-button>
+<div style="padding: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin: 20px; border-radius: 10px; overflow: hidden;">
+  <google-map [center]="center" [zoom]="zoom" height="400px" width="100%">
+    <ng-container *ngFor="let marker of markers">
+      <map-marker *ngFor="let marker of markers" 
+        [position]="marker.position"
+        [title]="marker.label"
+        [draggable]="marker.draggable"
+        (dragend)="onMarkerDragEnd(marker, $event)"
+        #markerRef="mapMarker"
+        (mapClick)="openInfoWindow(markerRef)">
+      </map-marker>
+    </ng-container>
+    <map-info-window #infoWindow>
+      <div style="padding: 10px;">
+        <div [innerHTML]="selectedMarkerInfo" style="font-size: 16px; margin-bottom: 8px;"></div>
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; max-width: 320px; padding: 8px;">
+          <!-- Buttons for loading nearby places -->
+          <p-button icon="fa fa-cutlery" [rounded]="true" [raised]="true" [outlined]="true"
+                    pTooltip="Restaurants" tooltipPosition="top"
+                    (onClick)="loadNearbyPlaces('restaurant')"
+                    style="width: 70px; height: 40px; font-size: 18px;"></p-button>
+          <p-button icon="pi pi-building" [rounded]="true" [raised]="true" [outlined]="true"
+                    pTooltip="Hotels" tooltipPosition="top"
+                    (onClick)="loadNearbyPlaces('lodging')"
+                    style="width: 70px; height: 40px; font-size: 18px;"></p-button>
+          <p-button icon="fa fa-beer" [rounded]="true" [raised]="true" [outlined]="true"
+                    pTooltip="Pubs" tooltipPosition="top"
+                    (onClick)="loadNearbyPlaces('bar')"
+                    style="width: 70px; height: 40px; font-size: 18px;"></p-button>
+          <p-button icon="pi pi-money-bill" [rounded]="true" [raised]="true" [outlined]="true"
+                    pTooltip="ATMs" tooltipPosition="top"
+                    (onClick)="loadNearbyPlaces('atm')"
+                    style="width: 70px; height: 40px; font-size: 18px;"></p-button>
+          <p-button icon="pi pi-heart" [rounded]="true" [raised]="true" [outlined]="true"
+                    pTooltip="Pharmacies" tooltipPosition="top"
+                    (onClick)="loadNearbyPlaces('pharmacy')"
+                    style="width: 70px; height: 40px; font-size: 18px;"></p-button>
+          <p-button icon="pi pi-car" [rounded]="true" [raised]="true" [outlined]="true"
+                    pTooltip="Parking" tooltipPosition="top"
+                    (onClick)="loadNearbyPlaces('parking')"
+                    style="width: 70px; height: 40px; font-size: 18px;"></p-button>
+          <p-button icon="fa fa-train" [rounded]="true" [raised]="true" [outlined]="true"
+                    pTooltip="Transit Stations" tooltipPosition="top"
+                    (onClick)="loadNearbyPlaces('transit_station')"
+                    style="width: 70px; height: 40px; font-size: 18px;"></p-button>
+        </div>
       </div>
-    </div>
-  </map-info-window>
-</google-map>
-
+    </map-info-window>
+  </google-map>
+</div>
 
 
 
 
 <p-toast></p-toast>
 <div class="card" style="margin: 0 20px; overflow: hidden;">
-  <div class="mb-2 ml-auto z-0" style="display: flex; gap: 10px;">
-    <p-button label="Place Draggable Marker" icon="pi pi-map-marker" (click)="placeDraggableMarker()" class="p-button-raised p-button-warning"></p-button>
+  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); background-color: #fff; border-radius: 8px; width: 100%;">
+    <p-button [label]="isMarkerPlaced ? 'Save Marker' : 'Place Draggable Marker'" icon="pi pi-map-marker" (click)="toggleMarkerPlacement()" class="p-button-raised" [ngClass]="{'p-button-warning': !isMarkerPlaced, 'p-button-success': isMarkerPlaced}" style="transition: background-color 0.3s, box-shadow 0.3s; flex-grow: 1;" tooltip="Click to place a marker, then save it"></p-button>
 
-    <div class="search-and-add-container" style="margin-bottom: 20px;">
-      <span class="p-input-icon-left">
-        <i class="pi pi-search"></i>
-        <input #auto pInputText type="text" [(ngModel)]="searchAddress" placeholder="Search location" class="p-inputtext-sm">
-      </span>
-    
-      <p-button label="Add Marker" icon="pi pi-map-marker" (click)="addMarkerBySearch()" class="p-button-raised p-button-success"></p-button>
-    </div>
+    <span style="flex-grow: 2; display: flex; align-items: center;">
+        <i class="pi pi-search" style="margin-right: 8px;"></i>
+        <input #auto pInputText type="text" [(ngModel)]="searchAddress" placeholder="Search location" class="p-inputtext-sm" style="width: 100%; padding: 8px 10px; border: 1px solid #ccc;">
+    </span>
+
+    <p-button label="Add Marker" icon="pi pi-map-marker" (click)="addMarkerBySearch()" class="p-button-raised p-button-success" style="transition: background-color 0.3s, box-shadow 0.3s; flex-grow: 1;" tooltip="Add a marker at the searched location"></p-button>
+
+
+
+
+  
+
+
   <app-download [class.hidden]="downloadSelectedMode" (downloadSelectedStudentsEvent)="downloadSelectedStudents()"></app-download>
   <p-button 
     label="Download Selected Students" 

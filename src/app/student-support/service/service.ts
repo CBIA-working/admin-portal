@@ -249,4 +249,7 @@ deleteAssignmentTrip(studentId: number, tripId: number): Observable<any> {
   getupdateMarker(params?: any): Observable<any>  {
     return this.http.post<any>(`${this.BASE_URL}/updateMarker`,params);
   }
+  addMarker(markerData: any): Observable<any> {
+    return this.http.post<any>(`${this.BASE_URL}/addMarker`, markerData);
+  }
 }
