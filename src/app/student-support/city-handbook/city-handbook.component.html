@@ -8,37 +8,163 @@
     </map-marker>
   </ng-container>
   <map-info-window #infoWindow>
-    <div [innerHTML]="selectedMarkerInfo"></div>
-    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;">
-      <p-button icon="fa fa-cutlery" [rounded]="true" [raised]="true" [outlined]="true"
-                pTooltip="Restaurants" tooltipPosition="top"
-                (onClick)="loadNearbyPlaces('restaurant')"
-                style="max-width: 80px; height: 40px;"></p-button>
-      <p-button icon="pi pi-building" [rounded]="true" [raised]="true" [outlined]="true"
-                pTooltip="Hotels" tooltipPosition="top"
-                (onClick)="loadNearbyPlaces('lodging')"
-                style="max-width: 80px; height: 40px;"></p-button>
-      <p-button icon="fa fa-beer" [rounded]="true" [raised]="true" [outlined]="true"
-                pTooltip="Pubs" tooltipPosition="top"
-                (onClick)="loadNearbyPlaces('bar')"
-                style="max-width: 80px; height: 40px;"></p-button>
-      <p-button icon="pi pi-money-bill" [rounded]="true" [raised]="true" [outlined]="true"
-                pTooltip="ATMs" tooltipPosition="top"
-                (onClick)="loadNearbyPlaces('atm')"
-                style="max-width: 80px; height: 40px;"></p-button>
-      <p-button icon="pi pi-heart" [rounded]="true" [raised]="true" [outlined]="true"
-                pTooltip="Pharmacies" tooltipPosition="top"
-                (onClick)="loadNearbyPlaces('pharmacy')"
-                style="max-width: 80px; height: 40px;"></p-button>
-      <p-button icon="pi pi-car" [rounded]="true" [raised]="true" [outlined]="true"
-                pTooltip="Parking" tooltipPosition="top"
-                (onClick)="loadNearbyPlaces('parking')"
-                style="max-width: 80px; height: 40px;"></p-button>
-      <p-button icon="fa fa-train" [rounded]="true" [raised]="true" [outlined]="true"
-                pTooltip="Transit Stations" tooltipPosition="top"
-                (onClick)="loadNearbyPlaces('transit_station')"
-                style="max-width: 80px; height: 40px;"></p-button>
-      <p-button style="display: none;"></p-button>
+    <div style="padding: 10px;">
+      <div [innerHTML]="selectedMarkerInfo" style="font-size: 16px; margin-bottom: 8px;"></div>
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; max-width: 320px; padding: 8px;">
+        <p-button icon="fa fa-cutlery" [rounded]="true" [raised]="true" [outlined]="true"
+                  pTooltip="Restaurants" tooltipPosition="top"
+                  (onClick)="loadNearbyPlaces('restaurant')"
+                  style="width: 70px; height: 40px; font-size: 18px;"></p-button>
+        <p-button icon="pi pi-building" [rounded]="true" [raised]="true" [outlined]="true"
+                  pTooltip="Hotels" tooltipPosition="top"
+                  (onClick)="loadNearbyPlaces('lodging')"
+                  style="width: 70px; height: 40px; font-size: 18px;"></p-button>
+        <p-button icon="fa fa-beer" [rounded]="true" [raised]="true" [outlined]="true"
+                  pTooltip="Pubs" tooltipPosition="top"
+                  (onClick)="loadNearbyPlaces('bar')"
+                  style="width: 70px; height: 40px; font-size: 18px;"></p-button>
+        <p-button icon="pi pi-money-bill" [rounded]="true" [raised]="true" [outlined]="true"
+                  pTooltip="ATMs" tooltipPosition="top"
+                  (onClick)="loadNearbyPlaces('atm')"
+                  style="width: 70px; height: 40px; font-size: 18px;"></p-button>
+        <p-button icon="pi pi-heart" [rounded]="true" [raised]="true" [outlined]="true"
+                  pTooltip="Pharmacies" tooltipPosition="top"
+                  (onClick)="loadNearbyPlaces('pharmacy')"
+                  style="width: 70px; height: 40px; font-size: 18px;"></p-button>
+        <p-button icon="pi pi-car" [rounded]="true" [raised]="true" [outlined]="true"
+                  pTooltip="Parking" tooltipPosition="top"
+                  (onClick)="loadNearbyPlaces('parking')"
+                  style="width: 70px; height: 40px; font-size: 18px;"></p-button>
+        <p-button icon="fa fa-train" [rounded]="true" [raised]="true" [outlined]="true"
+                  pTooltip="Transit Stations" tooltipPosition="top"
+                  (onClick)="loadNearbyPlaces('transit_station')"
+                  style="width: 70px; height: 40px; font-size: 18px;"></p-button>
+      </div>
     </div>
   </map-info-window>
 </google-map>
+
+
+
+
+
+<p-toast></p-toast>
+<div class="card" style="margin: 0 20px; overflow: hidden;">
+  <p-table
+    #dt1
+    [value]="marker"
+    [selectionMode]="downloadSelectedMode ? 'checkbox' : null"
+    [(selection)]="selectedMarker"
+    dataKey="id"
+    [rows]="10"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [loading]="loading"
+    [paginator]="true"
+    [globalFilterFields]="['id', 'lat', 'lng', 'label', 'info']">
+    
+    <ng-template pTemplate="caption">
+      <div class="flex">
+        <p-button 
+          label="Clear" 
+          [outlined]="true" 
+          icon="pi pi-filter-slash" 
+          (click)="clear(dt1)">
+        </p-button>
+        <span class="p-input-icon-left ml-auto" style="border: 1px solid #ccc; border-radius: 4px; padding: 2px;">
+          <i class="pi pi-search" style="margin-left: 8px;"></i>
+          <input 
+            pInputText 
+            type="text" 
+            (input)="dt1.filterGlobal($event.target.value, 'contains')" 
+            placeholder="Search keyword"
+            class="p-inputtext-sm" 
+            style="width: 15rem; padding-left: 3rem; border: none; outline: none; background: transparent; margin-left: 5px;">
+        </span>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th *ngIf="downloadSelectedMode">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
+        <th style="min-width: 12%">
+          <div class="flex align-items-center">
+            ID
+            <p-columnFilter type="text" field="id" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th style="min-width: 12%">
+          <div class="flex align-items-center">
+            latitude
+            <p-columnFilter type="text" field="lat" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th style="min-width: 15%">
+          <div class="flex align-items-center">
+            Longitude
+            <p-columnFilter type="text" field="lng" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th style="min-width: 15%">
+          <div class="flex align-items-center">
+            Label
+            <p-columnFilter type="text" field="label" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th style="min-width: 15%">
+            <div class="flex align-items-center">
+              Info
+              <p-columnFilter type="text" field="info" display="menu"></p-columnFilter>
+            </div>
+          </th>
+          <th style="min-width: 10%; text-align: center;">
+            <div style="display: flex; justify-content: center; align-items: center;">
+              Actions
+            </div>
+          </th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-marker>
+      <tr>
+        <td *ngIf="downloadSelectedMode">
+          <p-tableCheckbox [value]="marker"></p-tableCheckbox>
+        </td>
+        <td>{{ marker.id }}</td>
+        <td>{{ marker.position.lat }}</td>
+        <td>{{ marker.position.lng }}</td>
+        <td>{{ marker.label }}</td>
+        <td>{{ marker.info }}</td>
+        <td>
+          <div class="button-container" style="display: flex; gap: 0.5rem;">
+          <p-button (click)="showEditDialog(courses)" icon="pi pi-pencil" [text]="true" [plain]="true"></p-button>
+            <p-button (click)="showAssignDialog(courses.id)" icon="pi pi-user-plus" [text]="true" [plain]="true"></p-button>
+            <p-button (click)="deleteCulturalEvent(courses)" icon="pi pi-trash" [text]="true" [plain]="true"></p-button>
+          <p-button (click)="op.toggle($event)" icon="pi pi-ellipsis-v" [text]="true" [plain]="true"></p-button>
+          <p-overlayPanel #op>
+            <div>
+              <ul class="list-none p-0 m-0 flex flex-column gap-3">
+                <li *ngFor="let option of options" class="flex align-items-center gap-2" 
+                  (click)="navigateToMemberPage(option, courses.id)"
+                  style="cursor: pointer; transition: background-color 0.3s, transform 0.3s;">
+                  <div style="cursor: pointer; transition: background-color 0.3s, transform 0.3s;">
+                    <span class="font-medium">{{ option.name }}</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </p-overlayPanel>
+        </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="9">No Courses found.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+<p-confirmDialog></p-confirmDialog>

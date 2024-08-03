@@ -3,25 +3,64 @@ import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { GoogleMap, GoogleMapsModule, MapInfoWindow, MapMarker } from '@angular/google-maps';
 import { PlacesService } from '../service/places.service';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { Marker } from '../domain/schema';
 import { Service } from '../service/service';
 import { MapAnchorPoint } from '@angular/google-maps';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { Table, TableModule } from 'primeng/table';
+import { TagModule } from 'primeng/tag';
+import { DownloadComponent } from '../download/download.component';
+import * as XLSX from 'xlsx';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import { MessageService,ConfirmationService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+import { NavigationService } from '../service/navigation.service';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { ChipsModule } from 'primeng/chips';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { DialogModule } from 'primeng/dialog';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+
+
+
 
 @Component({
   selector: 'app-city-handbook',
   standalone: true,
-  imports: [GoogleMapsModule, CommonModule, FormsModule, HttpClientModule, ButtonModule, TooltipModule],
-  providers: [PlacesService, Service],
+  imports: [GoogleMapsModule, CommonModule, FormsModule, HttpClientModule,
+    ButtonModule, TooltipModule,TableModule, RouterModule, InputTextModule,
+    TagModule, DropdownModule, MultiSelectModule, ProgressBarModule,
+    DownloadComponent, ToastModule, OverlayPanelModule, InputGroupModule,
+    InputGroupAddonModule, ChipsModule,DialogModule,ConfirmDialogModule,
+  ],
+  providers: [PlacesService, Service, MessageService,ConfirmationService],
   templateUrl: './city-handbook.component.html',
   styleUrls: ['./city-handbook.component.scss']
 })
 export class CityHandbookComponent implements OnInit, AfterViewInit {
   @ViewChild(GoogleMap) map: GoogleMap;
   @ViewChild(MapInfoWindow) infoWindow: MapInfoWindow;
+  @ViewChild(DownloadComponent) downloadComponent!: DownloadComponent;
+  @ViewChild('dt1') table!: Table;
 
+  marker: Marker[] = [];
+  selectedMarker: Marker[] = [];
+  selectedCourse: Marker | null = null;
+  loading: boolean = true;
+  searchValue: string | undefined;
+  downloadSelectedMode: boolean = false;
+  dialogVisible: boolean = false;
+  currentUser: any = {};
+  selectedCourseId: number | null = null;
   center: google.maps.LatLngLiteral = { lat: 51.5074, lng: -0.1278 }; // Central London
   zoom = 13;
   markers: any[] = [];
@@ -33,11 +72,45 @@ export class CityHandbookComponent implements OnInit, AfterViewInit {
 
   constructor(
     private placesService: PlacesService,
-    private service: Service
+    private service: Service,
+    private route: ActivatedRoute,
+    private messageService: MessageService,
+    private navigationService: NavigationService,
+    private router: Router,
+    private http: HttpClient,
+    private confirmationService: ConfirmationService,
   ) {}
 
+  exportHeaderMapping = {
+    id: 'id',
+    position: {
+      lat: 'lat',
+      lng: 'lng',
+    },
+    label: 'label',
+    info: 'info',
+  };
+
+
   ngOnInit(): void {
-    this.loadMarkers();
+    this.loadMarkers()
+    this.fetchAllMarker();
+  }
+
+  fetchAllMarker() {
+    this.loading = true;
+    this.service.getMarkers().then((marker) => {
+      this.marker = marker;
+      this.loading = false;
+    }).catch(error => {
+      console.error('Error fetching all marker', error);
+      this.loading = false;
+    });
+  }
+
+  clear(table: Table) {
+    table.clear();
+    this.searchValue = '';
   }
 
   ngAfterViewInit(): void {
@@ -58,7 +131,6 @@ export class CityHandbookComponent implements OnInit, AfterViewInit {
       const marker = new google.maps.Marker({
         position: markerData.position,
         map: this.map.googleMap,
-        label: markerData.label
       });
 
       marker.addListener('click', () => {
