@@ -88,6 +88,14 @@ export class HeaderComponent implements OnInit {
         command: () => this.reloadPage('/cityHandbook')
       });
     }
+    else if (path === '/OrientationFile') {
+      this.items.push({ 
+        label: 'Orientation File', 
+        escape: false, 
+        routerLink: '/OrientationFile',
+        command: () => this.reloadPage('/OrientationFile')
+      });
+    }
     else if (path === '/courses') {
       this.items.push({ 
         label: 'Courses', 
@@ -128,6 +136,7 @@ export class HeaderComponent implements OnInit {
         command: () => this.reloadPage('/FAQs')
       });
     }
+    
     // Add more conditions for additional routes as needed
   }
 

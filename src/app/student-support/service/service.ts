@@ -252,4 +252,11 @@ deleteAssignmentTrip(studentId: number, tripId: number): Observable<any> {
   addMarker(markerData: any): Observable<any> {
     return this.http.post<any>(`${this.BASE_URL}/addMarker`, markerData);
   }
+
+//orientation
+
+getOrientation(params?: any): Promise<Marker[]> {
+  return this.http.get<Marker[]>(`${this.BASE_URL}/OrientationAdmin`, { params }).toPromise();
+}
+
 }
