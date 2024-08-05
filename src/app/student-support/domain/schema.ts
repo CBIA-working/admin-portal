@@ -95,4 +95,9 @@ export interface Faq {
     label: string;
     info: string;
   }
-  
+  export interface OrientationFile {
+    id:number;
+    Name:String;
+    Description:String;
+    OrientationPdf:String;
+  }

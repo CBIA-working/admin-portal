@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Accomodation, Courses, CulturalEvent, Faq, KeyProgramDate, Marker, Program, Trip } from '../domain/schema';
+import { Accomodation, Courses, CulturalEvent, Faq, KeyProgramDate, Marker, OrientationFile, Program, Trip } from '../domain/schema';
 
 @Injectable()
 export class Service {
@@ -255,8 +255,8 @@ deleteAssignmentTrip(studentId: number, tripId: number): Observable<any> {
 
 //orientation
 
-getOrientation(params?: any): Promise<Marker[]> {
-  return this.http.get<Marker[]>(`${this.BASE_URL}/OrientationAdmin`, { params }).toPromise();
+getOrientation(params?: any): Promise<OrientationFile[]> {
+  return this.http.get<OrientationFile[]>(`${this.BASE_URL}/OrientationAdmin`, { params }).toPromise();
 }
 
 }
