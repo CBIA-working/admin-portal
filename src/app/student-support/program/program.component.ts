@@ -208,6 +208,7 @@ export class ProgramComponent implements OnInit,AfterViewInit {
   exportHeaderMapping = {
     id: 'ID',
     name: 'Name',
+    fullForm:'Full Form',
     batch: 'Batch',
   };
 
@@ -329,6 +330,7 @@ export class ProgramComponent implements OnInit,AfterViewInit {
     return {
       ID: program.id,
       Name: program.name,
+      "Detailed Name":program.fullForm,
       Batch: program.batch,
     };
   }

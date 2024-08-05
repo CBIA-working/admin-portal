@@ -8,6 +8,11 @@
                style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;">
       </div>
       <div>
+        <strong>Detailed Name:</strong>
+        <input pInputText type="text" [(ngModel)]="program.fullForm" (ngModelChange)="onFieldChange()" placeholder="Detailed Name"
+               style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;">
+      </div>
+      <div>
         <strong>Batch:</strong>
         <input pInputText type="text" [(ngModel)]="program.batch" (ngModelChange)="onFieldChange()" placeholder="Batch"
                style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;">

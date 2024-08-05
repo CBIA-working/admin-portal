@@ -13,6 +13,13 @@
                                        severity="error" text="Name is required." style="margin-top: 8px;"></p-message>
                         </div>
                         <div>
+                            <label for="fullForm" style="display: block; margin-bottom: 8px; font-weight: bold;">Detailed Name:</label>
+                            <input id="fullForm" pInputText type="text" formControlName="fullForm" placeholder="Detailed Name" 
+                                   style="border: 1px solid #ccc; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box;">
+                            <p-message *ngIf="programForm.get('fullForm')?.invalid && programForm.get('fullForm')?.touched"
+                                       severity="error" text="Detailed Name is required." style="margin-top: 8px;"></p-message>
+                        </div>
+                        <div>
                             <label for="batch" style="display: block; margin-bottom: 8px; font-weight: bold;">Batch:</label>
                             <input id="batch" pInputText type="number" formControlName="batch" placeholder="Batch" 
                                    style="border: 1px solid #ccc; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box;">

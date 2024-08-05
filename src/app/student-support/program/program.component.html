@@ -31,13 +31,18 @@
     </p-button>
   </div>
 
-  <p-table #dt1 [value]="program" [selectionMode]="downloadSelectedMode ? 'checkbox' : null" [(selection)]="selectedprograms" dataKey="id" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]" [loading]="loading" [paginator]="true" [globalFilterFields]="['id', 'name', 'batch']" style="table-layout: fixed;">
+  <p-table #dt1 [value]="program" [selectionMode]="downloadSelectedMode ? 
+  'checkbox' : null" [(selection)]="selectedprograms" dataKey="id" [rows]="10" 
+  [rowsPerPageOptions]="[10, 25, 50]" [loading]="loading" [paginator]="true"
+   [globalFilterFields]="['id', 'name', 'fullForm','batch']" style="table-layout: fixed;">
     <ng-template pTemplate="caption">
       <div class="flex">
         <p-button label="Clear" [outlined]="true" icon="pi pi-filter-slash" (click)="clear(dt1)"></p-button>
         <span class="p-input-icon-left ml-auto" style="border: 1px solid #ccc; border-radius: 4px; padding: 2px;">
           <i class="pi pi-search" style="margin-left: 8px;"></i>
-          <input pInputText type="text" (input)="dt1.filterGlobal($event.target.value, 'contains')" placeholder="Search keyword" class="p-inputtext-sm" style="width: 15rem; padding-left: 3rem; border: none; outline: none; background: transparent; margin-left: 5px;">
+          <input pInputText type="text" (input)="dt1.filterGlobal($event.target.value, 'contains')" 
+          placeholder="Search keyword" class="p-inputtext-sm" 
+          style="width: 15rem; padding-left: 3rem; border: none; outline: none; background: transparent; margin-left: 5px;">
         </span>
       </div>
     </ng-template>
@@ -54,6 +59,12 @@
           <div class="flex align-items-center">
             Name
             <p-columnFilter type="text" field="name" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th style="width: 30%;">
+          <div class="flex align-items-center">
+            Detailed Name
+            <p-columnFilter type="text" field="fullForm" display="menu"></p-columnFilter>
           </div>
         </th>
         <th style="width: 30%;">
@@ -82,6 +93,7 @@
         </td>
         <td>{{ program.id }}</td>
         <td>{{ program.name }}</td>
+        <td>{{ program.fullForm }}</td>
         <td>{{ program.batch }}</td>
         <td *ngIf="showStatusColumn">
           <span *ngIf="program.archived" class="p-tag p-tag-rounded p-tag-warning">Archived</span>

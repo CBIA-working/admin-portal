@@ -83,6 +83,7 @@ export interface Faq {
   export interface Program {
     id:number;
     name:String;
+    fullForm:string;
     batch:String;
   }
 
