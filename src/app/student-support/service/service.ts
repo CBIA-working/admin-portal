@@ -258,5 +258,16 @@ deleteAssignmentTrip(studentId: number, tripId: number): Observable<any> {
 getOrientation(params?: any): Promise<OrientationFile[]> {
   return this.http.get<OrientationFile[]>(`${this.BASE_URL}/OrientationAdmin`, { params }).toPromise();
 }
+addOrientation(orientationFile: OrientationFile): Observable<any> {
+  return this.http.post<any>(`${this.BASE_URL}/addOrientation`, orientationFile);
+}
 
+deleteOrientation(OrientationId: number): Observable<void> {
+  return this.http.delete<void>(`${this.BASE_URL}/deleteOrientation`, { 
+    body: { id: OrientationId } 
+});
+}
+getupdateOrientation(params?: any): Observable<any>  {
+  return this.http.post<any>(`${this.BASE_URL}/updateOrientation`,params);
+}
 }

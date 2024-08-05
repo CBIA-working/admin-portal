@@ -1,25 +1,26 @@
 
 <p-toast></p-toast>
 <div class="card" style="margin: 0 20px; overflow: hidden;">
-  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); background-color: #fff; border-radius: 8px; width: 100%;">
-
-  <app-download [class.hidden]="downloadSelectedMode" (downloadSelectedStudentsEvent)="downloadSelectedStudents()"></app-download>
-  <p-button 
-    label="Download Selected Students" 
-    icon="pi pi-download" 
-    [raised]="true" 
-    severity="secondary" 
-    (click)="downloadSelectedStudents()" 
-    *ngIf="downloadSelectedMode">
-  </p-button>
-  <p-button 
-    icon="pi pi-times" 
-    severity="danger" 
-    [raised]="true" 
-    (click)="exitSelectionMode()" 
-    *ngIf="downloadSelectedMode">
-  </p-button>
-  </div>
+    <div class="mb-2 ml-auto z-0" style="display: flex; gap: 10px;">
+        <p-button icon="pi pi-plus" (click)="showAddDialog()" [raised]="true" severity="primary"></p-button>
+    
+        <app-download [class.hidden]="downloadSelectedMode" (downloadSelectedStudentsEvent)="downloadSelectedStudents()"></app-download>
+        <p-button 
+          label="Download Selected Students" 
+          icon="pi pi-download" 
+          [raised]="true" 
+          severity="secondary" 
+          (click)="downloadSelectedStudents()" 
+          *ngIf="downloadSelectedMode">
+        </p-button>
+        <p-button 
+          icon="pi pi-times" 
+          severity="danger" 
+          [raised]="true" 
+          (click)="exitSelectionMode()" 
+          *ngIf="downloadSelectedMode">
+        </p-button>
+      </div>
 
   <p-table
     #dt1
@@ -77,10 +78,9 @@
             <p-columnFilter type="text" field="Description" display="menu"></p-columnFilter>
           </div>
         </th>
-        <th style="min-width: 15%">
-          <div class="flex align-items-center">
-            OrientationPdf
-            <p-columnFilter type="text" field="OrientationPdf" display="menu"></p-columnFilter>
+        <th style="min-width: 15%; text-align: center;">
+            <div style="display: flex; justify-content: center; align-items: center;">
+            Pdf
           </div>
         </th>
           <th style="min-width: 10%; text-align: center;">
@@ -99,12 +99,19 @@
         <td>{{ orientationFile.id }}</td>
         <td>{{ orientationFile.Name }}</td>
         <td>{{ orientationFile.Description }}</td>
-        <td>{{ orientationFile.OrientationPdf }}</td>
+        <td>
+            <p-button 
+              icon="pi pi-file-pdf" 
+              (click)="openPdfInNewTab(orientationFile.OrientationPdf)" 
+              [text]="true" 
+              [plain]="true">
+            </p-button>
+          </td>
 
         <td>
           <div class="button-container" style="display: flex; gap: 0.5rem;">
           <p-button (click)="showEditDialog(orientationFile)" icon="pi pi-pencil" [text]="true" [plain]="true"></p-button>
-            <p-button (click)="deleteCulturalEvent(orientationFile)" icon="pi pi-trash" [text]="true" [plain]="true"></p-button>
+            <p-button (click)="deleteOrientationFile(orientationFile)" icon="pi pi-trash" [text]="true" [plain]="true"></p-button>
         </div>
         </td>
       </tr>
@@ -117,11 +124,13 @@
     </ng-template>
   </p-table>
   <p-dialog [(visible)]="dialogVisible" [modal]="true" [closable]="false" header="Edit Orientation File" [responsive]="true" [style]="{width: '60vw'}">
-    <app-edit-marker
+    <app-edit-orientation-file
     *ngIf="selectedOrientationFiles" 
     [orientationFile]="selectedOrientationFiles" 
     (dialogClose)="onDialogClose($event)">
-    </app-edit-marker>
+    </app-edit-orientation-file>
   </p-dialog>
-  </div>
+  <p-dialog [(visible)]="addDialogVisible" [modal]="true" [closable]="false" header="Add Orientation File" [responsive]="true" [style]="{width: '60vw' ,height:'68vh'}">
+    <app-add-orientation-file (dialogClose)="onAddDialogClose()"></app-add-orientation-file>
+  </p-dialog>
 <p-confirmDialog></p-confirmDialog>

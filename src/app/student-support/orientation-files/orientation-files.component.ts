@@ -26,6 +26,8 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { EditOrientationFileComponent } from "./edit-orientation-file/edit-orientation-file.component";
+import { AddOrientationFileComponent } from "./add-orientation-file/add-orientation-file.component";
 
 
 @Component({
@@ -35,8 +37,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
     ButtonModule, TooltipModule, TableModule, RouterModule, InputTextModule,
     TagModule, DropdownModule, MultiSelectModule, ProgressBarModule,
     DownloadComponent, ToastModule, OverlayPanelModule, InputGroupModule,
-    InputGroupAddonModule, ChipsModule, DialogModule, ConfirmDialogModule
-  ],
+    InputGroupAddonModule, ChipsModule, DialogModule, ConfirmDialogModule, EditOrientationFileComponent, AddOrientationFileComponent],
   providers: [Service, MessageService,ConfirmationService],
   templateUrl: './orientation-files.component.html',
   styleUrl: './orientation-files.component.scss'
@@ -54,8 +55,8 @@ export class OrientationFilesComponent implements OnInit, AfterViewInit {
   downloadSelectedMode: boolean = false;
   dialogVisible: boolean = false;
   currentUser: any = {};
+  addDialogVisible: boolean = false;
  
-
   constructor(
     private service: Service,
     private route: ActivatedRoute,
@@ -92,6 +93,13 @@ export class OrientationFilesComponent implements OnInit, AfterViewInit {
     window.location.reload();
   }
   
+  showAddDialog() {
+    this.addDialogVisible = true;
+  }
+  onAddDialogClose() {
+    this.addDialogVisible = false;
+    this.fetchAllorientationFile();
+  }
 
   ngOnInit(): void {
     this.fetchAllorientationFile();
@@ -113,13 +121,17 @@ export class OrientationFilesComponent implements OnInit, AfterViewInit {
     this.searchValue = '';
   }
 
-  deleteCulturalEvent(orientationFile: OrientationFile): void {
+  openPdfInNewTab(pdfUrl: string) {
+    window.open(pdfUrl, '_blank');
+  }
+
+  deleteOrientationFile(orientationFile: OrientationFile): void {
     this.confirmationService.confirm({
-      message: 'Are you sure you want to delete this marker?',
+      message: 'Are you sure you want to delete this Orientation File?',
       header: 'Confirm',
       icon: 'pi pi-info-circle',
       accept: () => {
-        this.service.deleteMarkers(orientationFile.id).subscribe(
+        this.service.deleteOrientation(orientationFile.id).subscribe(
           () => {
             this.orientationFile = this.orientationFile.filter(orientationFile => orientationFile.id !== orientationFile.id);
             this.messageService.add({
