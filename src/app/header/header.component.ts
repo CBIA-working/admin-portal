@@ -120,6 +120,14 @@ export class HeaderComponent implements OnInit {
         command: () => this.reloadPage('/keyprogramdates')
       });
     }
+    else if (path === '/library') {
+      this.items.push({ 
+        label: 'Library', 
+        escape: false, 
+        routerLink: '/library',
+        command: () => this.reloadPage('/library')
+      });
+    }
     else if (path === '/trips') {
       this.items.push({ 
         label: 'Trips', 

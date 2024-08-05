@@ -1,0 +1,10 @@
+<!-- library.component.html -->
+<div style="display: flex; flex-wrap: wrap; justify-content: space-around;">
+    <div *ngFor="let program of programs" 
+         style="flex: 1 1 23%; margin: 10px; box-sizing: border-box; width: 23%;">
+      <p-card [header]="program.name" style="width: 100%; height: 100%;">
+        <!-- Empty content since only the name is displayed in the header -->
+      </p-card>
+    </div>
+  </div>
+  

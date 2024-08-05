@@ -17,6 +17,7 @@ import { ProgramComponent } from './student-support/program/program.component';
 import { TripsComponent } from './student-support/trips/trips.component';
 import { CityHandbookComponent } from './student-support/city-handbook/city-handbook.component';
 import { OrientationFilesComponent } from './student-support/orientation-files/orientation-files.component';
+import { LibraryComponent } from './student-support/library/library.component';
 
 
 export const routes: Routes = [
@@ -30,6 +31,7 @@ export const routes: Routes = [
   { path: 'cityHandbook', component:CityHandbookComponent,canActivate: [AuthGuard]},
   { path: 'OrientationFile', component:OrientationFilesComponent,canActivate: [AuthGuard]},
   { path: 'keyprogramdates',component:KeyprogramdatesComponent,canActivate:[AuthGuard]},
+  { path: 'library', component:LibraryComponent,canActivate: [AuthGuard]},
   { path: 'trips', component:TripsComponent,canActivate: [AuthGuard]},
   { path: 'FAQs', component:FaqComponent,canActivate: [AuthGuard]},
   { path: 'profile', component:ProfileComponent,canActivate: [AuthGuard]},
