@@ -270,4 +270,5 @@ deleteOrientation(OrientationId: number): Observable<void> {
 getupdateOrientation(params?: any): Observable<any>  {
   return this.http.post<any>(`${this.BASE_URL}/updateOrientation`,params);
 }
+
 }

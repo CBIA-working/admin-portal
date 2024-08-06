@@ -4,7 +4,7 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { BadgeModule } from 'primeng/badge';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { ToastModule } from 'primeng/toast';
 
@@ -24,7 +24,9 @@ export class UploadOrientationFileComponent {
   
       totalSizePercent: number = 0;
   
-      constructor(private config: PrimeNGConfig, private messageService: MessageService) {
+      constructor(private config: PrimeNGConfig, 
+        private messageService: MessageService,
+        private http:HttpClient) {
           this.config.setTranslation({
               fileSizeTypes: ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB']
           });
@@ -47,7 +49,20 @@ export class UploadOrientationFileComponent {
       }
   
       onTemplatedUpload() {
-          this.messageService.add({ severity: 'info', summary: 'Success', detail: 'File Uploaded', life: 3000 });
+        this.files.forEach(file => {
+          const formData = new FormData();
+          formData.append('image', file, file.name);
+    
+          this.http.post('http://localhost:3000/api/uploadFile', formData).subscribe({
+            next: (response) => {
+              this.messageService.add({ severity: 'info', summary: 'Success', detail: 'File Uploaded', life: 3000 });
+              // Handle successful upload, e.g., moving file to uploadedFiles array
+            },
+            error: (err) => {
+              this.messageService.add({ severity: 'error', summary: 'Error', detail: 'File Upload Failed', life: 3000 });
+            }
+          });
+        });
       }
   
       onSelectedFiles(event) {
