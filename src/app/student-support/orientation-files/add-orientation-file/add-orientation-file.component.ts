@@ -90,15 +90,20 @@ export class AddOrientationFileComponent  implements OnInit {
           ...this.originalOrientationFile,
           ...this.orientationFileForm.value
         };
-  
+    
         this.service.addOrientation(updatedOrientationFile).subscribe({
           next: (response) => {
-            this.messageService.add({ severity: 'success', summary: 'Orientation File added', detail: 'Orientation File has been successfully added.' });
-  
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Orientation File added',
+              detail: 'Orientation File has been successfully added.'
+            });
+    
             // Close the dialog after a delay
             setTimeout(() => {
               this.dialogClose.emit(updatedOrientationFile);
-            }, 2000); // Adjust the delay time as needed (2000 ms = 2 seconds)
+              this.onClose();  // This will close the dialog
+            }, 2000); // Delay time is set to 2000 ms (2 seconds)
           },
           error: (error) => {
             console.error('Error adding Orientation File:', error);
@@ -121,7 +126,13 @@ export class AddOrientationFileComponent  implements OnInit {
         this.orientationFileForm.markAllAsTouched();
       }
     }
-  
+
+    onFileUploaded(fileName: string) {
+      const baseUrl = 'http://localhost:3000/orientation/';
+      this.orientationFileForm.get('OrientationPdf').setValue(baseUrl + fileName);
+    }
+    
+    
     onClose(): void {
       this.dialogClose.emit(null);
       this.resetForm(); // Correctly call the resetForm method

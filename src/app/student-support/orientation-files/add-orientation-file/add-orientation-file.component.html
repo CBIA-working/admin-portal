@@ -36,10 +36,11 @@
                         <div>
                             <label for="OrientationPdf" style="display: block; margin-bottom: 8px; font-weight: bold;">Orientation Pdf:</label>
                             <input id="OrientationPdf" pInputText type="text" formControlName="OrientationPdf" placeholder="Orientation Pdf" 
-                                   style="border: 1px solid #ccc; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box;">
+                                   style="border: 1px solid #ccc; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box;" readonly>
                             <p-message *ngIf="orientationFileForm.get('OrientationPdf')?.invalid && orientationFileForm.get('OrientationPdf')?.touched"
                                        severity="error" text="Orientation Pdf is required." style="margin-top: 8px;"></p-message>
                         </div>
+                        
                     </div>
                     <div style="display: flex; justify-content: flex-end; padding: 20px; border-top: 1px solid #eee;">
                         <button pButton type="submit" label="Save" [disabled]="orientationFileForm.invalid" style="margin-right: 10px;"></button>
@@ -52,5 +53,6 @@
 </div>
 <p-toast></p-toast>
 <p-dialog header="Upload Orientation PDF" [(visible)]="showUploadDialog" [modal]="true" [style]="{width: '50vw', height:'80vh'}">
-<app-upload-orientation-file></app-upload-orientation-file>
-</p-dialog>
+    <app-upload-orientation-file (fileUploaded)="onFileUploaded($event)"></app-upload-orientation-file>
+  </p-dialog>
+  

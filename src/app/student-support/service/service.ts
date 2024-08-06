@@ -270,5 +270,8 @@ deleteOrientation(OrientationId: number): Observable<void> {
 getupdateOrientation(params?: any): Observable<any>  {
   return this.http.post<any>(`${this.BASE_URL}/updateOrientation`,params);
 }
-
+uploadFile(formData: FormData): Observable<any> {
+  return this.http.post(`${this.BASE_URL}/uploadFile`, formData); // Use backticks for template literals
 }
+}
+
