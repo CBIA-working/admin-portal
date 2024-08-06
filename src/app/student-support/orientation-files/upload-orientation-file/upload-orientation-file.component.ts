@@ -51,7 +51,7 @@ export class UploadOrientationFileComponent {
       onTemplatedUpload() {
         this.files.forEach(file => {
           const formData = new FormData();
-          formData.append('image', file, file.name);
+          formData.append('files', file, file.name);
     
           this.http.post('http://localhost:3000/api/uploadFile', formData).subscribe({
             next: (response) => {
