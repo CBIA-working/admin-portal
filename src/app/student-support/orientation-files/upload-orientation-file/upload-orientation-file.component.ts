@@ -9,13 +9,14 @@ import { ProgressBarModule } from 'primeng/progressbar';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import { Service } from '../../service/service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-upload-orientation-file',
   standalone: true,
   imports: [
     FileUploadModule, ButtonModule, BadgeModule, ProgressBarModule,
-    ToastModule, TooltipModule, HttpClientModule, CommonModule
+    ToastModule, TooltipModule, HttpClientModule, CommonModule,FormsModule
   ],
   providers: [MessageService, Service],
   templateUrl: './upload-orientation-file.component.html',
@@ -44,7 +45,7 @@ export class UploadOrientationFileComponent {
   onRemoveTemplatingFile(event, file, removeFileCallback, index) {
     removeFileCallback(event, index);
     this.totalSize -= file.size;
-    this.totalSizePercent = (this.totalSize / 1000000) * 100; // Assuming max size is 1MB for 100%
+    this.totalSizePercent = (this.totalSize / 100000000) * 100; // Assuming max size is 1MB for 100%
   }
 
   onClearTemplatingUpload(clear) {
