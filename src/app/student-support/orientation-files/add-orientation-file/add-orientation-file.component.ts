@@ -46,7 +46,7 @@ export class AddOrientationFileComponent  implements OnInit {
     showUploadDialog: boolean = false;
     uploadedFiles: any[] = [];
 
-
+  
     constructor(
       private fb: FormBuilder,
       private service: Service,
@@ -127,10 +127,17 @@ export class AddOrientationFileComponent  implements OnInit {
       }
     }
 
-    onFileUploaded(fileName: string) {
-      const baseUrl = 'http://localhost:3000/orientation/';
-      this.orientationFileForm.get('OrientationPdf').setValue(baseUrl + fileName);
+
+
+    onFileUploaded(event: string) {
+        if (event === 'closed') {
+            this.showUploadDialog = false;  // Close the dialog
+        } else {
+            const baseUrl = 'http://localhost:3000/orientation/';
+            this.orientationFileForm.get('OrientationPdf').setValue(baseUrl + event);
+        }
     }
+    
     
     
     onClose(): void {

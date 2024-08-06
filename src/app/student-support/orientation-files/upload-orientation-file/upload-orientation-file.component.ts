@@ -17,7 +17,7 @@ import { Service } from '../../service/service';
     FileUploadModule, ButtonModule, BadgeModule, ProgressBarModule,
     ToastModule, TooltipModule, HttpClientModule, CommonModule
   ],
-  providers: [MessageService,Service],
+  providers: [MessageService, Service],
   templateUrl: './upload-orientation-file.component.html',
   styleUrls: ['./upload-orientation-file.component.scss']
 })
@@ -96,18 +96,12 @@ export class UploadOrientationFileComponent {
     });
   }
   
-  
-
   onSelectedFiles(event) {
     this.files = event.currentFiles;
     this.files.forEach(file => {
       this.totalSize += file.size;
     });
     this.totalSizePercent = (this.totalSize / 1000000) * 100;
-  }
-
-  uploadEvent(callback) {
-    callback();
   }
 
   formatSize(bytes) {
@@ -125,12 +119,21 @@ export class UploadOrientationFileComponent {
     this.files = [];
     this.totalSize = 0;
     this.totalSizePercent = 0;
-    // You can also clear any related UI elements or status messages
     this.messageService.clear();
   }
 
   onClose() {
-    this.resetState(); // Reset component state when closing
-    // Additional close logic if needed
-  }
+    console.log('Closing and resetting component state.');
+
+    // Loop through files and remove each one
+    this.files.forEach((file, index) => {
+        this.onRemoveTemplatingFile(null, file, (event, idx) => this.files.splice(idx, 1), index);
+    });
+
+    this.resetState();
+    console.log('Component state reset.');
+    this.fileUploaded.emit('closed');
+    console.log('Close event emitted.');
+}
+
 }
