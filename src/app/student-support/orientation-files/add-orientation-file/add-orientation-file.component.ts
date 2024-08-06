@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { OrientationFile } from '../../domain/schema';
 import { Service } from '../../service/service';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -11,23 +10,29 @@ import { ToastModule } from 'primeng/toast';
 import { HttpClientModule } from '@angular/common/http';
 import { TabViewModule } from 'primeng/tabview';
 import { ButtonModule } from 'primeng/button';
-import { Subscription } from 'rxjs';
-import { MessageService } from 'primeng/api';
+import { MessageService, PrimeNGConfig } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { MessageModule } from 'primeng/message';
 import { DialogModule } from 'primeng/dialog';
+import { UploadOrientationFileComponent } from "../upload-orientation-file/upload-orientation-file.component";
 
-import { Courses } from '../../domain/schema';
+
+interface UploadEvent {
+  originalEvent: Event;
+  files: File[];
+}
+
 @Component({
   selector: 'app-add-orientation-file',
   standalone:true,
   imports: [
     CommonModule, ReactiveFormsModule, CheckboxModule, CardModule, CalendarModule,
     ButtonModule, TabViewModule, FormsModule, HttpClientModule, ToastModule,
-    DropdownModule, InputTextModule, InputTextareaModule, MessageModule, DialogModule
-  ],
+    DropdownModule, InputTextModule, InputTextareaModule, MessageModule, DialogModule,
+    UploadOrientationFileComponent
+],
   providers: [MessageService],
   templateUrl: './add-orientation-file.component.html',
   styleUrl: './add-orientation-file.component.scss'
@@ -38,18 +43,26 @@ export class AddOrientationFileComponent  implements OnInit {
   
     orientationFileForm!: FormGroup;
     originalOrientationFile: OrientationFile | null = null;
-  
+    showUploadDialog: boolean = false;
+    uploadedFiles: any[] = [];
+
+
     constructor(
       private fb: FormBuilder,
       private service: Service,
-      private messageService: MessageService
-    ) { }
+      private messageService: MessageService,
+      private config: PrimeNGConfig
+    ) {
+      this.config.setTranslation({
+          fileSizeTypes: ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB']
+      });
+  }
   
     ngOnInit(): void {
       this.createForm();
       this.resetForm();
     }
-  
+
     createForm(): void {
       this.orientationFileForm = this.fb.group({
         Name: ['', Validators.required],
