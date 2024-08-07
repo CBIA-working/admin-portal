@@ -1,17 +1,19 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { NavigationEnd, Router, RouterModule } from '@angular/router';
-import { SidebarComponent } from '../sidebar/sidebar.component';
+import { Component, OnInit, NgZone } from '@angular/core';
+import { ActivatedRoute, NavigationEnd, Router, RouterModule } from '@angular/router';
 import { MenuItem } from 'primeng/api';
+import { CommonModule } from '@angular/common';
+import { SidebarComponent } from '../sidebar/sidebar.component';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
-import { filter } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 import { AuthService } from '../authentication/auth.service';
 import { AvatarModule } from 'primeng/avatar';
+import { Service } from '../student-support/service/service'; // Ensure correct path
 
 @Component({
   selector: 'app-header',
   standalone: true,
   imports: [RouterModule, CommonModule, SidebarComponent, BreadcrumbModule, AvatarModule],
+  providers: [Service],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
@@ -20,32 +22,38 @@ export class HeaderComponent implements OnInit {
   home: MenuItem = { icon: 'pi pi-home', routerLink: '/home' };
   user: any;
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private service: Service,
+    private route: ActivatedRoute,
+    private zone: NgZone  // For manually triggering Angular change detection
+  ) {}
 
   ngOnInit() {
     this.user = JSON.parse(sessionStorage.getItem('user')!);
-    // Initialize breadcrumb items based on current route
-    this.updateBreadcrumbs(this.router.url);
 
-    // Update breadcrumb items dynamically on route change
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        this.updateBreadcrumbs(event.urlAfterRedirects);
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd),
+      map(() => this.route)
+    ).subscribe(event => {
+      const params = new URLSearchParams(window.location.search);
+      const programId = params.get('programId');
+      if (programId) {
+        this.updateProgramBreadcrumb(programId);
       }
+      this.updateBreadcrumbs(window.location.pathname);
     });
   }
 
   logout() {
-    this.authService.clearToken(); // Clear token using AuthService
+    this.authService.clearToken();
     this.router.navigate(['/login'], { replaceUrl: true });
   }
 
   updateBreadcrumbs(url: string) {
-    // Reset breadcrumbs
+    const path = url.split('?')[0];
     this.items = [];
-
-    // Extract the path part of the URL
-    const path = url.split('?')[0]; // Remove query parameters
 
     // Add route-specific breadcrumbs
     if (path === '/managestudent') {
@@ -128,6 +136,20 @@ export class HeaderComponent implements OnInit {
         command: () => this.reloadPage('/library')
       });
     }
+    else if (path === '/librarytable') {
+      const queryParams = new URLSearchParams(window.location.search);
+      const programId = queryParams.get('programId');
+      if (programId) {
+        this.updateProgramBreadcrumb(programId);
+      } else {
+        this.items.push({
+          label: 'Library',
+          escape: false,
+          routerLink: '/librarytable',
+          command: () => this.reloadPage('/librarytable')
+        });
+      }
+    }
     else if (path === '/trips') {
       this.items.push({ 
         label: 'Trips', 
@@ -146,6 +168,26 @@ export class HeaderComponent implements OnInit {
     }
     
     // Add more conditions for additional routes as needed
+  }
+
+  updateProgramBreadcrumb(programId: string) {
+    this.service.getProgram({ id: programId }).then(program => {
+      if (Array.isArray(program)) {
+        const programIdNumber = Number(programId); // Convert programId to a number
+        const matchingProgram = program.find(p => p.id === programIdNumber);
+        if (matchingProgram) {
+          this.zone.run(() => {  // Update breadcrumb within Angular's zone
+            // Add LibraryTable breadcrumb first
+            this.items = [
+              { label: 'Library', escape: false, routerLink: '/librarytable', command: () => this.reloadPage('/librarytable') },
+              { label: matchingProgram.name, escape: false, routerLink: `/librarytable?programId=${programId}` , command: () => this.reloadPage('/library') }
+            ];
+          });
+        }
+      }
+    }).catch(error => {
+      console.error('Error fetching program:', error);
+    });
   }
 
   reloadPage(route: string) {
