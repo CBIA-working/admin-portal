@@ -1,0 +1,150 @@
+
+<p-toast></p-toast>
+<div class="card" style="margin: 0 20px; overflow: hidden;">
+    <div class="mb-2 ml-auto z-0" style="display: flex; gap: 10px;">
+        <p-button icon="pi pi-plus" (click)="showAddDialog()" [raised]="true" severity="primary"></p-button>
+    
+        <app-download [class.hidden]="downloadSelectedMode" (downloadSelectedStudentsEvent)="downloadSelectedStudents()"></app-download>
+        <p-button 
+          label="Download Selected Students" 
+          icon="pi pi-download" 
+          [raised]="true" 
+          severity="secondary" 
+          (click)="downloadSelectedStudents()" 
+          *ngIf="downloadSelectedMode">
+        </p-button>
+        <p-button 
+          icon="pi pi-times" 
+          severity="danger" 
+          [raised]="true" 
+          (click)="exitSelectionMode()" 
+          *ngIf="downloadSelectedMode">
+        </p-button>
+      </div>
+
+  <p-table
+    #dt1
+    [value]="library"
+    [selectionMode]="downloadSelectedMode ? 'checkbox' : null"
+    [(selection)]="selectedLibrary"
+    dataKey="id"
+    [rows]="10"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [loading]="loading"
+    [paginator]="true"
+    [globalFilterFields]="['id', 'Name','Description','Status','LibraryPdf']">
+    
+    <ng-template pTemplate="caption">
+      <div class="flex">
+        <p-button 
+          label="Clear" 
+          [outlined]="true" 
+          icon="pi pi-filter-slash" 
+          (click)="clear(dt1)">
+        </p-button>
+        <span class="p-input-icon-left ml-auto" style="border: 1px solid #ccc; border-radius: 4px; padding: 2px;">
+          <i class="pi pi-search" style="margin-left: 8px;"></i>
+          <input 
+            pInputText 
+            type="text" 
+            (input)="dt1.filterGlobal($event.target.value, 'contains')" 
+            placeholder="Search keyword"
+            class="p-inputtext-sm" 
+            style="width: 15rem; padding-left: 3rem; border: none; outline: none; background: transparent; margin-left: 5px;">
+        </span>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th *ngIf="downloadSelectedMode">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
+        <th style="min-width: 12%">
+          <div class="flex align-items-center">
+            ID
+            <p-columnFilter type="text" field="id" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th style="min-width: 12%">
+          <div class="flex align-items-center">
+            Name
+            <p-columnFilter type="text" field="Name" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th style="min-width: 15%">
+          <div class="flex align-items-center">
+            Description
+            <p-columnFilter type="text" field="Description" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th style="min-width: 15%">
+            <div class="flex align-items-center">
+                Status
+              <p-columnFilter type="text" field="Status" display="menu"></p-columnFilter>
+            </div>
+          </th>
+        <th style="min-width: 15%; text-align: center;">
+            <div style="display: flex; justify-content: center; align-items: center;">
+            Pdf
+          </div>
+        </th>
+          <th style="min-width: 10%; text-align: center;">
+            <div style="display: flex; justify-content: center; align-items: center;">
+              Actions
+            </div>
+          </th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-library>
+      <tr>
+        <td *ngIf="downloadSelectedMode">
+          <p-tableCheckbox [value]="library"></p-tableCheckbox>
+        </td>
+        <td>{{ library.id }}</td>
+        <td>{{ library.Name }}</td>
+        <td>{{ library.Description }}</td>
+        <!-- Assume each status is rendered in a cell within a loop -->
+        <td>
+            <span *ngIf="library.Status" 
+                [ngStyle]="{'background-color': getColorForStatus(library.Status)}"
+                class="p-tag p-tag-rounded">
+            {{ library.Status }}
+            </span>
+        </td>
+        <td>
+            <p-button 
+              icon="pi pi-file-pdf" 
+              (click)="openPdfInNewTab(library.LibraryPdf)" 
+              [text]="true" 
+              [plain]="true">
+            </p-button>
+          </td>
+
+        <td>
+          <div class="button-container" style="display: flex; gap: 0.5rem;">
+          <p-button (click)="showEditDialog(library)" icon="pi pi-pencil" [text]="true" [plain]="true"></p-button>
+            <p-button (click)="deleteOrientationFile(library)" icon="pi pi-trash" [text]="true" [plain]="true"></p-button>
+        </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="9">No Books found.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <!-- <p-dialog [(visible)]="dialogVisible" [modal]="true" [closable]="false" header="Edit Orientation File" [responsive]="true" [style]="{width: '60vw'}">
+    <app-edit-orientation-file
+    *ngIf="selectedLibrarys" 
+    [orientationFile]="selectedLibrarys" 
+    (dialogClose)="onDialogClose($event)">
+    </app-edit-orientation-file>
+  </p-dialog>
+  <p-dialog [(visible)]="addDialogVisible" [modal]="true" [closable]="false" header="Add Orientation File" [responsive]="true" [style]="{width: '60vw' ,height:'68vh'}">
+    <app-add-orientation-file (dialogClose)="onAddDialogClose()"></app-add-orientation-file>
+  </p-dialog> -->
+<p-confirmDialog></p-confirmDialog>

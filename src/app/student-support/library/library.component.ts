@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-library',
@@ -18,6 +19,7 @@ export class LibraryComponent implements OnInit{
 
   constructor(private service: Service,
     private http: HttpClient,
+    private router:Router
   ) {}
 
   ngOnInit() {
@@ -27,5 +29,9 @@ export class LibraryComponent implements OnInit{
       console.error('Failed to load programs:', error);
     });
   }
+  navigateToLibraryTable(program: any): void {
+    this.router.navigate(['/librarytable'], { state: { data: program } });
+  }
+  
 }
 

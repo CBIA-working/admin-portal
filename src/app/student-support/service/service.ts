@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Accomodation, Courses, CulturalEvent, Faq, KeyProgramDate, Marker, OrientationFile, Program, Trip } from '../domain/schema';
+import { Accomodation, Courses, CulturalEvent, Faq, KeyProgramDate, Library, Marker, OrientationFile, Program, Trip } from '../domain/schema';
 
 @Injectable()
 export class Service {
@@ -271,7 +271,28 @@ getupdateOrientation(params?: any): Observable<any>  {
   return this.http.post<any>(`${this.BASE_URL}/updateOrientation`,params);
 }
 uploadFile(formData: FormData): Observable<any> {
-  return this.http.post(`${this.BASE_URL}/uploadFile`, formData); // Use backticks for template literals
+  return this.http.post(`${this.BASE_URL}/uploadOrientation`, formData); // Use backticks for template literals
 }
+//Library
+
+getLibrary(params?: any): Promise<Library[]> {
+  return this.http.get<Library[]>(`${this.BASE_URL}/LibraryAdmin`, { params }).toPromise();
+}
+addLibrary(library: Library): Observable<any> {
+  return this.http.post<any>(`${this.BASE_URL}/addLibrary`, library);
+}
+
+deleteLibrary(LibraryId: number): Observable<void> {
+  return this.http.delete<void>(`${this.BASE_URL}/deleteLibrary`, { 
+    body: { id: LibraryId } 
+});
+}
+getupdateLibrary(params?: any): Observable<any>  {
+  return this.http.post<any>(`${this.BASE_URL}/updateLibrary`,params);
+}
+uploadLibraryBook(formData: FormData): Observable<any> {
+  return this.http.post(`${this.BASE_URL}/uploadLibraryBook`, formData); // Use backticks for template literals
+}
+
 }
 

@@ -102,3 +102,10 @@ export interface Faq {
     Description:String;
     OrientationPdf:String;
   }
+  export interface Library {
+    id:number;
+    Name:String;
+    Description:String;
+    Status:String;
+    LibraryPdf:String;
+}
