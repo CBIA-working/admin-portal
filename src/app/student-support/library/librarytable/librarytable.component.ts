@@ -113,9 +113,32 @@ export class LibrarytableComponent implements OnInit, AfterViewInit {
     this.fetchAllLibrary();
   }
 
-  ngOnInit(): void {
-    this.fetchAllLibrary();
+  navigateToMemberPage(option: { name: string, key: string }, id: string) {
+    this.navigationService.setSelectedId(id);
+    localStorage.setItem('refreshPage', 'true');
+    this.router.navigate([`/${option.key}`], { queryParams: { courseId: id } });
   }
+
+  ngOnInit(): void {
+    const programid = this.route.snapshot.queryParamMap.get('programId');
+    if (programid) {
+      this.fetchLibraryProgram(Number(programid));
+    }  else {
+      this.fetchAllLibrary();
+    }
+  }
+
+  fetchLibraryProgram(programId: number) {
+    this.loading = true;
+    this.service.getLibraryProgram({ Id: programId, type: 'program' }).then((response) => {
+      this.library = response.map(item => item.libraryDetails);
+      this.loading = false;
+    }).catch(error => {
+      console.error('Error fetching programs', error);
+      this.loading = false;
+    });
+  }
+
 
   fetchAllLibrary() {
     this.loading = true;
@@ -123,11 +146,11 @@ export class LibrarytableComponent implements OnInit, AfterViewInit {
       this.library = library;
       this.loading = false;
     }).catch(error => {
-      console.error('Error fetching all BOOKS', error);
+      console.error('Error fetching all students', error);
       this.loading = false;
     });
   }
-
+  
   clear(table: Table) {
     table.clear();
     this.searchValue = '';

@@ -1,19 +1,20 @@
 <div style="display: flex; flex-wrap: wrap; justify-content: space-around;">
   <div *ngFor="let program of programs" 
-  style="flex: 1 1 23%; margin: 10px; box-sizing: border-box; width: 23%; border: 1px solid #ccc; padding: 5px; background-color: #fff; border-radius: 10px;">
-<p-card [header]="program.name" style="width: 100%; height: 100%; border-radius: 10px;">
- <p (click)="navigateToLibraryTable(program)" style="padding: 10px; font-size: 14px; color: #666; cursor: pointer;">
-   {{ program.fullForm }}
- </p>
-</p-card>
-</div>
+       style="flex: 1 1 23%; margin: 10px; box-sizing: border-box; width: 23%; border: 1px solid #ccc; padding: 5px; background-color: #fff; border-radius: 10px;">
+    <p-card [header]="program.name" style="width: 100%; height: 100%; border-radius: 10px;">
+      <p (click)="navigateToLibraryTableProgram(program.id)" style="padding: 10px; font-size: 14px; color: #666; cursor: pointer;">
+        {{ program.fullForm }}
+      </p>
+    </p-card>
+  </div>
+
 
   <!-- Additional card for "All Programs" -->
   <div 
        style="flex: 1 1 23%; margin: 10px; box-sizing: border-box; width: 23%; border: 1px solid #ccc; padding: 5px; background-color: #fff; border-radius: 10px;">
     <p-card header="All Books" style="width: 100%; height: 100%; border-radius: 10px;">
       <!-- Description below the header -->
-      <p style="padding: 10px; font-size: 14px; color: #666;">
+      <p (click)="navigateToLibraryTable()" style="padding: 10px; font-size: 14px; color: #666; cursor: pointer;">
         All Books.
       </p>
     </p-card>

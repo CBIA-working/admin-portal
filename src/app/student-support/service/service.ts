@@ -208,6 +208,7 @@ deleteAssignmentTrip(studentId: number, tripId: number): Observable<any> {
     getStudentProgram(data: { Id: number, type: string }): Promise<any> {
     return this.http.post(`${this.BASE_URL}/StudentProgram`, data).toPromise();
     }
+    
     getCourseProgram(data: { Id: number, type: string }): Promise<any> {
         return this.http.post(`${this.BASE_URL}/CourseProgram`, data).toPromise();
     }
@@ -273,10 +274,14 @@ getupdateOrientation(params?: any): Observable<any>  {
 uploadFile(formData: FormData): Observable<any> {
   return this.http.post(`${this.BASE_URL}/uploadOrientation`, formData); // Use backticks for template literals
 }
+
 //Library
 
 getLibrary(params?: any): Promise<Library[]> {
   return this.http.get<Library[]>(`${this.BASE_URL}/LibraryAdmin`, { params }).toPromise();
+}
+getLibraryProgram(data: { Id: number, type: string }): Promise<any> {
+  return this.http.post(`${this.BASE_URL}/LibraryProgram`, data).toPromise();
 }
 addLibrary(library: Library): Observable<any> {
   return this.http.post<any>(`${this.BASE_URL}/addLibrary`, library);

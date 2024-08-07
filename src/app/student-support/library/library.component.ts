@@ -29,9 +29,13 @@ export class LibraryComponent implements OnInit{
       console.error('Failed to load programs:', error);
     });
   }
-  navigateToLibraryTable(program: any): void {
-    this.router.navigate(['/librarytable'], { state: { data: program } });
+  navigateToLibraryTable(): void {
+    this.router.navigate(['/librarytable']) };
+    navigateToLibraryTableProgram(programId: string): void {
+      this.router.navigate(['/librarytable'], { queryParams: { programId: programId } });
+    }
   }
   
-}
+  
+
 
