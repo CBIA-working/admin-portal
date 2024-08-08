@@ -1,0 +1,71 @@
+<div style="background-color: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 10px; border-radius: 8px;">
+    <div style="padding-left: 20px;">
+        <p-tabView>
+            <p-tabPanel header="Course Details">
+                <form [formGroup]="libraryForm" (ngSubmit)="saveChanges()">
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; padding: 10px;">
+                        <div>
+                            <label for="Name" style="display: block; margin-bottom: 8px; font-weight: bold;">Name:</label>
+                            <input id="Name" pInputText type="text" formControlName="Name" placeholder="Name" 
+                                   style="border: 1px solid #ccc; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box;">
+                            <p-message *ngIf="libraryForm.get('Name')?.invalid && libraryForm.get('Name')?.touched"
+                                       severity="error" text="Name is required." style="margin-top: 8px;"></p-message>
+                        </div>
+
+                        <div>
+                            <label for="Description" style="display: block; margin-bottom: 8px; font-weight: bold;">Description:</label>
+                            <textarea 
+                                id="Description" 
+                                pInputTextarea 
+                                rows="1" 
+                                formControlName="Description" 
+                                placeholder="Description" 
+                                style="border: 1px solid #ccc; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box;"
+                            ></textarea>
+                            <p-message 
+                                *ngIf="libraryForm.get('Description')?.invalid && libraryForm.get('Description')?.touched"
+                                severity="error" 
+                                text="Description is required."
+                                style="margin-top: 8px;"
+                            ></p-message>
+                        </div>
+                        <div>
+                            <label for="Status" style="display: block; margin-bottom: 8px; font-weight: bold;">Status:</label>
+                            <p-dropdown
+                                [options]="statusOptions"
+                                formControlName="Status"
+                                placeholder="Select a status"
+                                [showClear]="true"
+                                [filter]="true">
+                                </p-dropdown>
+
+                            <p-message *ngIf="libraryForm.get('Status')?.invalid && libraryForm.get('Status')?.touched"
+                                       severity="error" text="Status is required." style="margin-top: 8px;"></p-message>
+                        </div>
+                        <div>
+                            <button pButton type="button" label="Upload PDF" icon="pi pi-upload" (click)="showUploadDialog=true" style="margin-top: 10px;"></button>
+                        </div>                        
+                        <div>
+                            <label for="LibraryPdf" style="display: block; margin-bottom: 8px; font-weight: bold;">Library Pdf:</label>
+                            <input id="LibraryPdf" pInputText type="text" formControlName="LibraryPdf" placeholder="Library Pdf" 
+                                   style="border: 1px solid #ccc; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box;" readonly>
+                            <p-message *ngIf="libraryForm.get('LibraryPdf')?.invalid && libraryForm.get('LibraryPdf')?.touched"
+                                       severity="error" text="Library Pdf is required." style="margin-top: 8px;"></p-message>
+                        </div>
+                        
+                    </div>
+                    <div style="display: flex; justify-content: flex-end; padding: 20px; border-top: 1px solid #eee;">
+                        <button pButton type="submit" label="Save" [disabled]="libraryForm.invalid" style="margin-right: 10px;"></button>
+                        <button pButton type="button" label="Close" icon="pi pi-times" (click)="onClose()"></button>
+                    </div>
+                </form>
+            </p-tabPanel>
+        </p-tabView>
+    </div>
+</div>
+<p-toast></p-toast>
+<p-dialog header="Upload Library PDF" [(visible)]="showUploadDialog" [modal]="true" [style]="{width: '50vw', height:'80vh'}">
+    <app-upload-book (fileUploaded)="onFileUploaded($event)"></app-upload-book>
+</p-dialog>
+
+  

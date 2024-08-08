@@ -99,10 +99,8 @@ export class UploadOrientationFileComponent {
   
   onSelectedFiles(event) {
     this.files = event.currentFiles;
-    this.files.forEach(file => {
-      this.totalSize += file.size;
-    });
-    this.totalSizePercent = (this.totalSize / 1000000) * 100;
+    this.totalSize = this.files.reduce((acc, file) => acc + file.size, 0);
+    this.totalSizePercent = (this.totalSize / 10485760) * 100;
   }
 
   formatSize(bytes) {

@@ -26,6 +26,7 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { AddLibrarytableComponent } from "./add-librarytable/add-librarytable.component";
 
 @Component({
   selector: 'app-librarytable',
@@ -34,7 +35,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
     ButtonModule, TooltipModule, TableModule, RouterModule, InputTextModule,
     TagModule, DropdownModule, MultiSelectModule, ProgressBarModule,
     DownloadComponent, ToastModule, OverlayPanelModule, InputGroupModule,
-    InputGroupAddonModule, ChipsModule, DialogModule, ConfirmDialogModule],
+    InputGroupAddonModule, ChipsModule, DialogModule, ConfirmDialogModule, AddLibrarytableComponent],
   providers: [Service, MessageService,ConfirmationService],
   templateUrl: './librarytable.component.html',
   styleUrl: './librarytable.component.scss'

@@ -125,7 +125,7 @@
         <td>
           <div class="button-container" style="display: flex; gap: 0.5rem;">
           <p-button (click)="showEditDialog(library)" icon="pi pi-pencil" [text]="true" [plain]="true"></p-button>
-            <p-button (click)="deleteOrientationFile(library)" icon="pi pi-trash" [text]="true" [plain]="true"></p-button>
+            <p-button (click)="deleteLibrary(library)" icon="pi pi-trash" [text]="true" [plain]="true"></p-button>
             <p-button pTooltip="Navigate to" (click)="op.toggle($event)" icon="pi pi-ellipsis-v" [text]="true" [plain]="true"></p-button>
             <p-overlayPanel #op>
               <div>
@@ -157,8 +157,8 @@
     [orientationFile]="selectedLibrarys" 
     (dialogClose)="onDialogClose($event)">
     </app-edit-orientation-file>
-  </p-dialog>
-  <p-dialog [(visible)]="addDialogVisible" [modal]="true" [closable]="false" header="Add Orientation File" [responsive]="true" [style]="{width: '60vw' ,height:'68vh'}">
-    <app-add-orientation-file (dialogClose)="onAddDialogClose()"></app-add-orientation-file>
   </p-dialog> -->
+  <p-dialog [(visible)]="addDialogVisible" [modal]="true" [closable]="false" header="Add Orientation File" [responsive]="true" [style]="{width: '60vw' ,height:'68vh'}">
+    <app-add-librarytable (dialogClose)="onAddDialogClose()"></app-add-librarytable>
+  </p-dialog>
 <p-confirmDialog></p-confirmDialog>
