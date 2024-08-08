@@ -214,7 +214,8 @@ export class ProgramComponent implements OnInit,AfterViewInit {
 
   options = [
     { name: 'Students', key: 'managestudent' },
-    { name: 'Courses', key: 'courses' }
+    { name: 'Courses', key: 'courses' },
+    { name: 'Library', key: 'librarytable' },
   ];
 
   navigateToMemberPage(option: { name: string, key: string }, id: string) {
@@ -226,9 +227,10 @@ export class ProgramComponent implements OnInit,AfterViewInit {
   ngOnInit(): void {
     const studentId = this.route.snapshot.queryParamMap.get('Student_Id');
     const courseid = this.route.snapshot.queryParamMap.get('courseId');
+    const libraryid = this.route.snapshot.queryParamMap.get('libraryId');
     const source = this.route.snapshot.queryParamMap.get('source');
 
-    if (studentId || courseid || source) {
+    if (studentId || courseid || libraryid || source) {
       this.showStatusColumn = true;
     } else {
       this.showStatusColumn = false;
@@ -238,6 +240,8 @@ export class ProgramComponent implements OnInit,AfterViewInit {
       this.fetchStudentPrograms(Number(studentId));
     }else if (courseid){
       this.fetchCoursePrograms(Number(courseid));
+    } else if (libraryid){
+      this.fetchLibraryPrograms(Number(libraryid));
     } else {
       this.fetchAllPrograms();
     }
@@ -254,6 +258,17 @@ export class ProgramComponent implements OnInit,AfterViewInit {
       this.loading = false;
     });
   }
+  fetchLibraryPrograms(libraryId: number) {
+    this.loading = true;
+    this.service.getLibraryProgram({ Id: libraryId, type: 'library' }).then((response) => {
+      this.program = response.map(item => item.programDetails);
+      this.loading = false;
+    }).catch(error => {
+      console.error('Error fetching  program', error);
+      this.loading = false;
+    });
+  }
+
   fetchCoursePrograms(courseId: number) {
     this.loading = true;
     this.service.getCourseProgram({ Id: courseId, type: 'course' }).then((response) => {

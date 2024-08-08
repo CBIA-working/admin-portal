@@ -283,6 +283,9 @@ getLibrary(params?: any): Promise<Library[]> {
 getLibraryProgram(data: { Id: number, type: string }): Promise<any> {
   return this.http.post(`${this.BASE_URL}/LibraryProgram`, data).toPromise();
 }
+getStudentLibrary(data: { Id: number, type: string }): Promise<any> {
+  return this.http.post(`${this.BASE_URL}/StudentLibrary`, data).toPromise();
+  }
 addLibrary(library: Library): Observable<any> {
   return this.http.post<any>(`${this.BASE_URL}/addLibrary`, library);
 }

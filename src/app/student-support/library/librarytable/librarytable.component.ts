@@ -116,14 +116,22 @@ export class LibrarytableComponent implements OnInit, AfterViewInit {
   navigateToMemberPage(option: { name: string, key: string }, id: string) {
     this.navigationService.setSelectedId(id);
     localStorage.setItem('refreshPage', 'true');
-    this.router.navigate([`/${option.key}`], { queryParams: { courseId: id } });
+    this.router.navigate([`/${option.key}`], { queryParams: { libraryId: id } });
   }
 
+  options = [
+    { name: 'Students', key: 'managestudent' },
+    { name: 'Program', key: 'Programs' }
+  ];
+
   ngOnInit(): void {
+    const studentId = this.route.snapshot.queryParamMap.get('Student_Id');
     const programid = this.route.snapshot.queryParamMap.get('programId');
     if (programid) {
       this.fetchLibraryProgram(Number(programid));
-    }  else {
+    } else if (studentId) {
+      this.fetchLibraryStudent(Number(studentId));
+    } else {
       this.fetchAllLibrary();
     }
   }
@@ -138,8 +146,16 @@ export class LibrarytableComponent implements OnInit, AfterViewInit {
       this.loading = false;
     });
   }
-
-
+  fetchLibraryStudent(studentId: number) {
+    this.loading = true;
+    this.service.getStudentLibrary({ Id: studentId, type: 'student' }).then((response) => {
+      this.library = response.map(item => item.libraryDetails);
+      this.loading = false;
+    }).catch(error => {
+      console.error('Error fetching student library', error);
+      this.loading = false;
+    });
+  }
   fetchAllLibrary() {
     this.loading = true;
     this.service.getLibrary().then((library) => {
@@ -150,7 +166,7 @@ export class LibrarytableComponent implements OnInit, AfterViewInit {
       this.loading = false;
     });
   }
-  
+
   clear(table: Table) {
     table.clear();
     this.searchValue = '';

@@ -152,6 +152,7 @@ export class ManageStudentsComponent implements OnInit, AfterViewInit {
     { name: 'Courses', key: 'courses' },
     { name: 'Program', key: 'Programs' },
     { name: 'Trip', key: 'trips' },
+    { name: 'Library', key: 'librarytable' },
   ];
 
 
@@ -168,6 +169,7 @@ ngOnInit(): void {
   const courseid = this.route.snapshot.queryParamMap.get('courseId');
   const programid = this.route.snapshot.queryParamMap.get('programId');
   const tripid = this.route.snapshot.queryParamMap.get('tripId');
+  const libraryid = this.route.snapshot.queryParamMap.get('libraryId');
 
   if (eventid) {
     this.fetchStudentEvents(Number(eventid));
@@ -179,7 +181,9 @@ ngOnInit(): void {
     this.fetchStudentProgram(Number(programid));
   }else if (tripid){
     this.fetchStudentTrip(Number(tripid));
-  } else {
+  } else if (libraryid){
+    this.fetchStudentLibrary(Number(libraryid));
+  }else {
     this.fetchAllData();
   }
 }
@@ -212,6 +216,9 @@ fetchStudentProgram(id: number) {
 }
 fetchStudentTrip(id: number) {
   this.fetchData(() => this.service.getStudentTrips({ Id: id, type: 'trip' }), 'student trip');
+}
+fetchStudentLibrary(id: number) {
+  this.fetchData(() => this.service.getStudentLibrary({ Id: id, type: 'library' }), 'student Library');
 }
 
 fetchAllData() {
