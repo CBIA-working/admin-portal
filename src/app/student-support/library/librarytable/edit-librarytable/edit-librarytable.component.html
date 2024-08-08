@@ -1,1 +1,38 @@
-<p>edit-librarytable works!</p>
+<p-toast></p-toast>
+<div style="background-color: #fff; box-shadow: 0 4px 8px rgba(0,0,0,0.1); display: flex; padding: 20px; border-radius: 8px;">
+    <div style="flex: 1; padding: 0 20px;">
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; padding: 10px;">
+            <div>
+                <strong>Name</strong>
+                <input pInputText type="text" [(ngModel)]="library.Name" (ngModelChange)="onFieldChange()" placeholder="Name"
+                       style="border: 1px solid #ccc; padding: 10px; border-radius: 5px; width: 100%; box-sizing: border-box;">
+            </div>
+            
+            <div *ngIf="statusOptions.length > 0">
+                <strong>Status</strong>
+                <p-dropdown [options]="statusOptions" [(ngModel)]="library.Status" placeholder="Select a status" [showClear]="true" [filter]="true"
+                            style="border: 1px solid #ccc; border-radius: 5px; width: 100%;">
+                </p-dropdown>
+            </div>
+            
+            
+            
+            <div>
+                <strong>Description</strong>
+                <input pInputText type="text" [(ngModel)]="library.Description" (ngModelChange)="onFieldChange()" placeholder="Description"
+                       style="border: 1px solid #ccc; padding: 10px; border-radius: 5px; width: 100%; box-sizing: border-box;">
+            </div>
+
+            <div>
+                <strong>Library Pdf</strong>
+                <input pInputText type="text" [(ngModel)]="library.LibraryPdf" (ngModelChange)="onFieldChange()" placeholder="Orientation Pdf"
+                       style="border: 1px solid #ccc; padding: 10px; border-radius: 5px; width: 100%; box-sizing: border-box;">
+            </div>
+        </div>
+    </div>
+</div>
+
+<p-footer style="display: flex; justify-content: flex-end; padding: 20px 20px 0 20px;">
+    <button *ngIf="showSaveButton" pButton type="button" label="Save Changes" (click)="saveChanges()" style="background-color: #007BFF; color: white; border: none; padding: 10px 15px; border-radius: 5px; margin-right: 10px;"></button>
+    <button pButton type="button" label="Close" icon="pi pi-times" (click)="closeDialog()" style="background-color: #6c757d; color: white; border: none; padding: 10px 15px; border-radius: 5px;"></button>
+</p-footer>

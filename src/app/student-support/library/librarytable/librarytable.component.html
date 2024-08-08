@@ -151,13 +151,13 @@
       </tr>
     </ng-template>
   </p-table>
-  <!-- <p-dialog [(visible)]="dialogVisible" [modal]="true" [closable]="false" header="Edit Orientation File" [responsive]="true" [style]="{width: '60vw'}">
-    <app-edit-orientation-file
+  <p-dialog [(visible)]="dialogVisible" [modal]="true" [closable]="false" header="Edit Book" [responsive]="true" [style]="{width: '60vw',height:'60vh'}">
+    <app-edit-librarytable
     *ngIf="selectedLibrarys" 
-    [orientationFile]="selectedLibrarys" 
+    [library]="selectedLibrarys" 
     (dialogClose)="onDialogClose($event)">
-    </app-edit-orientation-file>
-  </p-dialog> -->
+    </app-edit-librarytable>
+  </p-dialog>
   <p-dialog [(visible)]="addDialogVisible" [modal]="true" [closable]="false" header="Add Orientation File" [responsive]="true" [style]="{width: '60vw' ,height:'68vh'}">
     <app-add-librarytable (dialogClose)="onAddDialogClose()"></app-add-librarytable>
   </p-dialog>
