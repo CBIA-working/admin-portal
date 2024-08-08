@@ -50,37 +50,49 @@ export class EditLibrarytableComponent  implements  OnInit, OnChanges {
   ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.orientationFile && changes.orientationFile.currentValue) {
-      this.cdr.detectChanges();
+    if (changes.library) {
+      console.log('Library input changed', changes.library);
+      this.loadStatusOptions(); // Reload status options if the library object changes
     }
   }
 
   ngOnInit(): void {
-    this.loadStatusOptions().then(() => {
-      if (this.library) {
-        this.originalLibrary = { ...this.library };
-      }
-      this.cdr.detectChanges(); // Trigger change detection manually once everything is loaded
-    });
+    console.log('Component initializing...');
+    this.loadStatusOptions(); // Load status options on init
   }
-  onStatusChange(): void {
-    // This function gets triggered when the dropdown value changes
-    this.cdr.detectChanges(); // Manually trigger change detection if necessary
-  }
-  
-  loadStatusOptions() {
-    return this.service.getProgram().then(data => {
+
+  loadStatusOptions(): void {
+    this.service.getProgram().then(data => {
       this.statusOptions = data.map((item: any) => ({
         label: item.name,
         value: item.name
       }));
+      console.log('Status options:', this.statusOptions);
+
+      // Ensure the dropdown updates after the statuses are loaded
+      if (this.library && this.library.Status) {
+        const matchedStatus = this.statusOptions.find(option => option.value === this.library.Status);
+        if (matchedStatus) {
+          this.library.Status = matchedStatus.value;
+          console.log('Setting selected status:', this.library.Status);
+        } else {
+          console.log('No matching status found for:', this.library.Status);
+        }
+      } else {
+        console.log('Library status is not set');
+      }
+      this.cdr.detectChanges(); // Update the view
     }).catch(error => {
       console.error('Error fetching statuses:', error);
     });
   }
-
+  onStatusChange(): void {
+    this.showSaveButton = true;
+    console.log('Status changed, save button enabled');
+  }
   onFieldChange(): void {
     this.checkForChanges();
+    this.onStatusChange();
   }
 
   checkForChanges(): void {

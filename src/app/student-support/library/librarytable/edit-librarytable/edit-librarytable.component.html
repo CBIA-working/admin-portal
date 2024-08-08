@@ -10,9 +10,9 @@
             
             <div *ngIf="statusOptions.length > 0">
                 <strong>Status</strong>
-                <p-dropdown [options]="statusOptions" [(ngModel)]="library.Status" placeholder="Select a status" [showClear]="true" [filter]="true"
-                            style="border: 1px solid #ccc; border-radius: 5px; width: 100%;">
-                </p-dropdown>
+                <p-dropdown [options]="statusOptions" [(ngModel)]="library.Status" (ngModelChange)="onFieldChange()" placeholder="Select a status" 
+                [showClear]="true" [filter]="true"></p-dropdown>
+
             </div>
             
             
