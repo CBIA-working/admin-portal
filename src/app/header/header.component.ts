@@ -158,6 +158,14 @@ export class HeaderComponent implements OnInit {
         command: () => this.reloadPage('/trips')
       });
     }
+    else if (path === '/Tasks') {
+      this.items.push({ 
+        label: 'Tasks', 
+        escape: false, 
+        routerLink: '/Tasks',
+        command: () => this.reloadPage('/Tasks')
+      });
+    }
     else if (path === '/FAQs') {
       this.items.push({ 
         label: 'FAQs', 

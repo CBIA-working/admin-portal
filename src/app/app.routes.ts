@@ -19,6 +19,7 @@ import { CityHandbookComponent } from './student-support/city-handbook/city-hand
 import { OrientationFilesComponent } from './student-support/orientation-files/orientation-files.component';
 import { LibraryComponent } from './student-support/library/library.component';
 import { LibrarytableComponent } from './student-support/library/librarytable/librarytable.component';
+import { TasksComponent } from './student-support/tasks/tasks.component';
 
 
 export const routes: Routes = [
@@ -29,6 +30,7 @@ export const routes: Routes = [
   { path: 'courses', component:CoursesComponent,canActivate: [AuthGuard]},
   { path: 'culturalevents', component:CulturalEventsComponent,canActivate: [AuthGuard]},
   { path: 'accomodations', component:AccomodationComponent,canActivate: [AuthGuard]},
+  { path: 'Tasks', component:TasksComponent,canActivate: [AuthGuard]},
   { path: 'cityHandbook', component:CityHandbookComponent,canActivate: [AuthGuard]},
   { path: 'OrientationFile', component:OrientationFilesComponent,canActivate: [AuthGuard]},
   { path: 'keyprogramdates',component:KeyprogramdatesComponent,canActivate:[AuthGuard]},

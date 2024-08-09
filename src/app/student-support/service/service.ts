@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Accomodation, Courses, CulturalEvent, Faq, KeyProgramDate, Library, Marker, OrientationFile, Program, Trip } from '../domain/schema';
+import { Accomodation, Courses, CulturalEvent, Faq, KeyProgramDate, Library, Marker, OrientationFile, Program, Tasks, Trip } from '../domain/schema';
 
 @Injectable()
 export class Service {
@@ -302,5 +302,15 @@ uploadLibraryBook(formData: FormData): Observable<any> {
   return this.http.post(`${this.BASE_URL}/uploadLibraryBook`, formData); // Use backticks for template literals
 }
 
+//tasks
+
+getTasks(params?: any): Promise<Tasks[]> {
+  return this.http.get<Tasks[]>(`${this.BASE_URL}/tasksAdmin`, { params }).toPromise();
+}
+deleteTasks(TasksId: number): Observable<void> {
+  return this.http.delete<void>(`${this.BASE_URL}/deleteTasks`, { 
+    body: { id: TasksId } 
+});
+}
 }
 

@@ -1,6 +1,4 @@
-
-
-export interface Student {
+  export interface Student {
     id?: number;
     fname?: string;
     lname?: string;
@@ -15,18 +13,18 @@ export interface Student {
     emergencyContactNumber?: string;
     emergencyContactRelation?: string;
     imageUrl?:string;
-}
-export interface CulturalEvent {
+  }
+
+  export interface CulturalEvent {
     id: number;
     eventName: string;
     date: string;  // Temporarily handle as string when dealing with forms
     description: string;
     signedUp: boolean;
     userId: number;
-}
+  }
 
-
-export interface Accomodation {
+  export interface Accomodation {
     id :number;     
     roomNumber:number;
     buildingName:String;
@@ -40,9 +38,9 @@ export interface Accomodation {
     agreement2:Boolean;               
     agreement3:Boolean;
     userId:number;
-}
+  }
 
-export interface Courses {
+  export interface Courses {
     id: number;
     title: string;
     description: string;
@@ -51,13 +49,13 @@ export interface Courses {
     keyDates: string;
     events: string;
     agreements: string;
-}
-// In your domain/schema.ts file
-export interface KeyProgramDate {
+  }
+
+  export interface KeyProgramDate {
     id: number;
     name: string;
     date: Date  | string;
-    time:string; // Allow date to be either Date or string
+    time:string; 
     description: string;
   }
 
@@ -74,7 +72,7 @@ export interface KeyProgramDate {
     GoingFormFilled:Boolean;
   }
 
-export interface Faq {
+  export interface Faq {
     id:number;
     name:String;
     description:String;
@@ -96,16 +94,27 @@ export interface Faq {
     label: string;
     info: string;
   }
+
   export interface OrientationFile {
     id:number;
     Name:String;
     Description:String;
     OrientationPdf:String;
   }
+
   export interface Library {
     id:number;
     Name:String;
     Description:String;
     Status:String;
     LibraryPdf:String;
-}
+  }
+
+  export interface Tasks{
+    id:number;
+    name:String;
+    date:Date;
+    status:Boolean;
+    FullName:String;
+    StudentId:number;
+  }
