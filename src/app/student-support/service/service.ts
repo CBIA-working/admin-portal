@@ -312,5 +312,16 @@ deleteTasks(TasksId: number): Observable<void> {
     body: { id: TasksId } 
 });
 }
+getStudentTasks(data: { Id: number, type: string }): Promise<any> {
+  return this.http.post(`${this.BASE_URL}/StudentTasks`, data).toPromise();
+}
+
+getupdateTasks(params?: any): Observable<any>  {
+  return this.http.post<any>(`${this.BASE_URL}/updateTasks`,params);
+}
+addTasks(tasks: Tasks): Observable<any> {
+  return this.http.post<any>(`${this.BASE_URL}/addTasks`, tasks);
+}
+
 }
 

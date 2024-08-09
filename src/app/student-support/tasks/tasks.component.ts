@@ -26,6 +26,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Service } from '../service/service';
 import { Tasks } from '../domain/schema';
 import { TooltipModule } from 'primeng/tooltip';
+import { AddTasksComponent } from "./add-tasks/add-tasks.component";
 
 @Component({
   selector: 'app-tasks',
@@ -34,7 +35,8 @@ import { TooltipModule } from 'primeng/tooltip';
     TableModule, RouterModule, HttpClientModule, CommonModule, InputTextModule,
     TagModule, DropdownModule, MultiSelectModule, ProgressBarModule, ButtonModule,
     DownloadComponent, ToastModule, FormsModule, OverlayPanelModule, InputGroupModule,
-    InputGroupAddonModule, ChipsModule, DialogModule, ConfirmDialogModule,TooltipModule
+    InputGroupAddonModule, ChipsModule, DialogModule, ConfirmDialogModule, TooltipModule,
+    AddTasksComponent
 ],
   providers: [Service, MessageService, ConfirmationService], // Add ConfirmationService here
   templateUrl: './tasks.component.html',
@@ -88,7 +90,7 @@ export class TasksComponent implements OnInit, AfterViewInit {
     this.fetchAllTasks();
   }
 
-  deleteTrip(tasks: Tasks): void {
+  deleteTasks(tasks: Tasks): void {
     this.confirmationService.confirm({
       message: 'Are you sure you want to delete this Task?',
       header: 'Confirm',
@@ -160,7 +162,7 @@ export class TasksComponent implements OnInit, AfterViewInit {
 
   fetchStudentTasks(studentId: number) {
     this.loading = true;
-    this.service.getStudentTrips({ Id: studentId, type: 'student' }).then((tasks) => {
+    this.service.getStudentTasks({ Id: studentId, type: 'student' }).then((tasks) => {
       this.tasks = tasks.map(tasks => tasks.taskDetails);
       this.loading = false;
     }).catch(error => {

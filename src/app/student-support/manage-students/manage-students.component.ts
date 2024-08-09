@@ -153,6 +153,7 @@ export class ManageStudentsComponent implements OnInit, AfterViewInit {
     { name: 'Program', key: 'Programs' },
     { name: 'Trip', key: 'trips' },
     { name: 'Library', key: 'librarytable' },
+    { name: 'Tasks', key: 'Tasks' },
   ];
 
 
@@ -170,6 +171,7 @@ ngOnInit(): void {
   const programid = this.route.snapshot.queryParamMap.get('programId');
   const tripid = this.route.snapshot.queryParamMap.get('tripId');
   const libraryid = this.route.snapshot.queryParamMap.get('libraryId');
+  const taskid = this.route.snapshot.queryParamMap.get('taskId');
 
   if (eventid) {
     this.fetchStudentEvents(Number(eventid));
@@ -179,11 +181,13 @@ ngOnInit(): void {
     this.fetchStudentCourse(Number(courseid));
   } else if (programid){
     this.fetchStudentProgram(Number(programid));
-  }else if (tripid){
+  } else if (tripid){
     this.fetchStudentTrip(Number(tripid));
   } else if (libraryid){
     this.fetchStudentLibrary(Number(libraryid));
-  }else {
+  } else if (taskid){
+    this.fetchStudentTasks(Number(taskid));
+  } else {
     this.fetchAllData();
   }
 }
@@ -219,6 +223,9 @@ fetchStudentTrip(id: number) {
 }
 fetchStudentLibrary(id: number) {
   this.fetchData(() => this.service.getStudentLibrary({ Id: id, type: 'library' }), 'student Library');
+}
+fetchStudentTasks(id: number) {
+  this.fetchData(() => this.service.getStudentTasks({ Id: id, type: 'task' }), 'student task');
 }
 
 fetchAllData() {

@@ -1,0 +1,64 @@
+<div style="background-color: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 10px; border-radius: 8px;">
+    <div style="padding-left: 20px;">
+        <p-tabView>
+            <p-tabPanel header="Task Details">
+                <div>Form Valid: {{ taskForm.valid }}</div>
+
+                <form [formGroup]="taskForm" (ngSubmit)="saveChanges()">
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; padding: 10px;">
+                        <div>
+                            <label for="name" style="display: block; margin-bottom: 8px; font-weight: bold;">Name:</label>
+                            <input id="name" pInputText type="text" formControlName="name" placeholder="Name" 
+                                   style="border: 1px solid #ccc; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box;">
+                            <p-message *ngIf="taskForm.get('name')?.invalid && taskForm.get('name')?.touched"
+                                       severity="error" text="Name is required." style="margin-top: 8px;"></p-message>
+                        </div>
+                        <div>
+                            <label for="date" style="display: block; margin-bottom: 8px; font-weight: bold;">Date:</label>
+                            <input id="date" pInputText type="date" formControlName="date" placeholder="Date" 
+                                   style="border: 1px solid #ccc; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box;">
+                            <p-message *ngIf="taskForm.get('date')?.invalid && taskForm.get('date')?.touched"
+                                       severity="error" text="Date is required." style="margin-top: 8px;"></p-message>
+                        </div>
+
+                        <div>
+                            <label for="status" style="display: block; margin-bottom: 8px; font-weight: bold;">Status:</label>
+                            <p-dropdown 
+                                id="status" 
+                                [options]="StatusOptions" 
+                                formControlName="status" 
+                                placeholder="Select an option" 
+                                style="width: 100%;"
+                            ></p-dropdown>
+                            <p-message 
+                                *ngIf="taskForm.get('status')?.invalid && taskForm.get('status')?.touched"
+                                severity="error" 
+                                text="status selection is required."
+                                style="margin-top: 8px;"
+                            ></p-message>
+                        </div>
+                        <div>
+                            <label for="FullName" style="display: block; margin-bottom: 8px; font-weight: bold;">Full Name:</label>
+                            <input id="FullName" pInputText type="text" formControlName="FullName" placeholder="Full Name" 
+                                   style="border: 1px solid #ccc; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box;">
+                            <p-message *ngIf="taskForm.get('FullName')?.invalid && taskForm.get('FullName')?.touched"
+                                       severity="error" text="Full Name are required." style="margin-top: 8px;"></p-message>
+                        </div>
+                        <div>
+                            <label for="StudentId" style="display: block; margin-bottom: 8px; font-weight: bold;">Student Id:</label>
+                            <input id="StudentId" pInputText type="number" formControlName="StudentId" placeholder="Student Id" 
+                                   style="border: 1px solid #ccc; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box;">
+                            <p-message *ngIf="taskForm.get('StudentId')?.invalid && taskForm.get('StudentId')?.touched"
+                                       severity="error" text="Student Id are required." style="margin-top: 8px;"></p-message>
+                        </div>                        
+                    </div>
+                    <div style="display: flex; justify-content: flex-end; padding: 20px; border-top: 1px solid #eee;">
+                        <button pButton type="submit" label="Save" [disabled]="taskForm.invalid" style="margin-right: 10px;"></button>
+                        <button pButton type="button" label="Close" icon="pi pi-times" (click)="onClose()"></button>
+                    </div>
+                </form>
+            </p-tabPanel>
+        </p-tabView>
+    </div>
+</div>
+<p-toast></p-toast>
