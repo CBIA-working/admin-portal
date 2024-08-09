@@ -27,6 +27,7 @@ import { Service } from '../service/service';
 import { Tasks } from '../domain/schema';
 import { TooltipModule } from 'primeng/tooltip';
 import { AddTasksComponent } from "./add-tasks/add-tasks.component";
+import { EditTasksComponent } from './edit-tasks/edit-tasks.component';
 
 @Component({
   selector: 'app-tasks',
@@ -36,7 +37,7 @@ import { AddTasksComponent } from "./add-tasks/add-tasks.component";
     TagModule, DropdownModule, MultiSelectModule, ProgressBarModule, ButtonModule,
     DownloadComponent, ToastModule, FormsModule, OverlayPanelModule, InputGroupModule,
     InputGroupAddonModule, ChipsModule, DialogModule, ConfirmDialogModule, TooltipModule,
-    AddTasksComponent
+    AddTasksComponent,EditTasksComponent
 ],
   providers: [Service, MessageService, ConfirmationService], // Add ConfirmationService here
   templateUrl: './tasks.component.html',

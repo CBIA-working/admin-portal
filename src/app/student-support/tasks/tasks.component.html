@@ -167,13 +167,13 @@
     </ng-template>
   </p-table>
 </div>
-<!-- <p-dialog [(visible)]="dialogVisible" [modal]="true" [closable]="false" header="Edit cultural Event" [responsive]="true" [style]="{width: '60vw'}">
-    <app-edit-trips 
-    *ngIf="selectedTrips" 
-    [trips]="selectedTrips" 
+<p-dialog [(visible)]="dialogVisible" [modal]="true" [closable]="false" header="Edit Task" [responsive]="true" [style]="{width: '60vw'}">
+    <app-edit-tasks 
+    *ngIf="selectedTasks" 
+    [tasks]="selectedTasks" 
     (dialogClose)="onDialogClose($event)">
-    </app-edit-trips>
-  </p-dialog> -->
+    </app-edit-tasks>
+  </p-dialog>
 
   <p-dialog [(visible)]="addDialogVisible" [modal]="true" [closable]="false" header="Add Task" [responsive]="true" [style]="{width: '60vw' ,height:'68vh'}">
     <app-add-tasks (dialogClose)="onAddDialogClose()"></app-add-tasks>
