@@ -1,0 +1,64 @@
+<div class="card" style="margin: 0 20px; overflow: hidden;">
+  <p-card styleClass="p-mx-auto p-p-4" style="max-width: 600px;">
+    <h2 class="p-text-center" style="color: #007bff;">Create New Role</h2>
+  
+    <form [formGroup]="roleForm" (ngSubmit)="onSubmit()">
+      <!-- Role Name -->
+      <div class="p-fluid p-field">
+        <label for="roleName">Role Name</label>
+        <input
+          pInputText
+          id="roleName"
+          formControlName="roleName"
+          placeholder="Enter role name"
+          style="border-radius: 4px; padding: 10px;"
+        />
+      </div>
+  
+      <!-- Page Permissions -->
+      <div class="p-field" *ngFor="let page of pages">
+        <label>{{ page.name }}</label>
+        <div class="p-d-flex p-jc-between p-ai-center p-py-2">
+          <p-checkbox
+            binary="true"
+            [ngModel]="isPermissionSelected('read', page.id)"
+            (onChange)="togglePermission('read', page.id)"
+            [tooltip]="tooltipText('Read')"
+            tooltipPosition="top"
+            label="Read"
+          ></p-checkbox>
+          <p-checkbox
+            binary="true"
+            [ngModel]="isPermissionSelected('write', page.id)"
+            (onChange)="togglePermission('write', page.id)"
+            [tooltip]="tooltipText('Write')"
+            tooltipPosition="top"
+            label="Write"
+          ></p-checkbox>
+          <p-checkbox
+            binary="true"
+            [ngModel]="isBothSelected(page.id)"
+            (onChange)="togglePermission('both', page.id)"
+            [tooltip]="tooltipText('Read & Write')"
+            tooltipPosition="top"
+            label="Read & Write"
+          ></p-checkbox>
+        </div>
+        <p-divider></p-divider>
+      </div>
+  
+      <!-- Submit Button -->
+      <div class="p-text-center p-mt-4">
+        <button
+          pButton
+          type="submit"
+          label="Create Role"
+          icon="pi pi-check"
+          [disabled]="!roleForm.valid"
+          style="background-color: #007bff; border: none; border-radius: 4px; padding: 10px 20px;"
+        ></button>
+      </div>
+    </form>
+  </p-card>
+</div>
+  <app-rolelist></app-rolelist>

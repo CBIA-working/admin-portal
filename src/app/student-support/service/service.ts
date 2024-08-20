@@ -10,6 +10,14 @@ export class Service {
 
     constructor(private http: HttpClient) {}
 
+//ROLE
+createRole(roleData: any): Observable<any> {
+  return this.http.post(`${this.BASE_URL}/roles`, roleData);
+}
+
+getRoles(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.BASE_URL}/role`);
+}
 
 //admin
 getupdateProfile(formData: FormData): Observable<any> {

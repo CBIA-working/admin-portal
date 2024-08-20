@@ -22,6 +22,15 @@
                         </a>
                     </li>
                     <li>
+
+                        <a (click)="handleRouteClick('/roles')"
+                            pRipple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple"
+                            [ngStyle]="{ 'background-color': isActive('/roles') ? '#e0e0e0' : '' }">
+                            <i class="pi pi-shield mr-2"></i>
+                            <span class="font-medium">Role</span>
+                        </a>
+                    </li>
+                    <li>
                         <a (click)="handleRouteClick('/managestudent')"
                             pRipple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple"
                             [ngStyle]="{ 'background-color': isActive('/managestudent') ? '#e0e0e0' : '' }">

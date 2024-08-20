@@ -136,6 +136,14 @@ export class HeaderComponent implements OnInit {
         command: () => this.reloadPage('/library')
       });
     }
+    else if (path === '/roles') {
+      this.items.push({ 
+        label: 'Roles', 
+        escape: false, 
+        routerLink: '/roles',
+        command: () => this.reloadPage('/roles')
+      });
+    }
     else if (path === '/librarytable') {
       const queryParams = new URLSearchParams(window.location.search);
       const programId = queryParams.get('programId');

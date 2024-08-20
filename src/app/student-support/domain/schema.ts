@@ -118,3 +118,16 @@
     FullName:String;
     StudentId:number;
   }
+
+  export interface Permission {
+    id: number;
+    type: string;  // e.g., 'read', 'write', 'admin'
+    description?: string;  // Optional description of the permission
+  }
+  
+  export interface Role {
+    id: number;
+    roleName: string;  // Name of the role, e.g., 'Admin', 'User'
+    permissions: Permission[];  // List of permissions associated with the role
+  }
+  
