@@ -25,6 +25,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Service } from 'src/app/student-support/service/service';
 import { Role } from 'src/app/student-support/domain/schema';
 import { TooltipModule } from 'primeng/tooltip';
+import { EditRoleListComponent } from './edit-role-list/edit-role-list.component';
 
 @Component({
   selector: 'app-rolelist',
@@ -33,7 +34,7 @@ import { TooltipModule } from 'primeng/tooltip';
     TableModule, RouterModule, HttpClientModule, CommonModule, InputTextModule,
     TagModule, DropdownModule, MultiSelectModule, ProgressBarModule, ButtonModule,
     ToastModule, FormsModule, OverlayPanelModule, InputGroupModule,
-    InputGroupAddonModule, ChipsModule, DialogModule, ConfirmDialogModule,TooltipModule
+    InputGroupAddonModule, ChipsModule, DialogModule, ConfirmDialogModule,TooltipModule,EditRoleListComponent
 ],
   providers: [Service, MessageService, ConfirmationService],
   templateUrl: './rolelist.component.html',
@@ -43,13 +44,28 @@ export class RoleListComponent implements OnInit {
   roles: Role[] = [];
   loading: boolean = true;
   addRoleDialogVisible: boolean = false;
+  selectedRole: Role | null = null;
+  dialogVisible: boolean = false;
 
   constructor(
     private service: Service,
     private messageService: MessageService,
     private confirmationService: ConfirmationService
   ) {}
-
+  showEditDialog(role: Role): void {
+    this.selectedRole = role;
+    this.dialogVisible = true;
+  }
+  onDialogClose(updatedRoles: Role | null): void {
+    if (updatedRoles) {
+      const index = this.roles.findIndex(s => s.id === updatedRoles.id);
+      if (index !== -1) {
+        this.roles[index] = updatedRoles;
+      }
+    }
+    this.selectedRole = null;
+    this.dialogVisible = false;
+  }
   ngOnInit(): void {
     this.fetchRoles();
   }

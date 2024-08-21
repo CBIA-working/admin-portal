@@ -55,7 +55,7 @@
         </td>
         <td>
           <div class="button-container" style="display: flex; justify-content: center; gap: 0.5rem;">
-            <p-button pTooltip="Edit" (click)="editRole(role)" icon="pi pi-pencil" [text]="true" [plain]="true"></p-button>
+            <p-button (click)="showEditDialog(role)" icon="pi pi-pencil" [text]="true" [plain]="true"></p-button>
             <p-button pTooltip="Delete" (click)="deleteRole(role)" icon="pi pi-trash" [text]="true" [plain]="true"></p-button>
           </div>
         </td>
@@ -69,4 +69,11 @@
     </ng-template>
   </p-table>
 </div>
+<p-dialog [(visible)]="dialogVisible" [modal]="true" [closable]="false" header="Edit Role" [responsive]="true" [style]="{width: '60vw'}">
+  <app-edit-role-list
+  *ngIf="selectedRole" 
+  [role]="selectedRole" 
+  (dialogClose)="onDialogClose($event)">
+  </app-edit-role-list>
+</p-dialog>
 <p-confirmDialog></p-confirmDialog>

@@ -19,6 +19,10 @@ getRoles(): Observable<any[]> {
   return this.http.get<any[]>(`${this.BASE_URL}/role`);
 }
 
+getupdateRoles(params?: any): Observable<any>  {
+  return this.http.post<any>(`${this.BASE_URL}/updateroles`,params);
+}
+
 //admin
 getupdateProfile(formData: FormData): Observable<any> {
     return this.http.post<any>(`${this.BASE_URL}/updateProfile`, formData);

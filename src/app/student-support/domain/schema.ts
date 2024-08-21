@@ -122,7 +122,7 @@
   export interface Permission {
     id: number;
     type: string;  // e.g., 'read', 'write', 'admin'
-    description?: string;  // Optional description of the permission
+    pageName:string;
   }
   
   export interface Role {
