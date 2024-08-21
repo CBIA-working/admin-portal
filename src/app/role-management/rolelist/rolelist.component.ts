@@ -93,40 +93,36 @@ export class RoleListComponent implements OnInit {
     this.fetchRoles(); // Refresh the roles list after adding a role
   }
 
-  editRole(role: Role) {
-    // Implement edit role functionality
+  deleteRole(role: Role): void {
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to delete this role?',
+      header: 'Confirm',
+      icon: 'pi pi-info-circle',
+      accept: () => {
+        this.service.deleteroles(role.id).subscribe(
+          () => {
+            this.roles = this.roles.filter(r => r.id !== role.id);
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: 'Role deleted successfully'
+            });
+          },
+          error => {
+            console.error('Error deleting role', error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Failed to delete role'
+            });
+          }
+        );
+      },
+      reject: () => {
+        // Optionally handle rejection (user clicks cancel)
+      }
+    });
   }
-
-  // deleteRole(role: Role): void {
-  //   this.confirmationService.confirm({
-  //     message: 'Are you sure you want to delete this role?',
-  //     header: 'Confirm',
-  //     icon: 'pi pi-info-circle',
-  //     accept: () => {
-  //       this.service.deleteRole(role.id).subscribe(
-  //         () => {
-  //           this.roles = this.roles.filter(r => r.id !== role.id);
-  //           this.messageService.add({
-  //             severity: 'success',
-  //             summary: 'Success',
-  //             detail: 'Role deleted successfully'
-  //           });
-  //         },
-  //         error => {
-  //           console.error('Error deleting role', error);
-  //           this.messageService.add({
-  //             severity: 'error',
-  //             summary: 'Error',
-  //             detail: 'Failed to delete role'
-  //           });
-  //         }
-  //       );
-  //     },
-  //     reject: () => {
-  //       // Optionally handle rejection (user clicks cancel)
-  //     }
-  //   });
-  // }
 
   clear(table: any) {
     table.clear();

@@ -19,9 +19,16 @@ getRoles(): Observable<any[]> {
   return this.http.get<any[]>(`${this.BASE_URL}/role`);
 }
 
-getupdateRoles(params?: any): Observable<any>  {
-  return this.http.post<any>(`${this.BASE_URL}/updateroles`,params);
+getupdateRoles(params?: any): Observable<any> {
+  return this.http.put<any>(`${this.BASE_URL}/updateroles`, params);
 }
+deleteroles(roleId: number): Observable<void> {
+  return this.http.delete<void>(`${this.BASE_URL}/deleteroles`, { 
+    params: { id: roleId.toString() }
+  });
+}
+
+
 
 //admin
 getupdateProfile(formData: FormData): Observable<any> {
