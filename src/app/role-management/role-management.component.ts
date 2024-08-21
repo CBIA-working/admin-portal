@@ -11,7 +11,8 @@ import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
 import { TooltipModule } from 'primeng/tooltip';
 import { CardModule } from 'primeng/card';
-import { RoleListComponent } from '../rolelist/rolelist.component';
+import { RoleListComponent } from './rolelist/rolelist.component';
+import { NavigationsService } from '../student-support/service/navigations.service';
 
 @Component({
   selector: 'app-role-management',
@@ -35,17 +36,13 @@ import { RoleListComponent } from '../rolelist/rolelist.component';
 })
 export class RoleManagementComponent implements OnInit {
   roleForm: FormGroup;
-  pages = [
-    { id: 1, name: 'Home' },
-    { id: 2, name: 'Dashboard' },
-    { id: 3, name: 'Settings' },
-    // Add more pages as needed
-  ];
+  pages = [];
 
   constructor(
     private fb: FormBuilder,
     private service: Service,
-    private router: Router
+    private router: Router,
+    private navService: NavigationsService
   ) {}
 
   ngOnInit(): void {
@@ -56,6 +53,11 @@ export class RoleManagementComponent implements OnInit {
         write: [],
       }),
     });
+    // Get pages from NavigationService
+    this.pages = this.navService.getPages().map(page => ({
+      id: page.path,  // Use path as id for simplicity
+      name: page.title  // Use the title as name
+    }));
   }
 
   togglePermission(type: string, pageId: number): void {
@@ -131,25 +133,35 @@ export class RoleManagementComponent implements OnInit {
   onSubmit() {
     if (this.roleForm.valid) {
       const roleData = this.roleForm.value;
-      
-      // Ensure permissions are in the correct format
-      const permissions = [];
-      if (this.roleForm.get('permissions.read').value) {
-        permissions.push('read');
-      }
-      if (this.roleForm.get('permissions.write').value) {
-        permissions.push('write');
-      }
+  
+      // Prepare permissions with page names
+      let permissions = {
+        read: [],
+        write: [],
+        both: []
+      };
+  
+      this.pages.forEach(page => {
+        if (this.isPermissionSelected('read', page.id) && !this.isPermissionSelected('write', page.id)) {
+          permissions.read.push(page.name);
+        }
+        if (this.isPermissionSelected('write', page.id) && !this.isPermissionSelected('read', page.id)) {
+          permissions.write.push(page.name);
+        }
+        if (this.isBothSelected(page.id)) {
+          permissions.both.push(page.name);
+        }
+      });
   
       const dataToSend = {
         roleName: roleData.roleName,
-        permissions: permissions  // Ensure this is an array
+        permissions
       };
   
       this.service.createRole(dataToSend).subscribe(
         response => {
           console.log('Role created successfully:', response);
-          this.router.navigate(['/roles']); // Update with your success route
+          this.router.navigate(['/roles']); // Navigate to the roles listing page on success
         },
         error => {
           console.error('Error creating role:', error);
@@ -157,5 +169,4 @@ export class RoleManagementComponent implements OnInit {
       );
     }
   }
-  
-}
+}  

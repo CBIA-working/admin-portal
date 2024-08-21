@@ -22,8 +22,8 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { Service } from '../student-support/service/service';
-import { Role } from '../student-support/domain/schema';
+import { Service } from 'src/app/student-support/service/service';
+import { Role } from 'src/app/student-support/domain/schema';
 import { TooltipModule } from 'primeng/tooltip';
 
 @Component({

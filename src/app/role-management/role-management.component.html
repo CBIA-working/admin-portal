@@ -1,64 +1,31 @@
 <div class="card" style="margin: 0 20px; overflow: hidden;">
   <p-card styleClass="p-mx-auto p-p-4" style="max-width: 600px;">
     <h2 class="p-text-center" style="color: #007bff;">Create New Role</h2>
-  
+
     <form [formGroup]="roleForm" (ngSubmit)="onSubmit()">
       <!-- Role Name -->
-      <div class="p-fluid p-field">
-        <label for="roleName">Role Name</label>
-        <input
-          pInputText
-          id="roleName"
-          formControlName="roleName"
-          placeholder="Enter role name"
-          style="border-radius: 4px; padding: 10px;"
-        />
+      <div class="p-fluid p-field" style="margin-bottom: 10px;">
+        <label for="roleName" style="display: block; margin-bottom: 2px;">Role Name</label>
+        <input pInputText id="roleName" formControlName="roleName" placeholder="Enter role name" style="border-radius: 4px; padding: 10px; width: 100%;" />
       </div>
-  
-      <!-- Page Permissions -->
-      <div class="p-field" *ngFor="let page of pages">
-        <label>{{ page.name }}</label>
-        <div class="p-d-flex p-jc-between p-ai-center p-py-2">
-          <p-checkbox
-            binary="true"
-            [ngModel]="isPermissionSelected('read', page.id)"
-            (onChange)="togglePermission('read', page.id)"
-            [tooltip]="tooltipText('Read')"
-            tooltipPosition="top"
-            label="Read"
-          ></p-checkbox>
-          <p-checkbox
-            binary="true"
-            [ngModel]="isPermissionSelected('write', page.id)"
-            (onChange)="togglePermission('write', page.id)"
-            [tooltip]="tooltipText('Write')"
-            tooltipPosition="top"
-            label="Write"
-          ></p-checkbox>
-          <p-checkbox
-            binary="true"
-            [ngModel]="isBothSelected(page.id)"
-            (onChange)="togglePermission('both', page.id)"
-            [tooltip]="tooltipText('Read & Write')"
-            tooltipPosition="top"
-            label="Read & Write"
-          ></p-checkbox>
-        </div>
-        <p-divider></p-divider>
+
+      <!-- Page Permissions in a single line with dividers -->
+      <div *ngFor="let page of pages; let i = index" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px; padding-bottom: 5px; border-bottom: 1px solid #ccc;">
+        <span style="flex: 1; font-weight: bold; margin-right: 20px;">{{ page.name }}</span>
+        <p-checkbox binary="true" [ngModel]="isPermissionSelected('read', page.id)" (onChange)="togglePermission('read', page.id)"
+          [tooltip]="tooltipText('Read')" tooltipPosition="top" label="Read" style="margin-right: 10px;"></p-checkbox>
+        <p-checkbox binary="true" [ngModel]="isPermissionSelected('write', page.id)" (onChange)="togglePermission('write', page.id)"
+          [tooltip]="tooltipText('Write')" tooltipPosition="top" label="Write" style="margin-right: 10px;"></p-checkbox>
+        <p-checkbox binary="true" [ngModel]="isBothSelected(page.id)" (onChange)="togglePermission('both', page.id)"
+          [tooltip]="tooltipText('Read & Write')" tooltipPosition="top" label="Read & Write" style="margin-right: 0;"></p-checkbox>
       </div>
-  
+
       <!-- Submit Button -->
-      <div class="p-text-center p-mt-4">
-        <button
-          pButton
-          type="submit"
-          label="Create Role"
-          icon="pi pi-check"
-          [disabled]="!roleForm.valid"
-          style="background-color: #007bff; border: none; border-radius: 4px; padding: 10px 20px;"
-        ></button>
+      <div class="p-text-center" style="margin-top: 20px;">
+        <button pButton type="submit" label="Create Role" icon="pi pi-check" [disabled]="!roleForm.valid"
+          style="background-color: #007bff; border: none; border-radius: 4px; padding: 10px 20px;"></button>
       </div>
     </form>
   </p-card>
 </div>
-  <app-rolelist></app-rolelist>
+<app-rolelist></app-rolelist>

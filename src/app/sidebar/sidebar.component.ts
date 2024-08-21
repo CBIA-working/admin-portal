@@ -5,6 +5,7 @@ import { Router, RouterLink, NavigationEnd } from '@angular/router';
 import { HomeComponent } from '../home/home.component';
 import { filter } from 'rxjs/operators';
 import { AuthService } from '../authentication/auth.service';
+import { NavigationsService } from '../student-support/service/navigations.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -13,38 +14,37 @@ import { AuthService } from '../authentication/auth.service';
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss']
 })
-export class SidebarComponent implements AfterViewInit, OnInit {
-  @ViewChild('sidebarRef') sidebarRef!: Sidebar;
+export class SidebarComponent implements OnInit, AfterViewInit {
   sidebarVisible: boolean = false;
   user: any;
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(private router: Router, private authService: AuthService, private navService: NavigationsService) {}
 
   ngOnInit(): void {
     this.user = JSON.parse(sessionStorage.getItem('user')!);
   }
 
-  ngAfterViewInit() {
-    this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe(() => {
-        if (this.sidebarVisible) {
-          this.sidebarRef.hide();
-          this.sidebarVisible = false;
-        }
-      });
+  ngAfterViewInit(): void {
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      if (this.sidebarVisible) {
+        this.closeSidebar();
+      }
+    });
   }
 
-  closeSidebar() {
-    this.sidebarRef.hide();
+  closeSidebar(): void {
     this.sidebarVisible = false;
   }
 
-  handleRouteClick(route: string): void {
-    // Close the sidebar
-    this.closeSidebar();
+  logout(): void {
+    this.authService.clearToken();
+    this.navService.navigateTo('/login');
+  }
 
-    // Reload the page
+  handleRouteClick(route: string): void {
+    this.closeSidebar();
     this.router.navigate([route]).then(() => {
       window.location.reload();
     });
@@ -52,21 +52,5 @@ export class SidebarComponent implements AfterViewInit, OnInit {
 
   isActive(route: string): boolean {
     return this.router.url === route;
-  }
-
-  logout() {
-    this.authService.clearToken();
-    this.router.navigate(['/login'], { replaceUrl: true });
-  }
-
-  getAvatarUrl(gender: string): string {
-    switch (gender.toLowerCase()) {
-      case 'male':
-        return 'path_to_male_avatar';
-      case 'female':
-        return 'path_to_female_avatar';
-      default:
-        return 'path_to_default_avatar';
-    }
   }
 }

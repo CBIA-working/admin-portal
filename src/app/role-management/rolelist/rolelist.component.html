@@ -1,8 +1,5 @@
 <p-toast></p-toast>
 <div class="card" style="margin: 0 20px; overflow: hidden;">
-  <div class="mb-2 ml-auto z-0" style="display: flex; gap: 10px;">
-    <p-button icon="pi pi-plus" (click)="showAddRoleDialog()" [raised]="true" severity="primary"></p-button>
-  </div>
 
   <p-table
     #dtRoles
@@ -11,7 +8,8 @@
     [rowsPerPageOptions]="[10, 25, 50]"
     [loading]="loading"
     [paginator]="true"
-    [globalFilterFields]="['roleName', 'permissions']"
+    [responsive]="true"
+    [globalFilterFields]="['id', 'roleName', 'permissions.type', 'permissions.pageName']"
   >
 
     <ng-template pTemplate="caption">
@@ -37,36 +35,26 @@
 
     <ng-template pTemplate="header">
       <tr>
-        <th style="min-width: 30%">
-          <div class="flex align-items-center">
-            Role Name
-            <p-columnFilter type="text" field="roleName" display="menu"></p-columnFilter>
-          </div>
-        </th>
-        <th style="min-width: 60%">
-          <div class="flex align-items-center">
-            Permissions
-            <p-columnFilter type="text" field="permissions" display="menu"></p-columnFilter>
-          </div>
-        </th>
-        <th style="min-width: 10%; text-align: center;">
-          <div style="display: flex; justify-content: center; align-items: center;">
-            Actions
-          </div>
-        </th>
+        <th style="min-width: 15%">Role ID</th>
+        <th style="min-width: 20%">Role Name</th>
+        <th style="min-width: 45%">Permissions</th>
+        <th style="min-width: 20%; text-align: center;">Actions</th>
       </tr>
     </ng-template>
 
     <ng-template pTemplate="body" let-role>
       <tr>
+        <td>{{ role.id }}</td>
         <td>{{ role.roleName }}</td>
         <td>
-          <ul>
-            <li *ngFor="let permission of role.permissions">{{ permission.type }}</li>
+          <ul style="list-style: none; padding-left: 0; margin: 0;">
+            <li *ngFor="let permission of role.permissions">
+              {{ permission.type }} - {{ permission.pageName }}
+            </li>
           </ul>
         </td>
         <td>
-          <div class="button-container" style="display: flex; gap: 0.5rem;">
+          <div class="button-container" style="display: flex; justify-content: center; gap: 0.5rem;">
             <p-button pTooltip="Edit" (click)="editRole(role)" icon="pi pi-pencil" [text]="true" [plain]="true"></p-button>
             <p-button pTooltip="Delete" (click)="deleteRole(role)" icon="pi pi-trash" [text]="true" [plain]="true"></p-button>
           </div>
@@ -76,13 +64,9 @@
 
     <ng-template pTemplate="emptymessage">
       <tr>
-        <td colspan="3">No roles found.</td>
+        <td colspan="4">No roles found.</td>
       </tr>
     </ng-template>
   </p-table>
 </div>
-
-<!-- <p-dialog [(visible)]="addRoleDialogVisible" [modal]="true" [closable]="false" header="Add Role" [responsive]="true" [style]="{width: '60vw'}">
-  <app-add-role (dialogClose)="onAddRoleDialogClose()"></app-add-role>
-</p-dialog> -->
 <p-confirmDialog></p-confirmDialog>
