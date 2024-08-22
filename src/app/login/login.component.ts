@@ -9,10 +9,11 @@ import { PasswordModule } from 'primeng/password';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
-import { ToastModule } from 'primeng/toast'; 
+import { ToastModule } from 'primeng/toast';
 
 import { AuthService } from '../authentication/auth.service';
 import { MessageService } from 'primeng/api';
+import { NavigationsService } from '../student-support/service/navigations.service';
 
 @Component({
   selector: 'app-login',
@@ -32,11 +33,12 @@ export class LoginComponent implements OnInit {
     private http: HttpClient,
     private router: Router,
     private authService: AuthService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private navigationsService: NavigationsService  // Inject the service
   ) {
     this.authForm = this.fb.group({
-      email: ['john.doe@example.com', [Validators.required, Validators.email]],
-      password: ['password123', Validators.required],
+      email: ['bob.brown@example.com', [Validators.required, Validators.email]],
+      password: ['password126', Validators.required],
       rememberme: [false]
     });
   }
@@ -60,18 +62,33 @@ export class LoginComponent implements OnInit {
     };
 
     try {
-      // Replace this with the actual API call
-      const response = await this.http.post<any>('http://localhost:3000/api/login', credentials).toPromise();
+      const response = await this.http.post<any>('http://localhost:3000/api/adminlogin', credentials).toPromise();
 
       if (response.status === 200) {
         const token = this.generateRandomToken();
         this.authService.setToken(token, credentials.rememberMe);
         sessionStorage.setItem('user', JSON.stringify(response.user)); // Store user data in sessionStorage
+        localStorage.setItem('userId', response.user.id);
+
         this.messageService.add({severity:'success', summary:'Login Success', detail:'You have successfully logged in!'});
 
-        setTimeout(() => {
-          this.router.navigate(['/home'], { replaceUrl: true });
-        }, 1000);
+        // Retrieve the ID from localStorage for the admin roles API call
+        const userId = localStorage.getItem('userId');
+        if (userId) {
+          const adminRolesBody = {
+            Id: +userId, // Convert to number
+            type: 'admin'
+          };
+          const adminRolesResponse = await this.http.post<any>('http://localhost:3000/api/adminroles', adminRolesBody).toPromise();
+          console.log('Admin Roles Response:', adminRolesResponse);
+
+          // Store the permissions in the NavigationsService
+          this.navigationsService.setPermissions(adminRolesResponse[0].roleDetails.permissions);
+
+          setTimeout(() => {
+            this.router.navigate(['/home'], { replaceUrl: true });
+          }, 1000);
+        }
       } else {
         this.messageService.add({severity:'error', summary:'Login Failed', detail:response.message});
       }

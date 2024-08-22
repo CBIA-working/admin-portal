@@ -12,8 +12,8 @@ export class NavigationsService {
       title: 'Roles',
       icon: 'pi pi-shield',
       children: [
-        { path: '/roles', title: 'Role', icon: 'fa fa-shield' }, // User with shield
-        { path: '/assign-roles', title: 'Assign Role', icon: 'fa fa-user-cog' } // User with gear
+        { path: '/roles', title: 'Role', icon: 'fa fa-shield' }, 
+        { path: '/assign-roles', title: 'Assign Role', icon: 'fa fa-user-cog' }
       ]
     },
     { path: '/managestudent', title: 'Manage Students', icon: 'pi pi-users' },
@@ -31,14 +31,28 @@ export class NavigationsService {
     { path: '/settings', title: 'Settings', icon: 'pi pi-cog' }
   ];
 
+  private permissions: any[] = [];  // Store permissions here
+
   constructor(private router: Router) {
     this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
       // Logic to close sidebar can be placed here if needed
     });
   }
 
+  setPermissions(permissions: any[]): void {
+    this.permissions = permissions;
+  }
+
   getPages() {
-    return this.pages;
+    // Filter pages based on permissions
+    return this.pages.filter(page => {
+      return this.hasPermissionForPage(page.title);
+    });
+  }
+
+  private hasPermissionForPage(pageName: string): boolean {
+    // Check if the user has permissions for the page
+    return this.permissions.some(permission => permission.pageName === pageName);
   }
 
   navigateTo(path: string): void {
