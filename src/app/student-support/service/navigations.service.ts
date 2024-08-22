@@ -12,7 +12,7 @@ export class NavigationsService {
       title: 'Roles',
       icon: 'pi pi-shield',
       children: [
-        { path: '/roles', title: 'Role', icon: 'fa fa-shield' }, 
+        { path: '/roles', title: 'Add Role', icon: 'fa fa-shield' }, 
         { path: '/assign-roles', title: 'Assign Role', icon: 'fa fa-user-cog' }
       ]
     },
