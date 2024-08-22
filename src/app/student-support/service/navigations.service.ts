@@ -12,8 +12,8 @@ export class NavigationsService {
       title: 'Roles',
       icon: 'pi pi-shield',
       children: [
-        { path: '/roles', title: 'Role',icon: 'pi pi-home'},
-        { path: '/assign-role', title: 'Assign Role',icon: 'pi pi-home'}
+        { path: '/roles', title: 'Role', icon: 'fa fa-shield' }, // User with shield
+        { path: '/assign-roles', title: 'Assign Role', icon: 'fa fa-user-cog' } // User with gear
       ]
     },
     { path: '/managestudent', title: 'Manage Students', icon: 'pi pi-users' },

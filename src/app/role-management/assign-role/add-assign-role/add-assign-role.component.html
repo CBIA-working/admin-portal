@@ -1,0 +1,26 @@
+<p-dropdown
+  [options]="admins"
+  [(ngModel)]="selectedAdminId"
+  optionLabel="label"
+  optionValue="value"
+  placeholder="Select an Admin"
+  [style]="{width: '200px'}"
+  appendTo="body">
+</p-dropdown>
+
+<p-dropdown
+  [options]="roles"
+  [(ngModel)]="selectedRoleId"
+  optionLabel="roleName"
+  optionValue="id"
+  placeholder="Select a Role"
+  [style]="{width: '200px'}"
+  appendTo="body">
+</p-dropdown>
+
+<p-button
+  label="Assign Role"
+  icon="pi pi-check"
+  (click)="assignRole()"
+  [disabled]="!selectedAdminId || !selectedRoleId">
+</p-button>

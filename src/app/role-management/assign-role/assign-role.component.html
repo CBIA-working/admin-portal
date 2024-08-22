@@ -1,0 +1,85 @@
+<p-toast></p-toast>
+<div class="card" style="margin: 0 20px; overflow: hidden;">
+    <div class="mb-2 ml-auto z-0" style="display: flex; gap: 10px;">
+        <p-button icon="pi pi-plus" (click)="showAddDialog()" [raised]="true" severity="primary"></p-button>
+</div>    
+  <p-table
+    #dtRoles
+    [value]="roles"
+    [rows]="10"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [loading]="loading"
+    [paginator]="true"
+    [responsive]="true"
+    [globalFilterFields]="['id', 'adminRoleID', 'admin.fname', 'admin.lname', 'role.roleName', 'role.permissions.type', 'role.permissions.pageName']">
+
+    <ng-template pTemplate="caption">
+      <div class="flex">
+        <p-button 
+          label="Clear" 
+          [outlined]="true" 
+          icon="pi pi-filter-slash" 
+          (click)="clear(dtRoles)">
+        </p-button>
+        <span class="p-input-icon-left ml-auto" style="border: 1px solid #ccc; border-radius: 4px; padding: 2px;">
+          <i class="pi pi-search" style="margin-left: 8px;"></i>
+          <input 
+            pInputText 
+            type="text" 
+            (input)="dtRoles.filterGlobal($event.target.value, 'contains')" 
+            placeholder="Search keyword"
+            class="p-inputtext-sm" 
+            style="width: 15rem; padding-left: 3rem; border: none; outline: none; background: transparent; margin-left: 5px;">
+        </span>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="min-width: 15%">ID <p-columnFilter type="text" field="id" display="menu"></p-columnFilter></th>
+        <th style="min-width: 20%">Admin Name <p-columnFilter type="text" field="admin.name" display="menu"></p-columnFilter></th>
+        <th style="min-width: 25%">Role Name <p-columnFilter type="text" field="role.roleName" display="menu"></p-columnFilter></th>
+        <th style="min-width: 30%">Permissions <p-columnFilter type="text" field="role.permissions" display="menu"></p-columnFilter></th>
+        <th style="min-width: 10%; text-align: center;">Actions</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-role>
+      <tr>
+        <td>{{ role.id }}</td>
+        <td>{{ role.Admin.fname + ' ' + role.Admin.lname }}</td>
+        <td>{{ role.Role.roleName }}</td>
+        <td>
+          <ul style="list-style: none; padding-left: 0; margin: 0;">
+            <li *ngFor="let permission of role.Role.permissions">
+              {{ permission.type }} - {{ permission.pageName }}
+            </li>
+          </ul>
+        </td>
+        <td>
+          <div class="button-container" style="display: flex; justify-content: center; gap: 0.5rem;">
+            <p-button (click)="showEditDialog(role)" icon="pi pi-pencil" [text]="true" [plain]="true"></p-button>
+            <p-button pTooltip="Delete" (click)="deleteRole(role)" icon="pi pi-trash" [text]="true" [plain]="true"></p-button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="5">No roles found.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+<p-dialog [(visible)]="dialogVisible" [modal]="true" [closable]="false" header="Edit Role" [responsive]="true" [style]="{width: '60vw'}">
+  <app-edit-role-list
+  *ngIf="selectedRole" 
+  [role]="selectedRole" 
+  (dialogClose)="onDialogClose($event)">
+  </app-edit-role-list>
+</p-dialog>
+<p-dialog [(visible)]="addDialogVisible" [modal]="true" [closable]="false" header="Add Event" [responsive]="true" [style]="{width: '60vw' ,height:'68vh'}">
+    <app-add-assign-role (dialogClose)="onAddDialogClose()"></app-add-assign-role>
+  </p-dialog>
+<p-confirmDialog></p-confirmDialog>

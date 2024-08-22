@@ -21,11 +21,13 @@ import { LibraryComponent } from './student-support/library/library.component';
 import { LibrarytableComponent } from './student-support/library/librarytable/librarytable.component';
 import { TasksComponent } from './student-support/tasks/tasks.component';
 import { RoleManagementComponent } from './role-management/role-management.component';
+import { AssignRoleComponent } from './role-management/assign-role/assign-role.component';
 
 
 export const routes: Routes = [
   { path: 'login', component:LoginComponent},
   { path: 'roles', component: RoleManagementComponent,canActivate: [AuthGuard] },
+  { path: 'assign-roles', component: AssignRoleComponent,canActivate: [AuthGuard] },
   { path: 'home', component: HomeComponent,canActivate: [AuthGuard] },
   { path: 'managestudent', component:ManageStudentsComponent,canActivate: [AuthGuard]},
   { path: 'Programs', component:ProgramComponent,canActivate: [AuthGuard]},
