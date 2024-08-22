@@ -37,21 +37,54 @@ export class NavigationsService {
     this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
       // Logic to close sidebar can be placed here if needed
     });
+    this.loadPermissionsFromSession();
   }
 
   setPermissions(permissions: any[]): void {
     this.permissions = permissions;
+    sessionStorage.setItem('permissions', JSON.stringify(permissions)); // Ensure permissions are stored
+  }
+
+  private loadPermissionsFromSession(): void {
+    const savedPermissions = sessionStorage.getItem('permissions');
+    if (savedPermissions) {
+      this.permissions = JSON.parse(savedPermissions);
+    }
+  }
+
+  hasReadPermission(pageName: string): boolean {
+    const permission = this.permissions.find(p => p.pageName === pageName);
+    return permission && permission.type === 'read';
+  }
+
+  hasWritePermission(pageName: string): boolean {
+    const permission = this.permissions.find(p => p.pageName === pageName);
+    return permission && (permission.type === 'both' || permission.type === 'write');
   }
 
   getPages() {
-    // Filter pages based on permissions
-    return this.pages.filter(page => {
-      return this.hasPermissionForPage(page.title);
-    });
+    // Recursively filter pages based on permissions
+    return this.filterPagesWithPermissions(this.pages);
+  }
+
+  private filterPagesWithPermissions(pages: any[]): any[] {
+    return pages
+      .map(page => {
+        if (page.children) {
+          // Recursively filter child pages
+          const filteredChildren = this.filterPagesWithPermissions(page.children);
+          if (filteredChildren.length > 0) {
+            return { ...page, children: filteredChildren };
+          }
+        } else if (this.hasPermissionForPage(page.title)) {
+          return page;
+        }
+        return null;
+      })
+      .filter(page => page !== null);
   }
 
   private hasPermissionForPage(pageName: string): boolean {
-    // Check if the user has permissions for the page
     return this.permissions.some(permission => permission.pageName === pageName);
   }
 

@@ -28,7 +28,7 @@ import { NavigationsService } from '../student-support/service/navigations.servi
     DividerModule,
     TooltipModule,
     CardModule,
-    RoleListComponent
+    RoleListComponent,
   ],
   providers: [Service],
   templateUrl: './role-management.component.html',

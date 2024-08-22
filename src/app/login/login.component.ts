@@ -83,7 +83,11 @@ export class LoginComponent implements OnInit {
           console.log('Admin Roles Response:', adminRolesResponse);
 
           // Store the permissions in the NavigationsService
-          this.navigationsService.setPermissions(adminRolesResponse[0].roleDetails.permissions);
+          const permissions = adminRolesResponse[0].roleDetails.permissions;
+          this.navigationsService.setPermissions(permissions);
+
+          // Store permissions in sessionStorage
+          sessionStorage.setItem('permissions', JSON.stringify(permissions));
 
           setTimeout(() => {
             this.router.navigate(['/home'], { replaceUrl: true });

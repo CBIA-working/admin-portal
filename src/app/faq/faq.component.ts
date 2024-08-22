@@ -1,6 +1,6 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import {  HttpClient,HttpClientModule } from '@angular/common/http';
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
@@ -9,13 +9,13 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { Table, TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
-import { Service } from '../student-support/service/service';
-import { Faq } from '../student-support/domain/schema';
-import { DownloadComponent } from '../student-support/download/download.component';
 import * as XLSX from 'xlsx';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { MessageService,ConfirmationService } from 'primeng/api';
+import { Service } from '../student-support/service/service';
+import { Faq } from '../student-support/domain/schema';
+import { DownloadComponent } from '../student-support/download/download.component';
+import { MessageService, ConfirmationService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { FormsModule } from '@angular/forms';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
@@ -26,6 +26,7 @@ import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { AddFaqComponent } from "./add-faq/add-faq.component";
 import { EditFaqComponent } from "./edit-faq/edit-faq.component";
+import { NavigationsService } from '../student-support/service/navigations.service';
 
 interface Column {
   field: string;
@@ -40,13 +41,13 @@ interface Column {
     InputTextModule, MultiSelectModule, ProgressBarModule, TagModule,
     ToastModule, FormsModule, OverlayPanelModule, InputGroupModule,
     InputGroupAddonModule, ChipsModule, DialogModule, ConfirmDialogModule,
-    DownloadComponent,AddFaqComponent,EditFaqComponent
-],
+    DownloadComponent, AddFaqComponent, EditFaqComponent
+  ],
   templateUrl: './faq.component.html',
   styleUrls: ['./faq.component.scss'],
   providers: [Service, MessageService, ConfirmationService, DatePipe]
 })
-export class FaqComponent implements OnInit {
+export class FaqComponent implements OnInit, AfterViewInit {
   @ViewChild(DownloadComponent) downloadComponent!: DownloadComponent;
   @ViewChild('dt') table!: Table;
 
@@ -71,16 +72,32 @@ export class FaqComponent implements OnInit {
     private messageService: MessageService,
     private router: Router,
     private confirmationService: ConfirmationService,
-    private http: HttpClient
+    private http: HttpClient,
+    private navigationsService: NavigationsService  // Inject the service
   ) {}
+
+  ngOnInit(): void {
+    this.fetchAllFaq();
+  }
+
+  ngAfterViewInit() {
+    if (this.downloadComponent) {
+      this.downloadComponent.downloadAllStudentsEvent.subscribe((format: string) => {
+        this.downloadAllStudents(format);
+      });
+      this.downloadComponent.downloadSelectedStudentsEvent.subscribe((format: string) => {
+        this.enterSelectionMode();
+      });
+    }
+  }
 
   showAddDialog() {
     this.addDialogVisible = true;
   }
+
   onAddDialogClose() {
     this.addDialogVisible = false;
     this.fetchAllFaq();
-    // Optionally refresh the student list here
   }
 
   showEditDialog(faq: Faq): void {
@@ -91,7 +108,6 @@ export class FaqComponent implements OnInit {
   onDialogClose(updatedFaq: Faq | null): void {
     if (updatedFaq) {
       this.selectedFaq = updatedFaq;
-      // Optionally refresh the program list here if necessary
     }
     this.dialogVisible = false;
   }
@@ -104,7 +120,6 @@ export class FaqComponent implements OnInit {
       accept: () => {
         this.service.deleteFaq(faq.id).subscribe(
           () => {
-            // Optionally call a method to re-fetch programs after deletion
             this.fetchAllFaq();
             this.messageService.add({
               severity: 'success',
@@ -122,21 +137,18 @@ export class FaqComponent implements OnInit {
           }
         );
       },
-      reject: () => {
-        // Optionally handle rejection (user clicks cancel)
-      }
+      reject: () => {}
     });
   }
 
   toggleReorderMode() {
     this.reorderMode = !this.reorderMode;
   }
-  
+
   saveOrder() {
-    // Capture the current order of FAQs
     const reorderedFaqs = this.faqs.map((faq, index) => ({
       id: faq.id,
-      order: index + 1 // or any logic to determine order
+      order: index + 1
     }));
   
     this.service.saveFaqOrder(reorderedFaqs).subscribe({
@@ -149,20 +161,10 @@ export class FaqComponent implements OnInit {
       }
     });
   }
-  
-  exitReorderMode() {
-    this.toggleReorderMode(); // Call the method to toggle the state
-  }
-  
-  ngOnInit(): void {
-    this.fetchAllFaq();
-  }
 
-exportHeaderMapping = {
-    id: 'ID',
-    name: 'Name',
-    description: 'Description',
-  };
+  exitReorderMode() {
+    this.toggleReorderMode();
+  }
 
   fetchAllFaq() {
     this.loading = true;
@@ -175,15 +177,8 @@ exportHeaderMapping = {
     });
   }
 
-  ngAfterViewInit() {
-    if (this.downloadComponent) {
-      this.downloadComponent.downloadAllStudentsEvent.subscribe((format: string) => {
-        this.downloadAllStudents(format);
-      });
-      this.downloadComponent.downloadSelectedStudentsEvent.subscribe((format: string) => {
-        this.enterSelectionMode();
-      });
-    }
+  hasWritePermission(pageName: string): boolean {
+    return this.navigationsService.hasWritePermission(pageName);
   }
 
   clear(table: Table) {
@@ -201,7 +196,7 @@ exportHeaderMapping = {
   }
 
   downloadAllStudents(format: string) {
-    const data = this.faqs.map(FAQ => this.mapCustomerToExportFormat(FAQ));
+    const data = this.faqs.map(faq => this.mapCustomerToExportFormat(faq));
     this.download(format, data, 'FAQ');
   }
 
@@ -214,7 +209,7 @@ exportHeaderMapping = {
           detail: 'Please select at least one course.'
         });
       } else {
-        const data = this.selectedFaqs.map(FAQ => this.mapCustomerToExportFormat(FAQ));
+        const data = this.selectedFaqs.map(faq => this.mapCustomerToExportFormat(faq));
         this.download(this.downloadComponent.format, data, 'selected_courses');
         this.exitSelectionMode();
       }
@@ -222,7 +217,11 @@ exportHeaderMapping = {
       console.warn('Download selected courses called but not in selection mode.');
     }
   }
-
+  exportHeaderMapping = {
+    id: 'ID',
+    name: 'Name',
+    description: 'Description',
+  };
   mapCustomerToExportFormat(faq: Faq) {
     return {
       ID: faq.id,
@@ -241,8 +240,6 @@ exportHeaderMapping = {
       XLSX.writeFile(workbook, `${filename}.xlsx`);
     } else if (format === 'pdf') {
       const doc = new jsPDF();
-
-      // Set document properties
       doc.setProperties({
         title: `${filename}`,
         author: 'Your Name',
@@ -250,26 +247,14 @@ exportHeaderMapping = {
       });
 
       doc.setFont('helvetica');
-
-      // Set margins
-      const margin = {
-        top: 20,
-        left: 20,
-        right: 20,
-        bottom: 20
-      };
-
+      const margin = { top: 20, left: 20, right: 20, bottom: 20 };
       doc.text('Courses List', margin.left, margin.top);
       const columns = Object.values(this.exportHeaderMapping);
-      const rows = data.map(course => Object.keys(this.exportHeaderMapping).map(key => course[key]));
+      const rows = data.map(faq => Object.keys(this.exportHeaderMapping).map(key => faq[key]));
 
       autoTable(doc, {
         margin: { top: 30 },
-        headStyles: {
-          fillColor: [41, 128, 185],
-          textColor: 255,
-          fontStyle: 'bold'
-        },
+        headStyles: { fillColor: [41, 128, 185], textColor: 255, fontStyle: 'bold' },
         bodyStyles: { textColor: 50 },
         head: [columns],
         body: rows
@@ -278,6 +263,4 @@ exportHeaderMapping = {
       doc.save(`${filename}.pdf`);
     }
   }
-
-
 }

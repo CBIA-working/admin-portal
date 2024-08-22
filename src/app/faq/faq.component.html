@@ -1,51 +1,27 @@
 <p-toast></p-toast>
 <div class="card" style="margin: 0 20px; overflow: hidden;">
   <div class="mb-2 ml-auto z-0" style="display: flex; gap: 10px;">
-    <p-button *ngIf="!reorderMode" pTooltip="Add Program" icon="pi pi-plus" (click)="showAddDialog()" [raised]="true" severity="primary"></p-button>
+    <!-- Add Button - only show if the user has write permission -->
+    <p-button *ngIf="!reorderMode && hasWritePermission('FAQs')" 
+      pTooltip="Add Program" icon="pi pi-plus" (click)="showAddDialog()" [raised]="true" severity="primary"></p-button>
 
-    <app-download *ngIf="!reorderMode" [class.hidden]="downloadSelectedMode" (downloadSelectedStudentsEvent)="downloadSelectedStudents()"></app-download>
-    <p-button 
-      pTooltip="Download Selected Students"
-      label="Download Selected Students" 
-      icon="pi pi-download" 
-      [raised]="true" 
-      severity="secondary" 
-      (click)="downloadSelectedStudents()" 
-      *ngIf="downloadSelectedMode">
-    </p-button>
-    <p-button 
-      pTooltip="Cancel"
-      icon="pi pi-times" 
-      severity="danger" 
-      [raised]="true" 
-      (click)="exitSelectionMode()" 
-      *ngIf="downloadSelectedMode">
+    <app-download *ngIf="!reorderMode " 
+      [class.hidden]="downloadSelectedMode" (downloadSelectedStudentsEvent)="downloadSelectedStudents()"></app-download>
+    
+    <!-- Reorder Button - only show if the user has write permission -->
+    <p-button *ngIf="hasWritePermission('FAQs')" 
+      pTooltip="Reorder Columns" icon="pi pi-arrows-h" [raised]="true" severity="info" (click)="toggleReorderMode()">
     </p-button>
 
-    <p-button 
-      pTooltip="Reorder Columns"
-      icon="pi pi-arrows-h" 
-      [raised]="true" 
-      severity="info" 
-      (click)="toggleReorderMode()">
+    <!-- Save Order Button - only show if the user has write permission -->
+    <p-button *ngIf="reorderMode && hasWritePermission('FAQs')" 
+      pTooltip="Save Order" icon="pi pi-save" [raised]="true" severity="success" (click)="saveOrder()">
     </p-button>
-
-    <p-button 
-      pTooltip="Save Order"
-      icon="pi pi-save" 
-      [raised]="true" 
-      severity="success" 
-      (click)="saveOrder()"
-      *ngIf="reorderMode">
+    
+    <!-- Cancel Reorder Button -->
+    <p-button *ngIf="reorderMode" 
+      pTooltip="Cancel" icon="pi pi-times" severity="danger" [raised]="true" (click)="exitReorderMode()">
     </p-button>
-    <p-button 
-      pTooltip="Cancel"
-      icon="pi pi-times" 
-      severity="danger" 
-      [raised]="true" 
-      (click)="exitReorderMode()" 
-      *ngIf="reorderMode">
-  </p-button>
   </div>
 
   <div *ngIf="reorderMode; else normalTable">
@@ -135,8 +111,13 @@
           <td>{{ faq.description }}</td>
           <td>
             <div class="button-container" style="display: flex; justify-content: center; gap: 0.5rem;">
-              <p-button pTooltip="Edit" (click)="showEditDialog(faq)" icon="pi pi-pencil" [text]="true" [plain]="true"></p-button>
-              <p-button pTooltip="Delete" (click)="deleteFaq(faq)" icon="pi pi-trash" [text]="true" [plain]="true"></p-button> 
+              <!-- Edit Button - only show if the user has write permission -->
+              <p-button *ngIf="hasWritePermission('FAQs')" 
+                pTooltip="Edit" (click)="showEditDialog(faq)" icon="pi pi-pencil" [text]="true" [plain]="true"></p-button>
+              
+              <!-- Delete Button - only show if the user has write permission -->
+              <p-button *ngIf="hasWritePermission('FAQs')" 
+                pTooltip="Delete" (click)="deleteFaq(faq)" icon="pi pi-trash" [text]="true" [plain]="true"></p-button> 
             </div>
           </td>
         </tr>
