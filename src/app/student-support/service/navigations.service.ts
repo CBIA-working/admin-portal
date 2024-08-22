@@ -8,7 +8,14 @@ import { filter } from 'rxjs/operators';
 export class NavigationsService {
   private pages = [
     { path: '/home', title: 'Home', icon: 'pi pi-home' },
-    { path: '/roles', title: 'Role', icon: 'pi pi-shield' },
+    {
+      title: 'Roles',
+      icon: 'pi pi-shield',
+      children: [
+        { path: '/roles', title: 'Role',icon: 'pi pi-home'},
+        { path: '/assign-role', title: 'Assign Role',icon: 'pi pi-home'}
+      ]
+    },
     { path: '/managestudent', title: 'Manage Students', icon: 'pi pi-users' },
     { path: '/Programs', title: 'Programs', icon: 'fa fa-graduation-cap' },
     { path: '/culturalevents', title: 'Cultural Events', icon: 'fa fa-calendar-alt' },

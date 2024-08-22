@@ -1,28 +1,60 @@
 <p-sidebar #sidebarRef [(visible)]="sidebarVisible">
-    <ng-template pTemplate="headless">
-      <div class="flex flex-column h-full">
-        <div class="flex align-items-center justify-content-between px-4 pt-3 flex-shrink-0">
-          <span class="inline-flex align-items-center gap-2">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSy7nFdX1g_CVR4WyP5LgKOGytP0J8PE53_RQ&s" alt="Logo" width="33" height="35">
-            <span class="font-semibold text-2xl text-primary">Admin Portal</span>
-          </span>
-          <p-button type="button" (click)="closeSidebar()" icon="pi pi-times" rounded="true" outlined="true" styleClass="h-2rem w-2rem"></p-button>
-        </div>
-        <div class="overflow-y-auto">
-          <ul class="list-none p-3 m-0">
-            <li *ngFor="let page of navService.getPages()">
-              <a (click)="navService.navigateTo(page.path)"
-                 pRipple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100"
-                 [ngStyle]="{'background-color': navService.isActive(page.path) ? '#e0e0e0' : ''}">
+  <ng-template pTemplate="headless">
+    <div class="flex flex-column h-full">
+      <div class="flex align-items-center justify-content-between px-4 pt-3 flex-shrink-0">
+        <span class="inline-flex align-items-center gap-2">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSy7nFdX1g_CVR4WyP5LgKOGytP0J8PE53_RQ&s" alt="Logo" width="33" height="35">
+          <span class="font-semibold text-2xl text-primary">Admin Portal</span>
+        </span>
+        <p-button type="button" (click)="closeSidebar()" icon="pi pi-times" rounded="true" outlined="true" styleClass="h-2rem w-2rem"></p-button>
+      </div>
+      <div class="overflow-y-auto">
+        <ul class="list-none p-3 m-0">
+          <li *ngFor="let page of navService.getPages()">
+            <div *ngIf="!page.children">
+              <!-- Single menu item -->
+              <a (click)="handleRouteClick(page.path)"
+                 pRipple
+                 class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100"
+                 [ngStyle]="{'background-color': isActive(page.path) ? '#e0e0e0' : ''}">
                 <i class="{{ page.icon }} mr-2"></i>
                 <span class="font-medium">{{ page.title }}</span>
               </a>
-            </li>
-            <!-- Logout and other links -->
-          </ul>
-        </div>
+            </div>
+
+            <div *ngIf="page.children">
+              <!-- Parent menu item with children -->
+              <a (click)="toggleMenu(page.title)"
+                 pRipple
+                 class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100">
+                <i class="{{ page.icon }} mr-2"></i>
+                <span class="font-medium">{{ page.title }}</span>
+                <i class="pi pi-chevron-down ml-auto" [ngClass]="{'pi-chevron-up': isExpanded(page.title)}"></i>
+              </a>
+              <ul *ngIf="isExpanded(page.title)" class="list-none ml-4">
+                <li *ngFor="let child of page.children">
+                  <a (click)="handleRouteClick(child.path)"
+                     pRipple
+                     class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100"
+                     [ngStyle]="{'background-color': isActive(child.path) ? '#e0e0e0' : ''}">
+                    <i class="{{ child.icon }} mr-2"></i> <!-- Icon for child items -->
+                    <span class="font-medium">{{ child.title }}</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+            
+          </li>
+        </ul>
       </div>
-    </ng-template>
-  </p-sidebar>
-  <p-button (click)="sidebarVisible = true" icon="pi pi-bars"></p-button>
-  
+      <div class="mt-auto">
+        <hr class="mb-3 mx-3 border-top-1 border-none surface-border" />
+        <a routerLink="/profile" routerLinkActive="active-link" pRipple class="m-3 flex align-items-center cursor-pointer p-3 gap-2 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
+            <p-avatar [image]="user.imageUrl" shape="circle"></p-avatar>
+            <span class="font-bold">{{ user?.fname }} {{ user?.lname }}</span>
+        </a>
+    </div>
+    </div>
+  </ng-template>
+</p-sidebar>
+<p-button (click)="sidebarVisible = true" icon="pi pi-bars"></p-button>

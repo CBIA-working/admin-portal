@@ -17,6 +17,7 @@ import { NavigationsService } from '../student-support/service/navigations.servi
 export class SidebarComponent implements OnInit, AfterViewInit {
   sidebarVisible: boolean = false;
   user: any;
+  expandedMenu: string | null = null;  // Track the expanded menu
 
   constructor(private router: Router, private authService: AuthService, private navService: NavigationsService) {}
 
@@ -38,6 +39,10 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     this.sidebarVisible = false;
   }
 
+  toggleMenu(title: string): void {
+    this.expandedMenu = this.expandedMenu === title ? null : title;  // Toggle expansion
+  }
+
   logout(): void {
     this.authService.clearToken();
     this.navService.navigateTo('/login');
@@ -52,5 +57,9 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 
   isActive(route: string): boolean {
     return this.router.url === route;
+  }
+
+  isExpanded(title: string): boolean {
+    return this.expandedMenu === title;
   }
 }
