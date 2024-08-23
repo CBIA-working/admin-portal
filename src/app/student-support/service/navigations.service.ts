@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { Injectable } from "@angular/core";
+import { NavigationEnd, Router } from "@angular/router";
+import { filter } from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +31,7 @@ export class NavigationsService {
     { path: '/settings', title: 'Settings', icon: 'pi pi-cog' }
   ];
 
-  private permissions: any[] = [];  // Store permissions here
+  private permissions: any[] = [];
 
   constructor(private router: Router) {
     this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
@@ -42,7 +42,7 @@ export class NavigationsService {
 
   setPermissions(permissions: any[]): void {
     this.permissions = permissions;
-    sessionStorage.setItem('permissions', JSON.stringify(permissions)); // Ensure permissions are stored
+    sessionStorage.setItem('permissions', JSON.stringify(permissions));
   }
 
   private loadPermissionsFromSession(): void {
@@ -63,20 +63,17 @@ export class NavigationsService {
   }
 
   getPages() {
-    // Recursively filter pages based on permissions
     return this.filterPagesWithPermissions(this.pages);
   }
 
   private filterPagesWithPermissions(pages: any[]): any[] {
     return pages
       .map(page => {
-        if (page.children) {
-          // Recursively filter child pages
-          const filteredChildren = this.filterPagesWithPermissions(page.children);
-          if (filteredChildren.length > 0) {
-            return { ...page, children: filteredChildren };
+        if (this.hasPermissionForPage(page.title)) {
+          // If the main page has permission, grant access to its children
+          if (page.children) {
+            return { ...page, children: page.children }; // Automatically include all children
           }
-        } else if (this.hasPermissionForPage(page.title)) {
           return page;
         }
         return null;
