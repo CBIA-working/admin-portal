@@ -79,7 +79,7 @@
   (dialogClose)="onDialogClose($event)">
   </app-edit-role-list>
 </p-dialog>
-<p-dialog [(visible)]="addDialogVisible" [modal]="true" [closable]="false" header="Add Event" [responsive]="true" [style]="{width: '60vw' ,height:'68vh'}">
+<p-dialog [(visible)]="addDialogVisible" [modal]="true" [closable]="true" header="Add Event" [responsive]="true"  [style]="{width: '60vw' ,height:'68vh'}">
     <app-add-assign-role (dialogClose)="onAddDialogClose()"></app-add-assign-role>
   </p-dialog>
 <p-confirmDialog></p-confirmDialog>
