@@ -1,4 +1,5 @@
-<!-- Role Dropdown: Only show if no role has been selected -->
+<p-toast></p-toast>
+
 <p-dropdown
   *ngIf="!roleSelected"
   [options]="roles"
@@ -11,46 +12,48 @@
   (onChange)="onRoleSelect()">
 </p-dropdown>
 
-<p-table *ngIf="selectedRoleDetails" [value]="[selectedRoleDetails]" styleClass="p-datatable-striped">
-    <ng-template pTemplate="header">
-        <tr>
-            <th>Role Name</th>
-            <th>Permissions</th>
-            <th>Admin</th> <!-- New column for Admin dropdown -->
-        </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-role>
-        <tr>
-            <!-- First Column: Role Name -->
-            <td>{{ role.roleName }}</td>
-            <!-- Second Column: Permissions, each on a new line -->
-            <td>
-              <ng-container *ngFor="let permission of role.permissions">
-                {{ permission.type }} - {{ permission.pageName }}<br/>
-              </ng-container>
-            </td>
-            <!-- Third Column: Admin Dropdown -->
-            <td>
-                <p-dropdown
-                  [options]="admins"
-                  [(ngModel)]="selectedAdminId"
-                  optionLabel="label"
-                  optionValue="value"
-                  placeholder="Select an Admin"
-                  [style]="{width: '200px'}"
-                  appendTo="body">
-                </p-dropdown>
-            </td>
-        </tr>
-    </ng-template>
+<p-table *ngIf="roleData.length > 0" [value]="roleData" styleClass="p-datatable-striped">
+  <ng-template pTemplate="header">
+      <tr>
+          <th>Role Name</th>
+          <th>Permissions</th>
+          <th>Admin</th>
+          <th>Action</th>
+      </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-role let-rowIndex="rowIndex">
+      <tr>
+          <td>{{ role.roleName }}</td>
+          <td>
+            <ng-container *ngFor="let permission of role.permissions">
+              {{ permission.type }} - {{ permission.pageName }}<br/>
+            </ng-container>
+          </td>
+          <td>
+              <p-dropdown
+                [options]="getAvailableAdmins(rowIndex)"
+                [(ngModel)]="selectedAdminIds[rowIndex]"
+                optionLabel="label"
+                optionValue="value"
+                placeholder="Select an Admin"
+                [style]="{width: '200px'}"
+                appendTo="body"
+                (onChange)="onAdminSelect(rowIndex)">
+              </p-dropdown>
+          </td>
+          <td>
+              <p-button icon="pi pi-plus" (click)="addRow()"></p-button>
+          </td>
+      </tr>
+  </ng-template>
 </p-table>
 
-<!-- Wrapper div with text-align: right to align the button to the right -->
 <div [style]="{ 'text-align': 'right', 'margin-top': '20px' }">
   <p-button
-    label="Assign Role"
+    label="Assign Roles"
     icon="pi pi-check"
-    (click)="assignRole()"
-    [disabled]="!selectedAdminId || !selectedRoleId">
+    (click)="assignRoles()"
+    [disabled]="!selectedAdminIds[0] || !selectedRoleId">
   </p-button>
 </div>
+

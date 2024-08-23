@@ -20,14 +20,17 @@ import { SkeletonModule } from 'primeng/skeleton';
   templateUrl: './add-assign-role.component.html',
   styleUrl: './add-assign-role.component.scss'
 })
+
+
 export class AddAssignRoleComponent implements OnInit {
   admins: any[] = [];
   roles: any[] = [];
-  selectedAdminId: number | null = null;
+  selectedAdminIds: (number | null)[] = [null];
   selectedRoleId: number | null = null;
   selectedRoleDetails: any | null = null;
+  roleData: any[] = [];
   loading: boolean = true;
-  roleSelected: boolean = false; // Track if a role is selected
+  roleSelected: boolean = false;
 
   constructor(private service: Service, private messageService: MessageService, private cdr: ChangeDetectorRef) {}
 
@@ -60,25 +63,76 @@ export class AddAssignRoleComponent implements OnInit {
   onRoleSelect() {
       if (this.selectedRoleId) {
           this.selectedRoleDetails = this.roles.find(role => role.id === this.selectedRoleId);
-          this.roleSelected = true; // Set roleSelected to true once a role is selected
-          this.cdr.detectChanges(); // Ensure the UI updates after setting the selectedRoleDetails
+          this.roleData.push({
+              roleName: this.selectedRoleDetails.roleName,
+              permissions: this.selectedRoleDetails.permissions
+          });
+          this.roleSelected = true;
+          this.cdr.detectChanges();
       }
   }
 
-  assignRole() {
-      if (this.selectedAdminId && this.selectedRoleId) {
-          this.service.getassignRoles(this.selectedAdminId, this.selectedRoleId).subscribe({
-              next: (response) => {
-                  this.messageService.add({ severity: 'success', summary: 'Role Assigned', detail: 'Role successfully assigned to admin' });
-              },
-              error: (error) => {
-                  console.error('Error assigning role:', error);
-                  this.messageService.add({ severity: 'error', summary: 'Assignment Failed', detail: 'Failed to assign role' });
-              }
+  addRow() {
+      if (this.selectedRoleDetails) {
+          this.roleData.push({
+              roleName: this.selectedRoleDetails.roleName,
+              permissions: this.selectedRoleDetails.permissions
           });
-      } else {
-          this.messageService.add({ severity: 'warn', summary: 'Selection Missing', detail: 'Please select an admin and a role to assign' });
+          this.selectedAdminIds.push(null);
+          this.cdr.detectChanges();
       }
   }
+
+  getAvailableAdmins(index: number) {
+      const selectedAdmins = this.selectedAdminIds.filter(id => id !== null && id !== this.selectedAdminIds[index]);
+      return this.admins.filter(admin => !selectedAdmins.includes(admin.value));
+  }
+
+  onAdminSelect(index: number) {
+      this.cdr.detectChanges();
+  }
+
+  assignRoles() {
+    let successCount = 0;
+    let failureCount = 0;
+
+    this.roleData.forEach((role, index) => {
+      const selectedAdminId = this.selectedAdminIds[index];
+      const selectedRoleId = this.selectedRoleId;
+
+      if (selectedAdminId && selectedRoleId) {
+        this.service.getassignRoles(selectedAdminId, selectedRoleId).subscribe({
+          next: (response) => {
+            successCount++;
+            if (successCount + failureCount === this.roleData.length) {
+              this.handleFinalToast(successCount, failureCount);
+            }
+          },
+          error: (error) => {
+            console.error('Error assigning role:', error);
+            failureCount++;
+            if (successCount + failureCount === this.roleData.length) {
+              this.handleFinalToast(successCount, failureCount);
+            }
+          }
+        });
+      } else {
+        this.messageService.add({ severity: 'warn', summary: 'Selection Missing', detail: 'Please select an admin and a role to assign' });
+      }
+    });
+  }
+
+  handleFinalToast(successCount: number, failureCount: number) {
+    if (successCount > 0) {
+      this.messageService.add({ severity: 'success', summary: 'Roles Assigned', detail: `${successCount} roles successfully assigned.` });
+    }
+    if (failureCount > 0) {
+      this.messageService.add({ severity: 'error', summary: 'Assignment Failed', detail: `${failureCount} roles failed to be assigned.` });
+    }
+  }
 }
+
+
+
+
 

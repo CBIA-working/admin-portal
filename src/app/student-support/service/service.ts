@@ -40,9 +40,11 @@ getAdmin(params?: any): Promise<any> {
 getAdminRoles(params?: any): Promise<any> {
   return this.http.get<any>(`${this.BASE_URL}/getadminroles`, { params }).toPromise();
 }
-getassignRoles(AdminId: number, RoleID: number): Observable<any> {
-  return this.http.post<any>(`${this.BASE_URL}/adminRole`, { AdminId, RoleID });
+getassignRoles(AdminId: number, RoleId: number): Observable<any> {
+  return this.http.post<any>(`${this.BASE_URL}/adminRole`, { AdminId, RoleId });
 }
+
+
 //students 
     getStudents(params?: any): Promise<any> {
         return this.http.get<any>(`${this.BASE_URL}/studentsAdmin`, { params }).toPromise();
