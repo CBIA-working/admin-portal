@@ -96,6 +96,16 @@ export class AddAssignRoleComponent implements OnInit {
     let successCount = 0;
     let failureCount = 0;
 
+    // Check for duplicate AdminIds
+    const duplicateAdmins = this.selectedAdminIds.filter((adminId, index, array) => 
+      adminId !== null && array.indexOf(adminId) !== index
+    );
+
+    if (duplicateAdmins.length > 0) {
+      this.messageService.add({ severity: 'error', summary: 'Duplicate Admin', detail: 'Duplicate Admin IDs found. Please select unique admins.' });
+      return;
+    }
+
     this.roleData.forEach((role, index) => {
       const selectedAdminId = this.selectedAdminIds[index];
       const selectedRoleId = this.selectedRoleId;
@@ -131,6 +141,7 @@ export class AddAssignRoleComponent implements OnInit {
     }
   }
 }
+
 
 
 
