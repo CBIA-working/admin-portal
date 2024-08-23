@@ -47,13 +47,21 @@
       </tr>
   </ng-template>
 </p-table>
-
-<div [style]="{ 'text-align': 'right', 'margin-top': '20px' }">
+<div style="display: flex; justify-content: flex-end; padding: 20px; border-top: 1px solid #eee;">
   <p-button
     label="Assign Roles"
     icon="pi pi-check"
     (click)="assignRoles()"
-    [disabled]="!selectedAdminIds[0] || !selectedRoleId">
+    [disabled]="!selectedAdminIds[0] || !selectedRoleId"
+    style="margin-right: 10px;">
+  </p-button>
+  <p-button 
+    type="button" 
+    label="Close" 
+    icon="pi pi-times" 
+    (click)="closeDialog()">
   </p-button>
 </div>
+
+
 

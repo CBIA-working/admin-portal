@@ -59,7 +59,7 @@ export class AssignRoleComponent implements OnInit {
   }
   onAddDialogClose() {
     this.addDialogVisible = false;
-    // Optionally refresh the student list here
+    this.fetchRoles(); 
   }
 
   ngOnInit(): void {
@@ -85,7 +85,7 @@ export class AssignRoleComponent implements OnInit {
     this.dialogVisible = true;
   }
 
-  onDialogClose(event: any): void {
+  onDialogClose(admin: Role | null): void {
     this.dialogVisible = false;
     this.fetchRoles(); // Refresh roles after changes
   }

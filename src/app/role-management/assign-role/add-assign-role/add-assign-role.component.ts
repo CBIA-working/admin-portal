@@ -9,6 +9,7 @@ import { Service } from 'src/app/student-support/service/service';
 import { MessageService } from 'primeng/api'; // Import ToastModule and MessageService
 import { ToastModule } from 'primeng/toast';
 import { SkeletonModule } from 'primeng/skeleton';
+import { Role } from 'src/app/student-support/domain/schema';
 
 @Component({
   selector: 'app-add-assign-role',
@@ -23,6 +24,9 @@ import { SkeletonModule } from 'primeng/skeleton';
 
 
 export class AddAssignRoleComponent implements OnInit {
+  @Input() role: Role | null = null;
+  @Output() dialogClose: EventEmitter<Role | null> = new EventEmitter<Role | null>();
+
   admins: any[] = [];
   roles: any[] = [];
   selectedAdminIds: (number | null)[] = [null];
@@ -139,8 +143,23 @@ export class AddAssignRoleComponent implements OnInit {
     if (failureCount > 0) {
       this.messageService.add({ severity: 'error', summary: 'Assignment Failed', detail: `${failureCount} roles failed to be assigned.` });
     }
+    
   }
+  resetForm(): void {
+    this.selectedAdminIds = [null];
+    this.selectedRoleId = null;
+    this.selectedRoleDetails = null;
+    this.roleData = [];
+    this.roleSelected = false;
+    this.cdr.detectChanges();
+  }
+  closeDialog(): void {
+    this.dialogClose.emit(null);
+    this.resetForm();
+  }
+ 
 }
+
 
 
 
