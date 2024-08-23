@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import * as CryptoJS from 'crypto-js';
 
 @Injectable({
   providedIn: 'root'
@@ -9,20 +10,21 @@ export class AuthService {
   private rememberMeKey = 'rememberMe';
   private logoutTimer: any;
   private readonly AUTO_LOGOUT_TIME = 30 * 60 * 1000; // 30 minutes
+  private encryptionKey = '1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef'; 
 
   constructor(private router: Router) {}
 
   isLoggedIn(): boolean {
-    return !!localStorage.getItem(this.tokenKey);
+    return !!this.getDecryptedData(this.tokenKey);
   }
 
   getToken(): string | null {
-    return localStorage.getItem(this.tokenKey);
+    return this.getDecryptedData(this.tokenKey);
   }
 
   setToken(token: string, rememberMe: boolean): void {
-    localStorage.setItem(this.tokenKey, token);
-    localStorage.setItem(this.rememberMeKey, JSON.stringify(rememberMe));
+    this.setEncryptedData(this.tokenKey, token);
+    this.setEncryptedData(this.rememberMeKey, rememberMe);
     this.manageLogoutTimer(!rememberMe); // Adjust timer based on the rememberMe value
   }
 
@@ -57,7 +59,7 @@ export class AuthService {
   }
 
   public resetLogoutTimer(): void {
-    const rememberMe = JSON.parse(localStorage.getItem(this.rememberMeKey) || 'false');
+    const rememberMe = this.getDecryptedData(this.rememberMeKey);
     if (!rememberMe) {
       this.startLogoutTimer();
     } else {
@@ -67,5 +69,24 @@ export class AuthService {
 
   private logout(): void {
     this.clearToken();
+  }
+
+  // Encryption helper functions
+  private setEncryptedData(key: string, data: any): void {
+    const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(data), this.encryptionKey).toString();
+    localStorage.setItem(key, encryptedData);
+  }
+
+  private getDecryptedData(key: string): any {
+    const encryptedData = localStorage.getItem(key);
+    if (!encryptedData) {
+      return null;
+    }
+    try {
+      const bytes = CryptoJS.AES.decrypt(encryptedData, this.encryptionKey);
+      return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+    } catch (e) {
+      return null; // Handle errors (e.g., wrong encryption key)
+    }
   }
 }
