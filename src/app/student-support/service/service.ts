@@ -37,12 +37,11 @@ updateAdminRole(data: { AdminId: number; RoleId: number }): Observable<any> {
   return this.http.put<any>(`${this.BASE_URL}/updateAssignRole`, data);
 }
 
-
-deleteAassignRoles(studentId: number, eventId: number): Observable<any> {
-  return this.http.request('DELETE', `${this.BASE_URL}/deleteAssign`, {
-    body: { studentId, eventId }
-  });
+deleteAssignedRole(roleId: number): Observable<void> {
+  return this.http.delete<void>(`${this.BASE_URL}/deleteAssignedRole?id=${roleId}`);
 }
+
+
 
 //admin
 getupdateProfile(formData: FormData): Observable<any> {

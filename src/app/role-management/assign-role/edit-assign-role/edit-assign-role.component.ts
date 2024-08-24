@@ -44,6 +44,11 @@ export class EditAssignRoleComponent implements OnInit, OnChanges {
 
   roles: any[] = [];  // Store the fetched roles
   selectedPermissions: string[] = []; // Store the permissions for the selected role
+  selectedRole: any; // Separate selected role for dropdown
+
+  // other existing properties and methods
+
+
 
   constructor(
     private service: Service,
@@ -60,46 +65,47 @@ export class EditAssignRoleComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     if (this.role) {
       this.originalRoleData = { ...this.role };
+      this.selectedRole = this.roles.find(r => r.roleName === this.role.RoleName);
     }
-
-    // Fetch roles on component initialization
+  
     this.getRoles().subscribe(
-      (roles) => {
+      roles => {
         this.roles = roles;
-        // If a role is already selected, set it as the selected option and load permissions
-        const matchingRole = this.roles.find(role => role.roleName === this.role?.RoleName);
-        if (matchingRole) {
-          this.role!.RoleName = matchingRole.roleName;
-          this.selectedPermissions = matchingRole.permissions;
+        this.selectedRole = roles.find(role => role.roleName === this.role?.RoleName);
+        if (this.selectedRole) {
+          this.selectedPermissions = this.selectedRole.permissions;
         }
       },
-      (error) => {
-        console.error('Error fetching roles:', error);
-      }
+      error => console.error('Error fetching roles:', error)
     );
   }
+  
 
   getRoles(): Observable<any[]> {
     return this.service.getRoles();
   }
 
   onRoleChange(event: any): void {
-    // Directly use the selected role object instead of finding it again in the array
     const selectedRole = event.value;
-  
     if (selectedRole) {
+      // Update the role object to reflect the change
+      this.role.RoleId = selectedRole.id;
+      this.role.RoleName = selectedRole.roleName;
+      this.role.Permissions = selectedRole.permissions;
+      
       this.selectedPermissions = selectedRole.permissions.map(permission => ({
         type: permission.type,
         pageName: permission.pageName
       }));
+  
+      // Check if the role change should toggle the save button
+      this.showSaveButton = this.originalRoleData && this.role.RoleId !== this.originalRoleData.RoleId;
     } else {
       this.selectedPermissions = [];
+      this.showSaveButton = false;
     }
-    this.cdr.detectChanges(); // Force change detection to update the view
+    this.cdr.detectChanges();
   }
-  
-  
-  
   
   
 
@@ -118,11 +124,11 @@ export class EditAssignRoleComponent implements OnInit, OnChanges {
     if (this.saveSubscription) {
       this.saveSubscription.unsubscribe();
     }
-
+  
     if (this.role) {
+  
       this.saveSubscription = this.service.updateAdminRole(this.role)
         .subscribe(response => {
-          console.log('Assigned Role updated successfully:', response);
           this.messageService.add({ severity: 'success', summary: 'Assigned Role Updated', detail: 'Will reload to apply the changes.' });
           setTimeout(() => {
             this.dialogClose.emit(this.role); // Emit the updated event object
@@ -132,6 +138,8 @@ export class EditAssignRoleComponent implements OnInit, OnChanges {
         });
     }
   }
+  
+  
 
   closeDialog(): void {
     this.dialogClose.emit(null);

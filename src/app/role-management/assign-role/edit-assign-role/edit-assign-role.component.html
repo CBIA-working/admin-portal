@@ -14,10 +14,13 @@
             </div>
             <div>
                 <strong>Role Name</strong>
-                <p-dropdown [options]="roles" [(ngModel)]="role" optionLabel="roleName" 
+                <p-dropdown [options]="roles" [(ngModel)]="selectedRole" optionLabel="roleName" 
                 placeholder="Select a Role" style="width: 100%;" (onChange)="onRoleChange($event)">
-    </p-dropdown>
-    
+                </p-dropdown>
+
+                <small style="display: block; margin-top: 8px; color: #666; font-size: 12px; font-weight: bold;">
+                    Original Role Assigned: {{ originalRoleData?.RoleName }}
+                </small>
             </div>
             <div>
                 <strong>Permissions</strong>
