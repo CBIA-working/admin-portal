@@ -14,16 +14,21 @@
             </div>
             <div>
                 <strong>Role Name</strong>
-                <input pInputText type="text" [(ngModel)]="role.RoleName" placeholder="Role Name"
-                       style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;">
+                <p-dropdown [options]="roles" [(ngModel)]="role" optionLabel="roleName" 
+                placeholder="Select a Role" style="width: 100%;" (onChange)="onRoleChange($event)">
+    </p-dropdown>
+    
             </div>
-            <!-- <div>
+            <div>
                 <strong>Permissions</strong>
-                <div *ngFor="let permission of permissions">
-                    <input type="checkbox" [(ngModel)]="permission.selected">
-                    {{ permission.type }} - {{ permission.name }}
+                <div style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%; height: 100px; overflow-y: auto;">
+                  <ul>
+                    <!-- Ensure you are iterating over selectedPermissions and accessing the correct properties -->
+                    <li *ngFor="let permission of selectedPermissions">{{ permission.type }} - {{ permission.pageName }}</li>
+                  </ul>
                 </div>
-            </div> -->
+              </div>
+              
         </div>
     </div>
 </div>

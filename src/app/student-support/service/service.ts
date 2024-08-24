@@ -17,6 +17,7 @@ createRole(roleData: any): Observable<any> {
 getRoles(): Observable<any[]> {
   return this.http.get<any[]>(`${this.BASE_URL}/role`);
 }
+
 getupdateRoles(params?: any): Observable<any> {
   return this.http.put<any>(`${this.BASE_URL}/updateroles`, params);
 }

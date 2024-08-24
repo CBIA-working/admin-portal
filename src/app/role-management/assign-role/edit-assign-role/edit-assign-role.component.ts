@@ -6,12 +6,13 @@ import { CardModule } from 'primeng/card';
 import { TabViewModule } from 'primeng/tabview';
 import { DialogModule } from 'primeng/dialog';
 import { HttpClientModule } from '@angular/common/http';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { Service } from 'src/app/student-support/service/service';
 import { RoleData } from 'src/app/student-support/domain/schema';
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
   selector: 'app-edit-assign-role',
@@ -25,6 +26,7 @@ import { RoleData } from 'src/app/student-support/domain/schema';
       HttpClientModule,
       CommonModule,
       ToastModule,
+      DropdownModule
     ],
   providers: [MessageService, Service, DatePipe],
   templateUrl: './edit-assign-role.component.html',
@@ -32,64 +34,108 @@ import { RoleData } from 'src/app/student-support/domain/schema';
 
 })
 export class EditAssignRoleComponent implements OnInit, OnChanges {
-    @Input() role: RoleData | null = null;
-    @Output() dialogClose: EventEmitter<RoleData | null> = new EventEmitter<RoleData | null>();
-  
-    originalRoleData: RoleData | null = null;
-    showSaveButton: boolean = false;
-    saveSubscription: Subscription | null = null;
-    selectedFile: File | null = null; // Store the selected file
-  
-    constructor(
-      private service: Service,
-      private messageService: MessageService,
-      private cdr: ChangeDetectorRef  // Inject ChangeDetectorRef for manual change detection
-    ) { }
-  
-    ngOnChanges(changes: SimpleChanges): void {
-      if (changes.role && changes.role.currentValue) {
-          this.cdr.detectChanges();  // Manually trigger change detection to update the view
-      }
-    }
-    
-    ngOnInit(): void {
-      if (this.role) {
-        this.originalRoleData = { ...this.role };
-      }
-    }
-  
-    onFieldChange(): void {
-      this.checkForChanges();
-    }
-  
-    checkForChanges(): void {
-      if (this.role && this.originalRoleData) {
-        const roleCopy = { ...this.role };
-        this.showSaveButton = JSON.stringify(roleCopy) !== JSON.stringify(this.originalRoleData);
-      }
-    }
-  
-    saveChanges(): void {
-      if (this.saveSubscription) {
-        this.saveSubscription.unsubscribe();
-      }
-  
-      if (this.role) {
-        this.saveSubscription = this.service.updateAdminRole(this.role)
-          .subscribe(response => {
-            console.log('Assigned Role updated successfully:', response);
-            this.messageService.add({ severity: 'success', summary: 'Assigned Role Updated', detail: 'Will reload to apply the changes.' });
-            setTimeout(() => {
-              this.dialogClose.emit(this.role); // Emit the updated event object
-            }, 1000);
-          }, error => {
-            console.error('Error updating Assigned Role:', error);
-          });
-      }
-    }
-  
-    closeDialog(): void {
-      this.dialogClose.emit(null);
+  @Input() role: RoleData | null = null;
+  @Output() dialogClose: EventEmitter<RoleData | null> = new EventEmitter<RoleData | null>();
+
+  originalRoleData: RoleData | null = null;
+  showSaveButton: boolean = false;
+  saveSubscription: Subscription | null = null;
+  selectedFile: File | null = null; // Store the selected file
+
+  roles: any[] = [];  // Store the fetched roles
+  selectedPermissions: string[] = []; // Store the permissions for the selected role
+
+  constructor(
+    private service: Service,
+    private messageService: MessageService,
+    private cdr: ChangeDetectorRef  // Inject ChangeDetectorRef for manual change detection
+  ) { }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.role && changes.role.currentValue) {
+        this.cdr.detectChanges();  // Manually trigger change detection to update the view
     }
   }
+  
+  ngOnInit(): void {
+    if (this.role) {
+      this.originalRoleData = { ...this.role };
+    }
+
+    // Fetch roles on component initialization
+    this.getRoles().subscribe(
+      (roles) => {
+        this.roles = roles;
+        // If a role is already selected, set it as the selected option and load permissions
+        const matchingRole = this.roles.find(role => role.roleName === this.role?.RoleName);
+        if (matchingRole) {
+          this.role!.RoleName = matchingRole.roleName;
+          this.selectedPermissions = matchingRole.permissions;
+        }
+      },
+      (error) => {
+        console.error('Error fetching roles:', error);
+      }
+    );
+  }
+
+  getRoles(): Observable<any[]> {
+    return this.service.getRoles();
+  }
+
+  onRoleChange(event: any): void {
+    // Directly use the selected role object instead of finding it again in the array
+    const selectedRole = event.value;
+  
+    if (selectedRole) {
+      this.selectedPermissions = selectedRole.permissions.map(permission => ({
+        type: permission.type,
+        pageName: permission.pageName
+      }));
+    } else {
+      this.selectedPermissions = [];
+    }
+    this.cdr.detectChanges(); // Force change detection to update the view
+  }
+  
+  
+  
+  
+  
+
+  onFieldChange(): void {
+    this.checkForChanges();
+  }
+
+  checkForChanges(): void {
+    if (this.role && this.originalRoleData) {
+      const roleCopy = { ...this.role };
+      this.showSaveButton = JSON.stringify(roleCopy) !== JSON.stringify(this.originalRoleData);
+    }
+  }
+
+  saveChanges(): void {
+    if (this.saveSubscription) {
+      this.saveSubscription.unsubscribe();
+    }
+
+    if (this.role) {
+      this.saveSubscription = this.service.updateAdminRole(this.role)
+        .subscribe(response => {
+          console.log('Assigned Role updated successfully:', response);
+          this.messageService.add({ severity: 'success', summary: 'Assigned Role Updated', detail: 'Will reload to apply the changes.' });
+          setTimeout(() => {
+            this.dialogClose.emit(this.role); // Emit the updated event object
+          }, 1000);
+        }, error => {
+          console.error('Error updating Assigned Role:', error);
+        });
+    }
+  }
+
+  closeDialog(): void {
+    this.dialogClose.emit(null);
+  }
+}
+
   

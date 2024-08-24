@@ -66,9 +66,6 @@ export class AssignRoleComponent implements OnInit {
   }
 
 showEditDialog(role: any): void {
-    console.log('Selected Role Data:', role);  // Log the selected role data
-    
-    // Set the selected role data for the dialog
     this.selectedRole = {
         AdminId: role.Admin.id,
         RoleId: role.Role.id,
