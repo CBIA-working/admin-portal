@@ -10,7 +10,7 @@ export class Service {
 
     constructor(private http: HttpClient) {}
 
-//ROLE
+//role
 createRole(roleData: any): Observable<any> {
   return this.http.post(`${this.BASE_URL}/roles`, roleData);
 }
@@ -41,8 +41,6 @@ deleteAssignedRole(roleId: number): Observable<void> {
   return this.http.delete<void>(`${this.BASE_URL}/deleteAssignedRole?id=${roleId}`);
 }
 
-
-
 //admin
 getupdateProfile(formData: FormData): Observable<any> {
     return this.http.post<any>(`${this.BASE_URL}/updateProfile`, formData);
@@ -50,9 +48,6 @@ getupdateProfile(formData: FormData): Observable<any> {
 getAdmin(params?: any): Promise<any> {
     return this.http.get<any>(`${this.BASE_URL}/adminData`, { params }).toPromise();
 }
-
-
-
 
 //students 
     getStudents(params?: any): Promise<any> {
@@ -167,7 +162,6 @@ getPdfUrl3(): string {
       }
 
 //keyprogramdates
-
     getKeyProgramDates(month: number): Promise<any> {
     const url = `${this.BASE_URL}/KeyProgramDatesAdmin`;
     const body = { month };
@@ -235,7 +229,6 @@ deleteAssignmentTrip(studentId: number, tripId: number): Observable<any> {
         return this.http.post<any>(`${this.BASE_URL}/updateOrder`, faqs);
       }
       
-      
 //Program
     getProgram(params?: any): Promise<any> {
     return this.http.get<any>(`${this.BASE_URL}/ProgramAdmin`, { params }).toPromise();
@@ -274,7 +267,6 @@ deleteAssignmentTrip(studentId: number, tripId: number): Observable<any> {
       }
 
 //cityhandbook
-
   getMarkers(params?: any): Promise<Marker[]> {
     return this.http.get<Marker[]>(`${this.BASE_URL}/markersAdmin`, { params }).toPromise();
   }
@@ -291,7 +283,6 @@ deleteAssignmentTrip(studentId: number, tripId: number): Observable<any> {
   }
 
 //orientation
-
 getOrientation(params?: any): Promise<OrientationFile[]> {
   return this.http.get<OrientationFile[]>(`${this.BASE_URL}/OrientationAdmin`, { params }).toPromise();
 }
@@ -312,7 +303,6 @@ uploadFile(formData: FormData): Observable<any> {
 }
 
 //Library
-
 getLibrary(params?: any): Promise<Library[]> {
   return this.http.get<Library[]>(`${this.BASE_URL}/LibraryAdmin`, { params }).toPromise();
 }
@@ -339,7 +329,6 @@ uploadLibraryBook(formData: FormData): Observable<any> {
 }
 
 //tasks
-
 getTasks(params?: any): Promise<Tasks[]> {
   return this.http.get<Tasks[]>(`${this.BASE_URL}/tasksAdmin`, { params }).toPromise();
 }

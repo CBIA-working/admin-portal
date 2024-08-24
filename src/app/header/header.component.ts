@@ -1,33 +1,49 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit, NgZone, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterModule } from '@angular/router';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, SelectItem } from 'primeng/api';
 import { CommonModule } from '@angular/common';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { filter, map } from 'rxjs/operators';
 import { AuthService } from '../authentication/auth.service';
 import { AvatarModule } from 'primeng/avatar';
-import { Service } from '../student-support/service/service'; // Ensure correct path
+import { Service } from '../student-support/service/service';
+import { DialogModule } from 'primeng/dialog';
+import { ListboxModule } from 'primeng/listbox';
+import { FormsModule } from '@angular/forms';
+import { OverlayPanelModule, OverlayPanel } from 'primeng/overlaypanel';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterModule, CommonModule, SidebarComponent, BreadcrumbModule, AvatarModule],
+  imports: [
+    RouterModule, CommonModule, SidebarComponent, FormsModule, BreadcrumbModule,
+    AvatarModule, DialogModule, ListboxModule, OverlayPanelModule
+  ],
   providers: [Service],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
+  @ViewChild('op') op: OverlayPanel;
+  @ViewChild('triggerButton') triggerButton: ElementRef;
+
   items: MenuItem[] = [];
   home: MenuItem = { icon: 'pi pi-home', routerLink: '/home' };
   user: any;
+  rolesOptions: SelectItem[] = [
+    { label: 'Add Roles', value: '/roles' },
+    { label: 'Assign Roles', value: '/assign-roles' }
+  ];
+  selectedRole: string;
+  showRolesDialog: boolean = false;
 
   constructor(
     private router: Router,
     private authService: AuthService,
     private service: Service,
     private route: ActivatedRoute,
-    private zone: NgZone  // For manually triggering Angular change detection
+    private zone: NgZone
   ) {}
 
   ngOnInit() {
@@ -36,12 +52,7 @@ export class HeaderComponent implements OnInit {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd),
       map(() => this.route)
-    ).subscribe(event => {
-      const params = new URLSearchParams(window.location.search);
-      const programId = params.get('programId');
-      if (programId) {
-        this.updateProgramBreadcrumb(programId);
-      }
+    ).subscribe(() => {
       this.updateBreadcrumbs(window.location.pathname);
     });
   }
@@ -55,13 +66,50 @@ export class HeaderComponent implements OnInit {
     const path = url.split('?')[0];
     this.items = [];
 
-    // Add route-specific breadcrumbs
-    if (path === '/managestudent') {
+    if (path === '/roles') {
+      this.items.push({
+        label: 'Role',
+        routerLink: '/roles',
+        command: () => {
+          let event = new MouseEvent('click', { bubbles: true, cancelable: true });
+          this.triggerButton.nativeElement.dispatchEvent(event);
+          this.zone.run(() => this.op.toggle(event));
+        }
+      }, {
+        label: 'Add Roles',
+        routerLink: '/roles',
+        command: () => this.reloadPage('/roles')
+      });
+    }
+    else if (path === '/assign-roles') {
+      this.items.push({
+        label: 'Role',
+        routerLink: '/assign-roles',
+        command: () => {
+          let event = new MouseEvent('click', { bubbles: true, cancelable: true });
+          this.triggerButton.nativeElement.dispatchEvent(event);
+          this.zone.run(() => this.op.toggle(event));
+        }
+      }, {
+        label: 'Assign Roles',
+        routerLink: '/assign-roles',
+        command: () => this.reloadPage('/assign-roles')
+      });
+    }
+    else if (path === '/managestudent') {
       this.items.push({ 
         label: 'Manage Student', 
         escape: false,
         routerLink: '/managestudent',
         command: () => this.reloadPage('/managestudent')
+      });
+    }
+    else if (path === '/accomodations') {
+      this.items.push({ 
+        label: 'Accommodations', 
+        escape: false, 
+        routerLink: '/accomodations',
+        command: () => this.reloadPage('/accomodations')
       });
     }
     else if (path === '/Programs') {
@@ -206,8 +254,13 @@ export class HeaderComponent implements OnInit {
     });
   }
 
+  onRoleSelect(rolePath: string) {
+    this.router.navigate([rolePath]).then(() => {
+      this.op.hide(); // Ensure the OverlayPanel closes after navigation
+    });
+  }
+
   reloadPage(route: string) {
-    // Navigate to the route and force reload
     this.router.navigate([route]).then(() => {
       window.location.reload();
     });
