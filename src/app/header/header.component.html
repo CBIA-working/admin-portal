@@ -1,4 +1,3 @@
-
 <div class="flex justify-between items-center bg-white p-3 w-full">
     <div class="flex items-center">
         <div class="flex-shrink-0">
@@ -25,12 +24,8 @@
 
 <div class="flex-auto bg-white p-2 mb-4 z-50 w-full">
     <p-breadcrumb [model]="items" [home]="home"></p-breadcrumb>
-    <!-- Trigger Button (invisible) -->
-<button #triggerButton style="display: none;">Trigger</button>
 
-<!-- OverlayPanel with absolute positioning and high z-index -->
-<div style="position: absolute; top: 100px; left: 0; width: 100%; z-index: 9999;">
-    <p-overlayPanel #op [dismissable]="true" [showCloseIcon]="true">
+    <p-dialog [(visible)]="showRolesDialog" [modal]="true" [closable]="true" [resizable]="false" [draggable]="false" [dismissableMask]="true">
         <ul>
             <li *ngFor="let role of rolesOptions">
                 <a (click)="onRoleSelect(role.value)">
@@ -38,9 +33,6 @@
                 </a>
             </li>
         </ul>
-    </p-overlayPanel>
-</div>
-</div>
-
-
-
+    </p-dialog>
+    
+</div> 

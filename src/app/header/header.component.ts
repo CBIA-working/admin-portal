@@ -27,7 +27,7 @@ import { OverlayPanelModule, OverlayPanel } from 'primeng/overlaypanel';
 export class HeaderComponent implements OnInit {
   @ViewChild('op') op: OverlayPanel;
   @ViewChild('triggerButton') triggerButton: ElementRef;
-
+  dialogVisible=false;
   items: MenuItem[] = [];
   home: MenuItem = { icon: 'pi pi-home', routerLink: '/home' };
   user: any;
@@ -70,11 +70,7 @@ export class HeaderComponent implements OnInit {
       this.items.push({
         label: 'Role',
         routerLink: '/roles',
-        command: () => {
-          let event = new MouseEvent('click', { bubbles: true, cancelable: true });
-          this.triggerButton.nativeElement.dispatchEvent(event);
-          this.zone.run(() => this.op.toggle(event));
-        }
+        command: () => this.openRolesDialog()
       }, {
         label: 'Add Roles',
         routerLink: '/roles',
@@ -85,11 +81,7 @@ export class HeaderComponent implements OnInit {
       this.items.push({
         label: 'Role',
         routerLink: '/assign-roles',
-        command: () => {
-          let event = new MouseEvent('click', { bubbles: true, cancelable: true });
-          this.triggerButton.nativeElement.dispatchEvent(event);
-          this.zone.run(() => this.op.toggle(event));
-        }
+       command: () => this.openRolesDialog()
       }, {
         label: 'Assign Roles',
         routerLink: '/assign-roles',
@@ -256,9 +248,19 @@ export class HeaderComponent implements OnInit {
 
   onRoleSelect(rolePath: string) {
     this.router.navigate([rolePath]).then(() => {
-      this.op.hide(); // Ensure the OverlayPanel closes after navigation
+      this.dialogVisible = false; // Ensure the dialog closes after navigation
     });
   }
+
+  // Updated to open the dialog instead of using the overlay panel
+  openRolesDialog() {
+    this.showRolesDialog = true;
+  }
+
+  closeRolesDialog() {
+    this.showRolesDialog = false;
+  }
+  
 
   reloadPage(route: string) {
     this.router.navigate([route]).then(() => {
