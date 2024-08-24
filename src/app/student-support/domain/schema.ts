@@ -131,3 +131,11 @@
     permissions: Permission[];  // List of permissions associated with the role
   }
   
+  export interface RoleData {
+    AdminId: number;
+    RoleId: number;
+    RoleName: string;
+    Permissions: any[];  // Adjust this type based on your permissions structure
+    AdminName: string;
+  }
+  

@@ -31,9 +31,12 @@ getassignRoles(AdminId: number, RoleId: number): Observable<any> {
 getAdminRoles(params?: any): Promise<any> {
   return this.http.get<any>(`${this.BASE_URL}/getadminroles`, { params }).toPromise();
 }
-updateassignRoles(AdminId: number, RoleId: number): Observable<any> {
-  return this.http.post<any>(`${this.BASE_URL}/updaterole`, { AdminId, RoleId });
+
+updateAdminRole(data: { AdminId: number; RoleId: number }): Observable<any> {
+  return this.http.put<any>(`${this.BASE_URL}/updateAssignRole`, data);
 }
+
+
 deleteAassignRoles(studentId: number, eventId: number): Observable<any> {
   return this.http.request('DELETE', `${this.BASE_URL}/deleteAssign`, {
     body: { studentId, eventId }

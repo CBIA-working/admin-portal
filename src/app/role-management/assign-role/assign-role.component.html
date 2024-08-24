@@ -73,13 +73,13 @@
   </p-table>
 </div>
 <p-dialog [(visible)]="dialogVisible" [modal]="true" [closable]="false" header="Edit Role" [responsive]="true" [style]="{width: '60vw'}">
-  <app-edit-role-list
+  <app-edit-assign-role
   *ngIf="selectedRole" 
   [role]="selectedRole" 
   (dialogClose)="onDialogClose($event)">
-  </app-edit-role-list>
+  </app-edit-assign-role>
 </p-dialog>
-<p-dialog [(visible)]="addDialogVisible" [modal]="true" [closable]="true" header="Add Event" [responsive]="true"  [style]="{width: '60vw' ,height:'68vh'}">
-    <app-add-assign-role (dialogClose)="onAddDialogClose()"></app-add-assign-role>
+<p-dialog [(visible)]="addDialogVisible" [modal]="true" [closable]="true" header="Assign Role" [responsive]="true"  [style]="{width: '60vw' ,height:'68vh'}">
+    <app-add-assign-role (dialogClose)="onAddDialogClose($event)"></app-add-assign-role>
   </p-dialog>
 <p-confirmDialog></p-confirmDialog>

@@ -1,0 +1,34 @@
+<p-toast></p-toast>
+<div style="background-color: #fff; box-shadow: 0 0 10px rgba(0,0,0,0.1); display: flex; padding: 20px;">
+    <div style="flex: 2; padding-left: 20px;">
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 10px;">
+            <div>
+                <strong>Admin Id</strong>
+                <input pInputText type="text" [(ngModel)]="role.AdminId" placeholder="Admin Id"
+                       style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;" readonly>
+            </div>
+            <div>
+                <strong>Admin Name</strong>
+                <input pInputText type="text" [(ngModel)]="role.AdminName" placeholder="Admin Name"
+                       style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;" readonly>
+            </div>
+            <div>
+                <strong>Role Name</strong>
+                <input pInputText type="text" [(ngModel)]="role.RoleName" placeholder="Role Name"
+                       style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 100%;">
+            </div>
+            <!-- <div>
+                <strong>Permissions</strong>
+                <div *ngFor="let permission of permissions">
+                    <input type="checkbox" [(ngModel)]="permission.selected">
+                    {{ permission.type }} - {{ permission.name }}
+                </div>
+            </div> -->
+        </div>
+    </div>
+</div>
+
+<p-footer style="display: flex; justify-content: flex-end; padding: 0 20px; margin-top: 20px;">
+    <button *ngIf="showSaveButton" pButton type="button" label="Save" (click)="saveChanges()" style="margin-right: 10px;"></button>
+    <button pButton type="button" label="Close" icon="pi pi-times" (click)="closeDialog()" style="margin-right: 10px;"></button>
+</p-footer>
