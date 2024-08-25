@@ -66,9 +66,9 @@ export class EditRoleListComponent implements OnInit, OnChanges {
   initializePages(): void {
     const allPages = this.navigationService.getPages();
     this.pages = allPages.map(page => {
-      const permission = this.role.permissions.find(p => p.pageName === page.title);
+      const permission = this.role?.permissions.find(p => p.pageName === page.title);
       return {
-        id: permission ? permission.id : null,
+        id: permission ? permission.id : null, // Existing permission ID or null for new
         pageName: page.title,
         read: permission ? permission.type === 'read' || permission.type === 'both' : false,
         write: permission ? permission.type === 'write' || permission.type === 'both' : false,
@@ -76,6 +76,7 @@ export class EditRoleListComponent implements OnInit, OnChanges {
       };
     });
   }
+  
 
   onPermissionChange(pageName: string, permissionType: string, isChecked: boolean): void {
     const page = this.pages.find(p => p.pageName === pageName);

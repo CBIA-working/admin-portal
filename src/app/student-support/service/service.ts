@@ -19,7 +19,7 @@ getRoles(): Observable<any[]> {
 }
 
 getupdateRoles(params?: any): Observable<any> {
-  return this.http.put<any>(`${this.BASE_URL}/updateroles`, params);
+  return this.http.post<any>(`${this.BASE_URL}/updateroles`, params);
 }
 deleteroles(roleId: number): Observable<void> {
   return this.http.delete<void>(`${this.BASE_URL}/deleteroles`, { 
