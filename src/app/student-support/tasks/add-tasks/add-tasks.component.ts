@@ -17,7 +17,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { MessageModule } from 'primeng/message';
 import { DialogModule } from 'primeng/dialog';
-import { Tasks, Trip } from '../../domain/schema';
+import { Tasks } from '../../domain/schema';
 @Component({
   selector: 'app-add-tasks',
   standalone: true,
