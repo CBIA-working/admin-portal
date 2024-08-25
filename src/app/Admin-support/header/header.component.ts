@@ -96,6 +96,22 @@ export class HeaderComponent implements OnInit {
         command: () => this.reloadPage('/managestudent')
       });
     }
+    else if (path === '/portalUser') {
+      this.items.push({ 
+        label: 'Portal User', 
+        escape: false, 
+        routerLink: '/portalUser',
+        command: () => this.reloadPage('/portalUser')
+      });
+    }
+    else if (path === '/assignedStudents') {
+      this.items.push({ 
+        label: 'Assigned Students', 
+        escape: false, 
+        routerLink: '/assignedStudents',
+        command: () => this.reloadPage('/assignedStudents')
+      });
+    }
     else if (path === '/accomodations') {
       this.items.push({ 
         label: 'Accommodations', 

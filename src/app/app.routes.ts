@@ -22,10 +22,14 @@ import { LibrarytableComponent } from './student-support/library/librarytable/li
 import { TasksComponent } from './student-support/tasks/tasks.component';
 import { RoleManagementComponent } from './role-management/role-management.component';
 import { AssignRoleComponent } from './role-management/assign-role/assign-role.component';
+import { PortalUserComponent } from './Admin-support/portal-user/portal-user.component';
+import { AssignedStudentsComponent } from './Admin-support/portal-user/assigned-students/assigned-students.component';
 
 
 export const routes: Routes = [
   { path: 'login', component:LoginComponent},
+  { path: 'portalUser', component: PortalUserComponent,canActivate: [AuthGuard] },
+  { path: 'assignedStudents', component: AssignedStudentsComponent,canActivate: [AuthGuard] },
   { path: 'roles', component: RoleManagementComponent,canActivate: [AuthGuard] },
   { path: 'assign-roles', component: AssignRoleComponent,canActivate: [AuthGuard] },
   { path: 'home', component: HomeComponent,canActivate: [AuthGuard] },

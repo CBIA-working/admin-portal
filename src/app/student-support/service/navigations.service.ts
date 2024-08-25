@@ -8,6 +8,7 @@ import { filter } from "rxjs";
 export class NavigationsService {
   private pages = [
     { path: '/home', title: 'Home', icon: 'pi pi-home' },
+    { path: '/portalUser', title: 'Portal User', icon: 'pi pi-users' },
     {
       title: 'Roles',
       icon: 'pi pi-shield',

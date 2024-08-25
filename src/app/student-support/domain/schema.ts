@@ -14,7 +14,22 @@
     emergencyContactRelation?: string;
     imageUrl?:string;
   }
-
+  export interface PortalUser {
+    id?: number;
+    fname?: string;
+    lname?: string;
+    email?: string;
+    password?: string;
+    dob?: string;
+    address?: string;
+    gender?: string;
+    bloodGroup?: string;
+    dietaryPreference?: string;
+    emergencyContactName?: string;
+    emergencyContactNumber?: string;
+    emergencyContactRelation?: string;
+    imageUrl?:string;
+  }
   export interface CulturalEvent {
     id: number;
     eventName: string;
