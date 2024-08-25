@@ -1,11 +1,11 @@
 import { Component, ViewChild, AfterViewInit, OnInit } from '@angular/core';
 import { Sidebar } from 'primeng/sidebar';
-import { ImportsModule } from '../imports';
+import { ImportsModule } from '../../imports';
 import { Router, RouterLink, NavigationEnd } from '@angular/router';
 import { HomeComponent } from '../home/home.component';
 import { filter } from 'rxjs/operators';
 import { AuthService } from '../authentication/auth.service';
-import { NavigationsService } from '../student-support/service/navigations.service';
+import { NavigationsService } from '../../student-support/service/navigations.service';
 
 @Component({
   selector: 'app-sidebar',

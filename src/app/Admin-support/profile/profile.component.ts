@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-import { Service } from '../student-support/service/service';
+import { Service } from 'src/app/student-support/service/service';
 
 @Component({
   selector: 'app-profile',

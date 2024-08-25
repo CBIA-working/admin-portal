@@ -13,7 +13,7 @@ import { ToastModule } from 'primeng/toast';
 
 import { AuthService } from '../authentication/auth.service';
 import { MessageService } from 'primeng/api';
-import { NavigationsService } from '../student-support/service/navigations.service';
+import { NavigationsService } from '../../student-support/service/navigations.service';
 
 @Component({
   selector: 'app-login',

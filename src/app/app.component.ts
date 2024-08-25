@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { HeaderComponent } from './header/header.component';
+import { HeaderComponent } from './Admin-support/header/header.component';
 import { Router,NavigationEnd } from '@angular/router';
-import { HomeComponent } from './home/home.component';
-import { AuthService } from './authentication/auth.service';
+import { HomeComponent } from './Admin-support/home/home.component';
+import { AuthService } from './Admin-support/authentication/auth.service';
 import { CommonModule } from '@angular/common';
-import { ActivityMonitorService } from './authentication/ActivityMonitorService';
+import { ActivityMonitorService } from './Admin-support/authentication/ActivityMonitorService';
 
 
 @Component({

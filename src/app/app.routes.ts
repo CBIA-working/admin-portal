@@ -1,16 +1,16 @@
 
 import { NgModule } from '@angular/core';
 import { RouterModule,Routes} from '@angular/router';
-import { HomeComponent } from './home/home.component';
+import { HomeComponent } from './Admin-support/home/home.component';
 import { ManageStudentsComponent } from './student-support/manage-students/manage-students.component';
 // import { StudentServicesComponent } from './student-support/student-services/student-services.component';
-import { LoginComponent } from './login/login.component';
-import { AuthGuard } from './authentication/auth.guard';
-import { SettingsComponent } from './settings/settings.component';
+import { LoginComponent } from './Admin-support/login/login.component';
+import { AuthGuard } from './Admin-support/authentication/auth.guard';
+import { SettingsComponent } from './Admin-support/settings/settings.component';
 import { CulturalEventsComponent } from './student-support/cultural-events/cultural-events.component';
 import { AccomodationComponent } from './student-support/accomodation/accomodation.component';
 import { CoursesComponent } from './student-support/courses/courses.component';
-import { ProfileComponent } from './profile/profile.component';
+import { ProfileComponent } from './Admin-support/profile/profile.component';
 import { KeyprogramdatesComponent } from './student-support/keyprogramdates/keyprogramdates.component';
 import { FaqComponent } from './faq/faq.component';
 import { ProgramComponent } from './student-support/program/program.component';

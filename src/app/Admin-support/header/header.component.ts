@@ -7,7 +7,7 @@ import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { filter, map } from 'rxjs/operators';
 import { AuthService } from '../authentication/auth.service';
 import { AvatarModule } from 'primeng/avatar';
-import { Service } from '../student-support/service/service';
+import { Service } from '../../student-support/service/service';
 import { DialogModule } from 'primeng/dialog';
 import { ListboxModule } from 'primeng/listbox';
 import { FormsModule } from '@angular/forms';
