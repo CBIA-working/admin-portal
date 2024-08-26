@@ -80,18 +80,29 @@ export class AssignedStudentsComponent implements OnInit {
 
   fetchAssignedStudents(): void {
     this.loading = true;
-    this.service.getAssignedStudents().subscribe(
-      (data) => {
-        this.assignedStudents = data;
-        console.log('Fetched assigned students:', data);  // Log the fetched data
-        this.loading = false;
-      },
-      (error) => {
-        console.error('Error fetching assigned students:', error);
-        this.loading = false;
-      }
-    );
-}
+    
+    // Retrieve the userId from local storage
+    const userId = localStorage.getItem('userId');
+    
+    // Make sure the userId exists
+    if (userId) {
+      this.service.getAssignedStudents().subscribe(
+        (data) => {
+          // Filter the data to only include students assigned to the current admin (user)
+          this.assignedStudents = data.filter(student => student.Admin.id === parseInt(userId));
+          console.log('Filtered assigned students:', this.assignedStudents);  // Log the filtered data
+          this.loading = false;
+        },
+        (error) => {
+          console.error('Error fetching assigned students:', error);
+          this.loading = false;
+        }
+      );
+    } else {
+      console.error('userId not found in local storage');
+      this.loading = false;
+    }
+  }
 
 openPhoneScreen(assignedStudent: AssignedStudents): void {
   this.selectedAssignedStudent = assignedStudent;

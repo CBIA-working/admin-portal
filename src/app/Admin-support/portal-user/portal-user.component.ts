@@ -27,6 +27,7 @@ import { NavigationService } from 'src/app/student-support/service/navigation.se
 import { EditStudentsComponent } from 'src/app/student-support/manage-students/edit-students/edit-students.component';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { EditPortalUserComponent } from "./edit-portal-user/edit-portal-user.component";
 
 @Component({
   selector: 'app-portal-user',
@@ -34,10 +35,11 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
   imports: [
     TableModule, RouterModule, HttpClientModule, CommonModule, InputTextModule,
     TagModule, DropdownModule, MultiSelectModule, ProgressBarModule, ButtonModule,
-    AddStudentComponent, DownloadComponent, ToastModule, BulkUploadComponent, 
+    AddStudentComponent, DownloadComponent, ToastModule, BulkUploadComponent,
     OverlayPanelModule, InputGroupModule, InputGroupAddonModule, ChipsModule,
-    EditStudentsComponent,DialogModule,ConfirmDialogModule
-  ],
+    EditStudentsComponent, DialogModule, ConfirmDialogModule,
+    EditPortalUserComponent
+],
   providers: [Service, MessageService,ConfirmationService],
   templateUrl: './portal-user.component.html',
   styleUrl: './portal-user.component.scss'
@@ -150,11 +152,12 @@ export class PortalUserComponent implements OnInit, AfterViewInit {
   ];
 
 
-navigateToMemberPage(option: { name: string, key: string }, adminId: string) {
-  this.navigationService.setSelectedId(adminId);
-  localStorage.setItem('refreshPage', 'true');
-  this.router.navigate([`/${option.key}`], { queryParams: { admin_Id: adminId } });
-}
+  navigateToMemberPage(option: { name: string, key: string }, adminId: string) {
+    this.navigationService.setSelectedId(adminId);
+    localStorage.setItem('refreshPage', 'true');
+    this.router.navigate([`/${option.key}`]);
+  }
+  
 
 
 ngOnInit(): void {

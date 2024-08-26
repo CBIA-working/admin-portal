@@ -53,7 +53,7 @@
             <p-columnFilter type="text" field="studentName" display="menu"></p-columnFilter>
           </div>
         </th>
-        <th style="min-width: 10%; text-align: center;">Message</th> <!-- New column for Message button -->
+        <th style="min-width: 10%; text-align: center;">Message</th> 
         <th style="min-width: 20%; text-align: center;">Actions</th>
       </tr>
     </ng-template>
@@ -65,7 +65,7 @@
         <td>{{ assignedStudent.student.fname }} {{ assignedStudent.student.lname }}</td>
         <td style="text-align: center;">
           <p-button pTooltip="Send Message" icon="pi pi-comment" (click)="openPhoneScreen(assignedStudent)" [text]="true" [plain]="true"></p-button>
-        </td> <!-- Message button -->
+        </td> 
         <td>
           <div class="button-container" style="display: flex; justify-content: center; gap: 0.5rem;">
             <p-button (click)="showEditDialog(assignedStudent)" icon="pi pi-pencil" [text]="true" [plain]="true"></p-button>
@@ -77,16 +77,15 @@
 
     <ng-template pTemplate="emptymessage">
       <tr>
-        <td colspan="5">No Assigned Students found.</td> <!-- Update colspan to 5 -->
+        <td colspan="5">No Assigned Students found.</td> 
       </tr>
     </ng-template>
   </p-table>
 </div>
-<!-- Include the new Phone Messaging Component -->
+
 <app-phone-messaging 
   [(visible)]="phoneScreenVisible" 
   [messages]="messages">
 </app-phone-messaging>
-
 
 <p-confirmDialog></p-confirmDialog>

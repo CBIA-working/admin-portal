@@ -175,7 +175,7 @@
 </div>
 
 <p-dialog [(visible)]="dialogVisible" [modal]="true" [closable]="false" header="Edit Student" [responsive]="true" [style]="{width: '60vw'}">
-  <app-edit-portalUsers *ngIf="selectedPortalUser" [portalUser]="selectedStudent" (dialogClose)="onDialogClose($event)"></app-edit-portalUsers>
+  <app-edit-portal-user *ngIf="selectedPortalUser" [portalUser]="selectedPortalUser" (dialogClose)="onDialogClose($event)"></app-edit-portal-user>
 
 </p-dialog>
     <!-- <app-add-portalUser *ngIf="!downloadSelectedMode"></app-add-portalUser> -->

@@ -13,21 +13,21 @@ import { DialogModule } from 'primeng/dialog';
   styleUrl: './phone-messaging.component.scss'
 })
 export class PhoneMessagingComponent {
-  @Input() visible: boolean = false; // Controls visibility of the dialog
-  @Output() visibleChange = new EventEmitter<boolean>(); // Ensure this is typed as EventEmitter<boolean>
-  @Input() messages: { text: string }[] = []; // Messages to display
+  @Input() visible: boolean = false;
+  @Output() visibleChange = new EventEmitter<boolean>(); 
+  @Input() messages: { text: string }[] = []; 
 
-  newMessage: string = ''; // Model for new message input
+  newMessage: string = ''; 
 
   sendMessage(): void {
     if (this.newMessage.trim()) {
       this.messages.push({ text: this.newMessage });
       this.newMessage = '';
-      // Implement actual message sending logic here
+      
     }
   }
 
   closeDialog(): void {
-    this.visibleChange.emit(false); // Notify parent to close the dialog
+    this.visibleChange.emit(false); 
   }
 }
