@@ -367,5 +367,10 @@ getMessages(studentId: number, adminId: number): Observable<any[]> {
   const params = { studentId: studentId.toString(), adminId: adminId.toString() };
   return this.http.get<any[]>(url, { params });
 }
+postMessage(messageData: { content: string; studentId: number; adminId: number; sender: string }): Observable<any> {
+  const url = `${this.BASE_URL}/postMessages`;
+  return this.http.post<any>(url, messageData);
+}
+
 }
 

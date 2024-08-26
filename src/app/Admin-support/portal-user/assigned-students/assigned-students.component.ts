@@ -1,31 +1,24 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { ProgressBarModule } from 'primeng/progressbar';
-import { Table, TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
-
-import * as XLSX from 'xlsx';
-import { jsPDF } from 'jspdf';
-import autoTable from 'jspdf-autotable';
-import { MessageService, ConfirmationService } from 'primeng/api'; // Import ConfirmationService
+import { MessageService, ConfirmationService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { FormsModule } from '@angular/forms';
-import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
-import { ChipsModule } from 'primeng/chips';
-import { InputGroupModule } from 'primeng/inputgroup';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { Service } from 'src/app/student-support/service/service';
-import { AssignedStudents, Role } from 'src/app/student-support/domain/schema';
 import { TooltipModule } from 'primeng/tooltip';
-import { PhoneMessagingComponent } from "./phone-messaging/phone-messaging.component";
+import { PhoneMessagingComponent } from './phone-messaging/phone-messaging.component';
+import { Service } from 'src/app/student-support/service/service';
+import { AssignedStudents } from 'src/app/student-support/domain/schema';
 
 @Component({
   selector: 'app-assigned-students',
@@ -33,13 +26,12 @@ import { PhoneMessagingComponent } from "./phone-messaging/phone-messaging.compo
   imports: [
     TableModule, RouterModule, HttpClientModule, CommonModule, InputTextModule,
     TagModule, DropdownModule, MultiSelectModule, ProgressBarModule, ButtonModule,
-    ToastModule, FormsModule, OverlayPanelModule, InputGroupModule,
-    InputGroupAddonModule, ChipsModule, DialogModule, ConfirmDialogModule, TooltipModule,
+    ToastModule, FormsModule, OverlayPanelModule, DialogModule, ConfirmDialogModule, TooltipModule,
     PhoneMessagingComponent
-],
+  ],
   providers: [Service, MessageService, ConfirmationService],
   templateUrl: './assigned-students.component.html',
-  styleUrl: './assigned-students.component.scss'
+  styleUrls: ['./assigned-students.component.scss']
 })
 export class AssignedStudentsComponent implements OnInit {
   assignedStudents: AssignedStudents[] = [];
@@ -49,7 +41,7 @@ export class AssignedStudentsComponent implements OnInit {
   dialogVisible: boolean = false;
   phoneScreenVisible: boolean = false; // Controls the visibility of the phone screen dialog
   selectedAssignedStudent: AssignedStudents | null = null;
-  messages: { text: string }[] = []; // Placeholder for messages
+  messages: { text: string; sender: string; createdAt: string }[] = []; // Array to hold messages
   newMessage: string = ''; // Model for new message input
 
   constructor(
@@ -57,22 +49,6 @@ export class AssignedStudentsComponent implements OnInit {
     private messageService: MessageService,
     private confirmationService: ConfirmationService
   ) {}
-  
-  showEditDialog(assignedStudents: AssignedStudents): void {
-    this.selectedassignedStudents = assignedStudents;
-    this.dialogVisible = true;
-  }
-
-  onDialogClose(updatedAssignedStudents: AssignedStudents | null): void {
-    if (updatedAssignedStudents) {
-      const index = this.assignedStudents.findIndex(s => s.id === updatedAssignedStudents.id);
-      if (index !== -1) {
-        this.assignedStudents[index] = updatedAssignedStudents;
-      }
-    }
-    this.selectedassignedStudents = null;
-    this.dialogVisible = false;
-  }
 
   ngOnInit(): void {
     this.fetchAssignedStudents();
@@ -126,15 +102,60 @@ export class AssignedStudentsComponent implements OnInit {
       );
     }
   }
+
+  sendMessage(): void {
+    if (this.newMessage.trim() && this.selectedAssignedStudent) {
+      // Prepare the message data for the API call
+      const messageData = {
+        content: this.newMessage,
+        studentId: this.selectedAssignedStudent.student.id, // Use the selected student's ID
+        adminId: this.selectedAssignedStudent.Admin.id, // Use the selected admin's ID
+        sender: 'admin' // Replace with 'student' if the sender is a student
+      };
+  
+      // Log the API endpoint and the data being sent
+      console.log('Posting to API:', `${this.service}/postMessages`);
+      console.log('Message data:', messageData);
+  
+      // Post the message to the API
+      this.service.postMessage(messageData).subscribe(
+        (response) => {
+          console.log('Message sent successfully', response);
+  
+          // Add the new message to the local messages array to update the UI
+          this.messages.push({
+            text: this.newMessage,
+            sender: messageData.sender,
+            createdAt: new Date().toISOString() // Add the current timestamp
+          });
+  
+          // Clear the input field after sending the message
+          this.newMessage = '';
+        },
+        (error) => {
+          console.error('Error sending message', error);
+        }
+      );
+    }
+  }
+  
   
 
-sendMessage(): void {
-  if (this.newMessage.trim()) {
-    this.messages.push({ text: this.newMessage });
-    this.newMessage = '';
-    // Implement actual message sending logic here, like calling a service to save the message
+  showEditDialog(assignedStudents: AssignedStudents): void {
+    this.selectedassignedStudents = assignedStudents;
+    this.dialogVisible = true;
   }
-}
+
+  onDialogClose(updatedAssignedStudents: AssignedStudents | null): void {
+    if (updatedAssignedStudents) {
+      const index = this.assignedStudents.findIndex(s => s.id === updatedAssignedStudents.id);
+      if (index !== -1) {
+        this.assignedStudents[index] = updatedAssignedStudents;
+      }
+    }
+    this.selectedassignedStudents = null;
+    this.dialogVisible = false;
+  }
 
   showAddRoleDialog() {
     this.addassignedStudentsDialogVisible = true;
