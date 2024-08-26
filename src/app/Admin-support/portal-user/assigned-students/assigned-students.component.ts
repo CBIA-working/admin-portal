@@ -43,6 +43,7 @@ export class AssignedStudentsComponent implements OnInit {
   selectedAssignedStudent: AssignedStudents | null = null;
   messages: { text: string; sender: string; createdAt: string }[] = []; // Array to hold messages
   newMessage: string = ''; // Model for new message input
+  selectedStudentName: string = ''; // Property to hold the student's name
 
   constructor(
     private service: Service,
@@ -82,6 +83,7 @@ export class AssignedStudentsComponent implements OnInit {
 
   openPhoneScreen(assignedStudent: AssignedStudents): void {
     this.selectedAssignedStudent = assignedStudent;
+    this.selectedStudentName = assignedStudent.student.fname + ' ' + assignedStudent.student.lname; // Assuming 'name' is the property holding the student's name
   
     // Fetch messages from the API for the selected student and admin
     if (assignedStudent) {
@@ -102,6 +104,7 @@ export class AssignedStudentsComponent implements OnInit {
       );
     }
   }
+  
 
   sendMessage(): void {
     if (this.newMessage.trim() && this.selectedAssignedStudent) {

@@ -83,12 +83,16 @@
   </p-table>
 </div>
 
-<app-phone-messaging 
-  [(visible)]="phoneScreenVisible" 
-  [messages]="messages"
-  [studentId]="selectedAssignedStudent?.student.id"
-  [adminId]="selectedAssignedStudent?.Admin.id">
+<app-phone-messaging
+    [visible]="phoneScreenVisible"
+    [messages]="messages"
+    [studentId]="selectedAssignedStudent?.student.id"
+    [adminId]="selectedAssignedStudent?.Admin.id"
+    [selectedAssignedStudent]="selectedAssignedStudent" 
+    [studentName]="selectedStudentName"
+    (visibleChange)="phoneScreenVisible = $event">
 </app-phone-messaging>
+
 
 
 <p-confirmDialog></p-confirmDialog>

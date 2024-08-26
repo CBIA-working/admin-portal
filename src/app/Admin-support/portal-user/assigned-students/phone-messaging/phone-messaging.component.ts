@@ -3,6 +3,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
+import { AssignedStudents } from 'src/app/student-support/domain/schema';
 import { Service } from 'src/app/student-support/service/service'; // Import your service
 
 @Component({
@@ -18,6 +19,8 @@ export class PhoneMessagingComponent {
   @Input() messages: { text: string; sender: string; createdAt: string }[] = [];
   @Input() studentId!: number; // Expect the studentId to be passed from parent
   @Input() adminId!: number;   // Expect the adminId to be passed from parent
+  @Input() studentName!: string; // Expect the student's name to be passed from the parent
+  @Input() selectedAssignedStudent: AssignedStudents | null = null;
 
   newMessage: string = '';
 
