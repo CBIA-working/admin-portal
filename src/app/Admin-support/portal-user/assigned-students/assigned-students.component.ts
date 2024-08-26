@@ -104,11 +104,29 @@ export class AssignedStudentsComponent implements OnInit {
     }
   }
 
-openPhoneScreen(assignedStudent: AssignedStudents): void {
-  this.selectedAssignedStudent = assignedStudent;
-  this.phoneScreenVisible = true;
-  // Initialize or fetch messages for the selected student here if necessary
-}
+  openPhoneScreen(assignedStudent: AssignedStudents): void {
+    this.selectedAssignedStudent = assignedStudent;
+  
+    // Fetch messages from the API for the selected student and admin
+    if (assignedStudent) {
+      this.service.getMessages(assignedStudent.student.id, assignedStudent.Admin.id).subscribe(
+        (messages) => {
+          // Map the messages to include text, sender, and createdAt
+          this.messages = messages.map((msg) => ({
+            text: msg.content,
+            sender: msg.sender, // Include the sender property
+            createdAt: msg.createdAt // Include the createdAt property
+          }));
+          this.phoneScreenVisible = true; // Show the phone messaging dialog
+        },
+        (error) => {
+          console.error('Error fetching messages:', error);
+          this.messages = []; // Clear the messages if there's an error
+        }
+      );
+    }
+  }
+  
 
 sendMessage(): void {
   if (this.newMessage.trim()) {

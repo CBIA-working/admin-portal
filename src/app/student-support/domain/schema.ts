@@ -34,8 +34,19 @@
 
   export interface AssignedStudents {
     id: number;
-    adminName: string;
-    studentName: string;
+    student: {
+      id: number;
+      fname: string;
+      lname: string;
+      // Add other student properties as needed
+    };
+    Admin: {
+      id: number;
+      fname: string;
+      lname: string;
+      // Add other admin properties as needed
+    };
+    // Add other properties as needed
   }
   
 

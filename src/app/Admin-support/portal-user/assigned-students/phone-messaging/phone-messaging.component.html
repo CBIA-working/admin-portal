@@ -11,10 +11,17 @@
             <button (click)="closeDialog()" style="background: none; border: none; color: white; font-size: 18px; cursor: pointer;">&#10005;</button>
         </div>
         <div style="flex: 1; padding: 12px; overflow-y: auto; background-color: #f7f9fc;">
-            <div *ngFor="let message of messages" style="margin-bottom: 10px;">
-                <p style="background-color: #d1e8ff; color: #333; padding: 8px 12px; border-radius: 12px; max-width: 80%; margin: 0;">
-                    {{message.text}}
-                </p>
+            <div *ngFor="let message of messages; let i = index">
+                <!-- Show the date if it's the first message of the day -->
+                <div *ngIf="i === 0 || !isSameDate(messages[i - 1].createdAt, message.createdAt)" style="text-align: center; margin: 10px 0;">
+                    <strong>{{ message.createdAt | date: 'fullDate' }}</strong>
+                </div>
+                <div [ngStyle]="{'justify-content': message.sender === 'admin' ? 'flex-end' : 'flex-start', 'display': 'flex'}">
+                    <div [ngStyle]="{'background-color': message.sender === 'admin' ? '#e0f7e9' : '#d1e8ff', 'color': '#333', 'padding': '8px 12px', 'border-radius': '12px', 'max-width': '80%', 'margin-bottom': '10px'}">
+                        <p style="margin: 0;">{{message.text}}</p>
+                        <small style="color: #888; font-size: 12px; display: block; text-align: right;">{{ message.createdAt | date:'shortTime' }}</small>
+                    </div>
+                </div>
             </div>
         </div>
         <div style="display: flex; padding: 10px; background-color: #ffffff; border-top: 1px solid #ddd;">

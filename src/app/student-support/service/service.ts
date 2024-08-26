@@ -361,5 +361,11 @@ addTasks(tasks: Tasks): Observable<any> {
   return this.http.post<any>(`${this.BASE_URL}/addTasks`, tasks);
 }
 
+//MESSAGES
+getMessages(studentId: number, adminId: number): Observable<any[]> {
+  const url = `${this.BASE_URL}/getMessages`;
+  const params = { studentId: studentId.toString(), adminId: adminId.toString() };
+  return this.http.get<any[]>(url, { params });
+}
 }
 
