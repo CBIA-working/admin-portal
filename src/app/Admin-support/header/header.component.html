@@ -25,14 +25,22 @@
 <div class="flex-auto bg-white p-2 mb-4 z-50 w-full">
     <p-breadcrumb [model]="items" [home]="home"></p-breadcrumb>
 
-    <p-dialog [(visible)]="showRolesDialog" [modal]="true" [closable]="true" [resizable]="false" [draggable]="false" [dismissableMask]="true">
-        <ul>
-            <li *ngFor="let role of rolesOptions">
-                <a (click)="onRoleSelect(role.value)">
-                    {{ role.label }}
-                </a>
-            </li>
-        </ul>
-    </p-dialog>
+    <p-dialog [(visible)]="showRolesDialog" 
+    [modal]="false"
+    [closable]="true" 
+    [resizable]="false" 
+    [draggable]="false" 
+    [dismissableMask]="true"  
+    [styleClass]="'custom-roles-dialog'">
+<ul>
+  <li *ngFor="let role of rolesOptions">
+      <a (click)="onRoleSelect(role.value)">
+          {{ role.label }}
+      </a>
+  </li>
+</ul>
+</p-dialog>
+
+
     
 </div> 
