@@ -1,31 +1,31 @@
-::ng-deep .p-dialog {
-    position: fixed;  // Ensures it stays in place even when scrolling
-    top: 130px;        // Distance from the top of the viewport
-    left: 50px;       // Distance from the left of the viewport
+// ::ng-deep .p-dialog {
+//     position: fixed;  // Ensures it stays in place even when scrolling
+//     top: 130px;        // Distance from the top of the viewport
+//     left: 50px;       // Distance from the left of the viewport
 
-  }
-  /* Reduce padding for the dialog's content */
-::ng-deep .p-dialog-content {
-    padding-top: 10px !important;  /* Adjust top padding */
-    padding-bottom: 10px !important;  /* Adjust bottom padding */
-}
+//   }
+//   /* Reduce padding for the dialog's content */
+// ::ng-deep .p-dialog-content {
+//     padding-top: 10px !important;  /* Adjust top padding */
+//     padding-bottom: 10px !important;  /* Adjust bottom padding */
+// }
 
-/* If you want to adjust the header and footer padding as well */
-::ng-deep .p-dialog-header, 
-::ng-deep .p-dialog-footer {
-    padding-top: 5px !important;  /* Adjust top padding */
-    padding-bottom: 5px !important;  /* Adjust bottom padding */
-}
+// /* If you want to adjust the header and footer padding as well */
+// ::ng-deep .p-dialog-header, 
+// ::ng-deep .p-dialog-footer {
+//     padding-top: 5px !important;  /* Adjust top padding */
+//     padding-bottom: 5px !important;  /* Adjust bottom padding */
+// }
 
-/* Ensures the overlay background is completely transparent */
-::ng-deep .p-dialog-mask {
-    background-color: transparent !important; /* Makes the overlay transparent */
-    opacity: 1 !important;  /* Ensures full visibility */
-}
+// /* Ensures the overlay background is completely transparent */
+// ::ng-deep .p-dialog-mask {
+//     background-color: transparent !important; /* Makes the overlay transparent */
+//     opacity: 1 !important;  /* Ensures full visibility */
+// }
 
-/* Additional class for the mask-content to prevent any dimming effects */
-::ng-deep .p-dialog-mask-content {
-    background-color: transparent !important; /* Ensures content area is also transparent */
-    opacity: 1 !important; /* Ensures full visibility */
-}
+// /* Additional class for the mask-content to prevent any dimming effects */
+// ::ng-deep .p-dialog-mask-content {
+//     background-color: transparent !important; /* Ensures content area is also transparent */
+//     opacity: 1 !important; /* Ensures full visibility */
+// }
 

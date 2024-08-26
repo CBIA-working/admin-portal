@@ -54,6 +54,13 @@ getAssignedStudents(): Observable<any[]> {
 getupdateAdmin(formData: FormData): Observable<any> {
   return this.http.post<any>(`${this.BASE_URL}/updateAdminData`, formData);
 }
+addAdmin(formData: FormData): Observable<any> {
+  return this.http.post<any>(`${this.BASE_URL}/addAdminData`, formData);
+}
+deleteAdmin(AdminId: number): Observable<void> {
+  return this.http.request<void>('delete', `${this.BASE_URL}/deleteAdminData`, 
+      { body: { id: AdminId } });
+}
 
 //students 
     getStudents(params?: any): Promise<any> {
@@ -70,7 +77,7 @@ getupdateAdmin(formData: FormData): Observable<any> {
       addStudent(formData: FormData): Observable<any> {
         return this.http.post<any>(`${this.BASE_URL}/registerStudent`, formData);
       }
-
+      
 //culttural events
     getCultural(params?: any): Promise<any> {
         return this.http.get<any>(`${this.BASE_URL}/CulturalEventAdmin`, { params }).toPromise();

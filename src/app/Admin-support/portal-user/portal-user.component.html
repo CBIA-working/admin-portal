@@ -146,7 +146,7 @@
         <td>
           <div class="button-container" style="display: flex; gap: 0.5rem;">
             <p-button (click)="showEditDialog(portalUser)" icon="pi pi-user-plus" [text]="true" [plain]="true"></p-button>
-            <p-button (click)="deleteStudents(portalUser)" icon="pi pi-trash" [text]="true" [plain]="true"></p-button>
+            <p-button (click)="deletePortalUsers(portalUser)" icon="pi pi-trash" [text]="true" [plain]="true"></p-button>
             <p-button (click)="op.toggle($event)" icon="pi pi-ellipsis-v" [text]="true" [plain]="true"></p-button>
             <p-overlayPanel #op>
               <div>
@@ -180,6 +180,6 @@
 </p-dialog>
     <!-- <app-add-portalUser *ngIf="!downloadSelectedMode"></app-add-portalUser> -->
     <p-dialog [(visible)]="addDialogVisible" [modal]="true" [closable]="false" header="Add Student" [responsive]="true" [style]="{width: '70vw' ,height:'78vh'}">
-      <app-add-student (dialogClose)="onAddDialogClose()"></app-add-student>
+      <app-add-portal-user (dialogClose)="onAddDialogClose()"></app-add-portal-user>
     </p-dialog>
 <p-confirmDialog></p-confirmDialog>

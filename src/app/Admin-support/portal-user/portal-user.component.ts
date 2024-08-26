@@ -28,6 +28,7 @@ import { EditStudentsComponent } from 'src/app/student-support/manage-students/e
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { EditPortalUserComponent } from "./edit-portal-user/edit-portal-user.component";
+import { AddPortalUserComponent } from "./add-portal-user/add-portal-user.component";
 
 @Component({
   selector: 'app-portal-user',
@@ -38,7 +39,8 @@ import { EditPortalUserComponent } from "./edit-portal-user/edit-portal-user.com
     AddStudentComponent, DownloadComponent, ToastModule, BulkUploadComponent,
     OverlayPanelModule, InputGroupModule, InputGroupAddonModule, ChipsModule,
     EditStudentsComponent, DialogModule, ConfirmDialogModule,
-    EditPortalUserComponent
+    EditPortalUserComponent,
+    AddPortalUserComponent
 ],
   providers: [Service, MessageService,ConfirmationService],
   templateUrl: './portal-user.component.html',
@@ -92,7 +94,7 @@ export class PortalUserComponent implements OnInit, AfterViewInit {
       header: 'Confirm',
       icon: 'pi pi-info-circle',
       accept: () => {
-        this.service.deleteStudents(portalUser.id).subscribe(
+        this.service.deleteAdmin(portalUser.id).subscribe(
           () => {
             this.portalUsers = this.portalUsers.filter(s => s.id !== portalUser.id); // Corrected from this.student to this.students
             this.messageService.add({
