@@ -25,6 +25,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Service } from 'src/app/student-support/service/service';
 import { AssignedStudents, Role } from 'src/app/student-support/domain/schema';
 import { TooltipModule } from 'primeng/tooltip';
+import { PhoneMessagingComponent } from "./phone-messaging/phone-messaging.component";
 
 @Component({
   selector: 'app-assigned-students',
@@ -33,7 +34,8 @@ import { TooltipModule } from 'primeng/tooltip';
     TableModule, RouterModule, HttpClientModule, CommonModule, InputTextModule,
     TagModule, DropdownModule, MultiSelectModule, ProgressBarModule, ButtonModule,
     ToastModule, FormsModule, OverlayPanelModule, InputGroupModule,
-    InputGroupAddonModule, ChipsModule, DialogModule, ConfirmDialogModule,TooltipModule
+    InputGroupAddonModule, ChipsModule, DialogModule, ConfirmDialogModule, TooltipModule,
+    PhoneMessagingComponent
 ],
   providers: [Service, MessageService, ConfirmationService],
   templateUrl: './assigned-students.component.html',
@@ -45,6 +47,10 @@ export class AssignedStudentsComponent implements OnInit {
   addassignedStudentsDialogVisible: boolean = false;
   selectedassignedStudents: AssignedStudents | null = null;
   dialogVisible: boolean = false;
+  phoneScreenVisible: boolean = false; // Controls the visibility of the phone screen dialog
+  selectedAssignedStudent: AssignedStudents | null = null;
+  messages: { text: string }[] = []; // Placeholder for messages
+  newMessage: string = ''; // Model for new message input
 
   constructor(
     private service: Service,
@@ -87,6 +93,19 @@ export class AssignedStudentsComponent implements OnInit {
     );
 }
 
+openPhoneScreen(assignedStudent: AssignedStudents): void {
+  this.selectedAssignedStudent = assignedStudent;
+  this.phoneScreenVisible = true;
+  // Initialize or fetch messages for the selected student here if necessary
+}
+
+sendMessage(): void {
+  if (this.newMessage.trim()) {
+    this.messages.push({ text: this.newMessage });
+    this.newMessage = '';
+    // Implement actual message sending logic here, like calling a service to save the message
+  }
+}
 
   showAddRoleDialog() {
     this.addassignedStudentsDialogVisible = true;
