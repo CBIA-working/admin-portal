@@ -1,0 +1,11 @@
+::ng-deep .custom-dialog-class .p-dialog-content {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+}
+
+/* Adjust header and footer padding */
+::ng-deep .custom-dialog-class .p-dialog-header, 
+::ng-deep .custom-dialog-class .p-dialog-footer {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+}
