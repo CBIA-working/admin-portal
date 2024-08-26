@@ -14,6 +14,7 @@
     emergencyContactRelation?: string;
     imageUrl?:string;
   }
+
   export interface PortalUser {
     id?: number;
     fname?: string;
@@ -30,6 +31,14 @@
     emergencyContactRelation?: string;
     imageUrl?:string;
   }
+
+  export interface AssignedStudents {
+    id: number;
+    adminName: string;
+    studentName: string;
+  }
+  
+
   export interface CulturalEvent {
     id: number;
     eventName: string;

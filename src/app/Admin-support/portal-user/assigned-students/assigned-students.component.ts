@@ -1,12 +1,134 @@
-import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ButtonModule } from 'primeng/button';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { Table, TableModule } from 'primeng/table';
+import { TagModule } from 'primeng/tag';
+
+import * as XLSX from 'xlsx';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import { MessageService, ConfirmationService } from 'primeng/api'; // Import ConfirmationService
+import { ToastModule } from 'primeng/toast';
+import { FormsModule } from '@angular/forms';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { ChipsModule } from 'primeng/chips';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { DialogModule } from 'primeng/dialog';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { Service } from 'src/app/student-support/service/service';
+import { AssignedStudents, Role } from 'src/app/student-support/domain/schema';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-assigned-students',
   standalone: true,
-  imports: [],
+  imports: [
+    TableModule, RouterModule, HttpClientModule, CommonModule, InputTextModule,
+    TagModule, DropdownModule, MultiSelectModule, ProgressBarModule, ButtonModule,
+    ToastModule, FormsModule, OverlayPanelModule, InputGroupModule,
+    InputGroupAddonModule, ChipsModule, DialogModule, ConfirmDialogModule,TooltipModule
+],
+  providers: [Service, MessageService, ConfirmationService],
   templateUrl: './assigned-students.component.html',
   styleUrl: './assigned-students.component.scss'
 })
-export class AssignedStudentsComponent {
+export class AssignedStudentsComponent implements OnInit {
+  assignedStudents: AssignedStudents[] = [];
+  loading: boolean = true;
+  addassignedStudentsDialogVisible: boolean = false;
+  selectedassignedStudents: AssignedStudents | null = null;
+  dialogVisible: boolean = false;
 
+  constructor(
+    private service: Service,
+    private messageService: MessageService,
+    private confirmationService: ConfirmationService
+  ) {}
+  
+  showEditDialog(assignedStudents: AssignedStudents): void {
+    this.selectedassignedStudents = assignedStudents;
+    this.dialogVisible = true;
+  }
+
+  onDialogClose(updatedAssignedStudents: AssignedStudents | null): void {
+    if (updatedAssignedStudents) {
+      const index = this.assignedStudents.findIndex(s => s.id === updatedAssignedStudents.id);
+      if (index !== -1) {
+        this.assignedStudents[index] = updatedAssignedStudents;
+      }
+    }
+    this.selectedassignedStudents = null;
+    this.dialogVisible = false;
+  }
+
+  ngOnInit(): void {
+    this.fetchAssignedStudents();
+  }
+
+  fetchAssignedStudents(): void {
+    this.loading = true;
+    this.service.getAssignedStudents().subscribe(
+      (data) => {
+        this.assignedStudents = data;
+        console.log('Fetched assigned students:', data);  // Log the fetched data
+        this.loading = false;
+      },
+      (error) => {
+        console.error('Error fetching assigned students:', error);
+        this.loading = false;
+      }
+    );
+}
+
+
+  showAddRoleDialog() {
+    this.addassignedStudentsDialogVisible = true;
+  }
+
+  onAddRoleDialogClose() {
+    this.addassignedStudentsDialogVisible = false;
+    this.fetchAssignedStudents(); // Refresh the roles list after adding a role
+  }
+
+  deleteRole(assignedStudents: AssignedStudents): void {
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to delete this Assigned Students?',
+      header: 'Confirm',
+      icon: 'pi pi-info-circle',
+      accept: () => {
+        this.service.deleteroles(assignedStudents.id).subscribe(
+          () => {
+            this.assignedStudents = this.assignedStudents.filter(r => r.id !== assignedStudents.id);
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: 'Assigned Students deleted successfully'
+            });
+          },
+          error => {
+            console.error('Error deleting Assigned Students', error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Failed to delete Assigned Students'
+            });
+          }
+        );
+      },
+      reject: () => {
+        // Optionally handle rejection (user clicks cancel)
+      }
+    });
+  }
+
+  clear(table: any) {
+    table.clear();
+  }
 }

@@ -1,1 +1,89 @@
-<p>assigned-students works!</p>
+<p-toast></p-toast>
+<div class="card" style="margin: 0 20px; overflow: hidden;">
+
+  <p-table
+    #dtRoles
+    [value]="assignedStudents"
+    [rows]="10"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [loading]="loading"
+    [paginator]="true"
+    [responsive]="true"
+    [globalFilterFields]="['id', 'adminName', 'studentName']"
+  >
+
+    <ng-template pTemplate="caption">
+      <div class="flex">
+        <p-button 
+          label="Clear" 
+          [outlined]="true" 
+          icon="pi pi-filter-slash" 
+          (click)="clear(dtRoles)">
+        </p-button>
+        <span class="p-input-icon-left ml-auto" style="border: 1px solid #ccc; border-radius: 4px; padding: 2px;">
+          <i class="pi pi-search" style="margin-left: 8px;"></i>
+          <input 
+            pInputText 
+            type="text" 
+            (input)="dtRoles.filterGlobal($event.target.value, 'contains')" 
+            placeholder="Search keyword"
+            class="p-inputtext-sm" 
+            style="width: 15rem; padding-left: 3rem; border: none; outline: none; background: transparent; margin-left: 5px;">
+        </span>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="min-width: 12%">
+            <div class="flex align-items-center">
+              ID
+              <p-columnFilter type="text" field="id" display="menu"></p-columnFilter>
+            </div>
+          </th>
+        <th style="min-width: 12%">
+            <div class="flex align-items-center">
+              Admin Name
+              <p-columnFilter type="text" field="adminName" display="menu"></p-columnFilter>
+            </div>
+          </th>
+          <th style="min-width: 12%">
+            <div class="flex align-items-center">
+              Student Name
+              <p-columnFilter type="text" field="studentName" display="menu"></p-columnFilter>
+            </div>
+          </th>
+        <th style="min-width: 20%; text-align: center;">Actions</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-assignedStudent>
+        <tr>
+          <td>{{assignedStudent.id}}</td>
+          <td>{{ assignedStudent.Admin.fname }} {{ assignedStudent.Admin.lname }}</td>
+          <td>{{ assignedStudent.student.fname }} {{ assignedStudent.student.lname }}</td>
+          <td>
+            <div class="button-container" style="display: flex; justify-content: center; gap: 0.5rem;">
+              <p-button (click)="showEditDialog(assignedStudent)" icon="pi pi-pencil" [text]="true" [plain]="true"></p-button>
+              <p-button pTooltip="Delete" (click)="deleteRole(assignedStudent)" icon="pi pi-trash" [text]="true" [plain]="true"></p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="4">No AssignedStudents  found.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+<p-dialog [(visible)]="dialogVisible" [modal]="true" [closable]="false" header="Edit Role" [responsive]="true" [style]="{width: '60vw'}">
+  <app-edit-role-list
+  *ngIf="selectedassignedStudents" 
+  [assignedStudents]="selectedassignedStudents" 
+  (dialogClose)="onDialogClose($event)">
+  </app-edit-role-list>
+</p-dialog>
+<p-confirmDialog></p-confirmDialog>

@@ -48,6 +48,9 @@ getupdateProfile(formData: FormData): Observable<any> {
 getAdmin(params?: any): Promise<any> {
     return this.http.get<any>(`${this.BASE_URL}/adminData`, { params }).toPromise();
 }
+getAssignedStudents(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.BASE_URL}/assignedStudents`);
+}
 
 //students 
     getStudents(params?: any): Promise<any> {
