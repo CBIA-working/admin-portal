@@ -22,10 +22,13 @@
                 </div>
                 <div [ngStyle]="{'justify-content': message.sender === 'admin' ? 'flex-end' : 'flex-start', 'display': 'flex'}">
                     <div [ngStyle]="{'background-color': message.sender === 'admin' ? '#e0f7e9' : '#d1e8ff', 'color': '#333', 'padding': '8px 12px', 'border-radius': '12px', 'max-width': '80%', 'margin-bottom': '10px'}">
-                        <p style="margin: 0;">{{message.text}}</p>
-                        <small style="color: #888; font-size: 12px; display: block; text-align: right;">{{ message.createdAt | date:'shortTime' }}</small>
+                      <p style="margin: 0;">{{message.text}}</p>
+                      <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <small style="color: #888; font-size: 12px;">{{ message.createdAt | date:'shortTime' }}</small>
+                        <span class="pi" [ngClass]="message.seen ? 'pi-check' : 'pi-times'"></span>
+                      </div>
                     </div>
-                </div>
+                  </div>
             </div>
         </div>
         <div style="display: flex; padding: 10px; background-color: #ffffff; border-top: 1px solid #ddd;">

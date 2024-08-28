@@ -20,6 +20,14 @@ import { PhoneMessagingComponent } from './phone-messaging/phone-messaging.compo
 import { Service } from 'src/app/student-support/service/service';
 import { AssignedStudents } from 'src/app/student-support/domain/schema';
 
+interface Message {
+  id: number;
+  text: string;
+  sender: string;
+  createdAt: string;
+  seen: boolean;
+}
+
 @Component({
   selector: 'app-assigned-students',
   standalone: true,
@@ -39,11 +47,11 @@ export class AssignedStudentsComponent implements OnInit {
   addassignedStudentsDialogVisible: boolean = false;
   selectedassignedStudents: AssignedStudents | null = null;
   dialogVisible: boolean = false;
-  phoneScreenVisible: boolean = false; // Controls the visibility of the phone screen dialog
+  phoneScreenVisible: boolean = false;
   selectedAssignedStudent: AssignedStudents | null = null;
-  messages: { text: string; sender: string; createdAt: string }[] = []; // Array to hold messages
-  newMessage: string = ''; // Model for new message input
-  selectedStudentName: string = ''; // Property to hold the student's name
+  messages: Message[] = [];
+  newMessage: string = '';
+  selectedStudentName: string = '';
 
   constructor(
     private service: Service,
@@ -57,17 +65,13 @@ export class AssignedStudentsComponent implements OnInit {
 
   fetchAssignedStudents(): void {
     this.loading = true;
-    
-    // Retrieve the userId from local storage
     const userId = localStorage.getItem('userId');
-    
-    // Make sure the userId exists
+
     if (userId) {
       this.service.getAssignedStudents().subscribe(
         (data) => {
-          // Filter the data to only include students assigned to the current admin (user)
           this.assignedStudents = data.filter(student => student.Admin.id === parseInt(userId));
-          console.log('Filtered assigned students:', this.assignedStudents);  // Log the filtered data
+          console.log('Filtered assigned students:', this.assignedStudents);
           this.loading = false;
         },
         (error) => {
@@ -83,56 +87,86 @@ export class AssignedStudentsComponent implements OnInit {
 
   openPhoneScreen(assignedStudent: AssignedStudents): void {
     this.selectedAssignedStudent = assignedStudent;
-    this.selectedStudentName = assignedStudent.student.fname + ' ' + assignedStudent.student.lname; // Assuming 'name' is the property holding the student's name
+    this.selectedStudentName = assignedStudent.student.fname + ' ' + assignedStudent.student.lname;
   
-    // Fetch messages from the API for the selected student and admin
     if (assignedStudent) {
       this.service.getMessages(assignedStudent.student.id, assignedStudent.Admin.id).subscribe(
         (messages) => {
-          // Map the messages to include text, sender, and createdAt
-          this.messages = messages.map((msg) => ({
+          console.log('Fetched messages:', messages); // Log the fetched messages
+  
+          this.messages = messages.map(msg => ({
+            id: msg.id,
             text: msg.content,
-            sender: msg.sender, // Include the sender property
-            createdAt: msg.createdAt // Include the createdAt property
+            sender: msg.sender,
+            createdAt: msg.createdAt,
+            seen: msg.seen
           }));
-          this.phoneScreenVisible = true; // Show the phone messaging dialog
+          this.phoneScreenVisible = true;
+  
+          // Filter messages with seen: false and submit their IDs
+          const unseenMessageIds = this.messages
+            .filter(msg => msg.seen === false)
+            .map(msg => msg.id);
+  
+          this.updateSeenStatus(unseenMessageIds);
         },
         (error) => {
           console.error('Error fetching messages:', error);
-          this.messages = []; // Clear the messages if there's an error
+          this.messages = [];
         }
       );
     }
   }
   
+  
+
+  updateSeenStatus(messageIds: number[]): void {
+    // Ensure there are valid message IDs to update
+    const validMessageIds = messageIds.filter(id => id != null);
+    console.log('Unseen message IDs to update:', validMessageIds);
+  
+    if (validMessageIds.length > 0) {
+      this.service.updateSeenStatus(validMessageIds).subscribe(
+        () => {
+          console.log('Seen status updated successfully');
+          // Update the local messages to mark them as seen
+          this.messages.forEach(msg => {
+            if (validMessageIds.includes(msg.id)) {
+              msg.seen = true;
+            }
+          });
+        },
+        error => console.error('Failed to update seen status:', error)
+      );
+    } else {
+      console.log('No valid message IDs to update.');
+    }
+  }
+  
+  
+  
 
   sendMessage(): void {
     if (this.newMessage.trim() && this.selectedAssignedStudent) {
-      // Prepare the message data for the API call
       const messageData = {
         content: this.newMessage,
-        studentId: this.selectedAssignedStudent.student.id, // Use the selected student's ID
-        adminId: this.selectedAssignedStudent.Admin.id, // Use the selected admin's ID
-        sender: 'admin' // Replace with 'student' if the sender is a student
+        studentId: this.selectedAssignedStudent.student.id,
+        adminId: this.selectedAssignedStudent.Admin.id,
+        sender: 'admin'
       };
-  
-      // Log the API endpoint and the data being sent
-      console.log('Posting to API:', `${this.service}/postMessages`);
-      console.log('Message data:', messageData);
-  
-      // Post the message to the API
+
+      console.log('Posting to API:', `${this.service}/postMessages`, messageData);
+
       this.service.postMessage(messageData).subscribe(
         (response) => {
           console.log('Message sent successfully', response);
-  
-          // Add the new message to the local messages array to update the UI
           this.messages.push({
+            id: response.data.id, // Assuming the response includes the message ID
             text: this.newMessage,
-            sender: messageData.sender,
-            createdAt: new Date().toISOString() // Add the current timestamp
+            sender: 'admin',
+            createdAt: new Date().toISOString(),
+            seen: true
           });
-  
-          // Clear the input field after sending the message
           this.newMessage = '';
         },
         (error) => {
@@ -141,8 +175,6 @@ export class AssignedStudentsComponent implements OnInit {
       );
     }
   }
-  
-  
 
   showEditDialog(assignedStudents: AssignedStudents): void {
     this.selectedassignedStudents = assignedStudents;
@@ -160,13 +192,13 @@ export class AssignedStudentsComponent implements OnInit {
     this.dialogVisible = false;
   }
 
-  showAddRoleDialog() {
+  showAddRoleDialog(): void {
     this.addassignedStudentsDialogVisible = true;
   }
 
-  onAddRoleDialogClose() {
+  onAddRoleDialogClose(): void {
     this.addassignedStudentsDialogVisible = false;
-    this.fetchAssignedStudents(); // Refresh the roles list after adding a role
+    this.fetchAssignedStudents();
   }
 
   deleteRole(assignedStudents: AssignedStudents): void {
@@ -195,12 +227,12 @@ export class AssignedStudentsComponent implements OnInit {
         );
       },
       reject: () => {
-        // Optionally handle rejection (user clicks cancel)
+        // Optionally handle rejection
       }
     });
   }
 
-  clear(table: any) {
+  clear(table: any): void {
     table.clear();
   }
 }

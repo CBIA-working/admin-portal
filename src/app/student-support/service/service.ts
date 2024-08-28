@@ -371,6 +371,9 @@ postMessage(messageData: { content: string; studentId: number; adminId: number; 
   const url = `${this.BASE_URL}/postMessages`;
   return this.http.post<any>(url, messageData);
 }
-
+updateSeenStatus(messageIds: number[]): Observable<any> {
+  const url = `${this.BASE_URL}/updateSeenStatus`;
+  return this.http.post<any>(url, { messageIds });
+}
 }
 
