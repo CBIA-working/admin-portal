@@ -26,6 +26,7 @@ interface Message {
   sender: string;
   createdAt: string;
   seen: boolean;
+  studentId: number;
 }
 
 @Component({
@@ -52,6 +53,7 @@ export class AssignedStudentsComponent implements OnInit {
   messages: Message[] = [];
   newMessage: string = '';
   selectedStudentName: string = '';
+  unseenMessagesMap: { [studentId: number]: number } = {}; // Track the number of unseen messages for each student
 
   constructor(
     private service: Service,
@@ -72,6 +74,7 @@ export class AssignedStudentsComponent implements OnInit {
         (data) => {
           this.assignedStudents = data.filter(student => student.Admin.id === parseInt(userId));
           console.log('Filtered assigned students:', this.assignedStudents);
+          this.checkForUnseenMessages(); // Check for unseen messages after fetching students
           this.loading = false;
         },
         (error) => {
@@ -83,6 +86,28 @@ export class AssignedStudentsComponent implements OnInit {
       console.error('userId not found in local storage');
       this.loading = false;
     }
+  }
+
+  checkForUnseenMessages(): void {
+    // Iterate through each assigned student and fetch messages
+    this.assignedStudents.forEach(assignedStudent => {
+      this.service.getMessages(assignedStudent.student.id, assignedStudent.Admin.id).subscribe(
+        (messages) => {
+          // Count the number of unseen messages from the student
+          const unseenMessageCount = messages.filter(msg => msg.sender === 'student' && !msg.seen).length;
+          if (unseenMessageCount > 0) {
+            this.unseenMessagesMap[assignedStudent.student.id] = unseenMessageCount; // Store the count of unseen messages
+          }
+        },
+        (error) => {
+          console.error('Error fetching messages:', error);
+        }
+      );
+    });
+  }
+
+  getUnseenMessageCount(studentId: number): number {
+    return this.unseenMessagesMap[studentId] || 0;
   }
 
   openPhoneScreen(assignedStudent: AssignedStudents): void {
@@ -99,13 +124,14 @@ export class AssignedStudentsComponent implements OnInit {
             text: msg.content,
             sender: msg.sender,
             createdAt: msg.createdAt,
-            seen: msg.seen
+            seen: msg.seen,
+            studentId: assignedStudent.student.id // Ensure studentId is tracked
           }));
           this.phoneScreenVisible = true;
   
-          // Filter messages with seen: false and submit their IDs
+          // Filter messages with seen: false and sender: 'student' and submit their IDs
           const unseenMessageIds = this.messages
-            .filter(msg => msg.seen === false)
+            .filter(msg => msg.seen === false && msg.sender === 'student')
             .map(msg => msg.id);
   
           this.updateSeenStatus(unseenMessageIds);
@@ -118,12 +144,10 @@ export class AssignedStudentsComponent implements OnInit {
     }
   }
   
-  
-
   updateSeenStatus(messageIds: number[]): void {
     // Ensure there are valid message IDs to update
     const validMessageIds = messageIds.filter(id => id != null);
-    console.log('Unseen message IDs to update:', validMessageIds);
+    console.log('Unseen message IDs from students to update:', validMessageIds);
   
     if (validMessageIds.length > 0) {
       this.service.updateSeenStatus(validMessageIds).subscribe(
@@ -135,6 +159,10 @@ export class AssignedStudentsComponent implements OnInit {
               msg.seen = true;
             }
           });
+          // Clear the unseen status for this student
+          if (this.selectedAssignedStudent) {
+            this.unseenMessagesMap[this.selectedAssignedStudent.student.id] = 0;
+          }
         },
         error => console.error('Failed to update seen status:', error)
       );
@@ -142,9 +170,6 @@ export class AssignedStudentsComponent implements OnInit {
       console.log('No valid message IDs to update.');
     }
   }
-  
-  
-  
 
   sendMessage(): void {
     if (this.newMessage.trim() && this.selectedAssignedStudent) {
@@ -165,7 +190,8 @@ export class AssignedStudentsComponent implements OnInit {
             text: this.newMessage,
             sender: 'admin',
             createdAt: new Date().toISOString(),
-            seen: true
+            seen: true,
+            studentId: this.selectedAssignedStudent?.student.id // Ensure studentId is tracked
           });
           this.newMessage = '';
         },

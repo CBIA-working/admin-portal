@@ -64,8 +64,21 @@
         <td>{{ assignedStudent.Admin.fname }} {{ assignedStudent.Admin.lname }}</td>
         <td>{{ assignedStudent.student.fname }} {{ assignedStudent.student.lname }}</td>
         <td style="text-align: center;">
-          <p-button pTooltip="Send Message" icon="pi pi-comment" (click)="openPhoneScreen(assignedStudent)" [text]="true" [plain]="true"></p-button>
-        </td> 
+          <div style="position: relative; display: inline-block;">
+            <p-button 
+              pTooltip="Send Message" 
+              icon="pi pi-comment" 
+              (click)="openPhoneScreen(assignedStudent)" 
+              [text]="true" 
+              [plain]="true">
+            </p-button>
+            <!-- Red dot with number of unseen messages -->
+            <div *ngIf="getUnseenMessageCount(assignedStudent.student.id) > 0" 
+                 style="position: absolute; top: -5px; right: -5px; width: 20px; height: 20px; background-color: red; border-radius: 50%; color: white; font-size: 12px; display: flex; align-items: center; justify-content: center;">
+              {{ getUnseenMessageCount(assignedStudent.student.id) }}
+            </div>
+          </div>
+        </td>
         <td>
           <div class="button-container" style="display: flex; justify-content: center; gap: 0.5rem;">
             <p-button (click)="showEditDialog(assignedStudent)" icon="pi pi-pencil" [text]="true" [plain]="true"></p-button>
@@ -92,7 +105,5 @@
     [studentName]="selectedStudentName"
     (visibleChange)="phoneScreenVisible = $event">
 </app-phone-messaging>
-
-
 
 <p-confirmDialog></p-confirmDialog>

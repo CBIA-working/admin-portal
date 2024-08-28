@@ -25,11 +25,12 @@
                       <p style="margin: 0;">{{message.text}}</p>
                       <div style="display: flex; justify-content: space-between; align-items: center;">
                         <small style="color: #888; font-size: 12px;">{{ message.createdAt | date:'shortTime' }}</small>
-                        <span class="pi" [ngClass]="message.seen ? 'pi-check' : 'pi-times'"></span>
+                        <span class="pi" [ngClass]="message.seen ? 'pi-eye' : 'pi-eye-slash'" style="font-size: 12px; margin-left: 8px;"></span>
                       </div>
                     </div>
                   </div>
-            </div>
+                  
+        </div>
         </div>
         <div style="display: flex; padding: 10px; background-color: #ffffff; border-top: 1px solid #ddd;">
             <input pInputText type="text" [(ngModel)]="newMessage" placeholder="Type a message..." style="flex: 1; border: 1px solid #ddd; padding: 10px; border-radius: 8px; outline: none;">
