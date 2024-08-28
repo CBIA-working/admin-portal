@@ -9,6 +9,7 @@ export class NavigationsService {
   private pages = [
     { path: '/home', title: 'Home', icon: 'pi pi-home' },
     { path: '/portalUser', title: 'Portal User', icon: 'fa fa-user-circle' },
+    { path: '/assignedStudents', title: 'Assigned Students', icon: 'fa fa-users' },
     {
       title: 'Roles',
       icon: 'pi pi-shield',

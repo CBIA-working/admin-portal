@@ -147,20 +147,6 @@
           <div class="button-container" style="display: flex; gap: 0.5rem;">
             <p-button (click)="showEditDialog(portalUser)" icon="pi pi-user-plus" [text]="true" [plain]="true"></p-button>
             <p-button (click)="deletePortalUsers(portalUser)" icon="pi pi-trash" [text]="true" [plain]="true"></p-button>
-            <p-button (click)="op.toggle($event)" icon="pi pi-ellipsis-v" [text]="true" [plain]="true"></p-button>
-            <p-overlayPanel #op>
-              <div>
-                <ul class="list-none p-0 m-0 flex flex-column gap-3">
-                  <li *ngFor="let option of options" class="flex align-items-center gap-2" 
-                  (click)="navigateToMemberPage(option, portalUser.id)"
-                  style="cursor: pointer; transition: background-color 0.3s, transform 0.3s;">
-                    <div>
-                      <span class="font-medium">{{ option.name }}</span>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </p-overlayPanel>
           </div>
         </td>
 

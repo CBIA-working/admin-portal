@@ -149,45 +149,11 @@ export class PortalUserComponent implements OnInit, AfterViewInit {
     private confirmationService:ConfirmationService
   ) {}
 
-  options = [
-    { name: 'Assigned Students', key: 'assignedStudents' },
-  ];
-
-
-  navigateToMemberPage(option: { name: string, key: string }, adminId: string) {
-    this.navigationService.setSelectedId(adminId);
-    localStorage.setItem('refreshPage', 'true');
-    this.router.navigate([`/${option.key}`]);
-  }
-  
-
 
 ngOnInit(): void {
-  const adminid = this.route.snapshot.queryParamMap.get('adminId');
-
-  if (adminid) {
-    this.fetchassignedStudents(Number(adminid));
-  }  else {
     this.fetchAllData();
-  }
 }
 
-private async fetchData(apiCall: () => Promise<any>, type: string) {
-  this.loading = true;
-  try {
-    const response = await apiCall();
-    console.log(`Fetched Data (${type}):`, response); // Log the response
-    this.portalUsers = response.map(item => item.adminDetails);
-  } catch (error) {
-    console.error(`Error fetching ${type}`, error);
-  } finally {
-    this.loading = false;
-  }
-}
-
-fetchassignedStudents(id: number) {
-  this.fetchData(() => this.service.getStudentEvents({ Id: id, type: 'event' }), 'student events');
-}
 
 fetchAllData() {
   this.loading = true;
