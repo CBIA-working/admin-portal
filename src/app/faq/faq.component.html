@@ -2,16 +2,41 @@
 <div class="card" style="margin: 0 20px; overflow: hidden;">
   <div class="mb-2 ml-auto z-0" style="display: flex; gap: 10px;">
     <!-- Add Button - only show if the user has write permission -->
-    <p-button *ngIf="!reorderMode && hasWritePermission('FAQs')" 
-      pTooltip="Add Program" icon="pi pi-plus" (click)="showAddDialog()" [raised]="true" severity="primary"></p-button>
+    <ng-container *appHasPermission="'FAQs'">
+    <p-button 
+  *ngIf="!reorderMode" 
+  pTooltip="Add Program" 
+  icon="pi pi-plus" 
+  (click)="showAddDialog()" 
+  [raised]="true" 
+  severity="primary">
+</p-button>
+</ng-container>
+
 
     <app-download *ngIf="!reorderMode " 
       [class.hidden]="downloadSelectedMode" (downloadSelectedStudentsEvent)="downloadSelectedStudents()"></app-download>
     
-    <!-- Reorder Button - only show if the user has write permission -->
-    <p-button *ngIf="hasWritePermission('FAQs')" 
-      pTooltip="Reorder Columns" icon="pi pi-arrows-h" [raised]="true" severity="info" (click)="toggleReorderMode()">
+      <p-button *appHasPermission="'FAQs'" 
+      pTooltip="Reorder Columns" 
+      icon="pi pi-arrows-h" 
+      [raised]="true" 
+      severity="info" 
+      (click)="toggleReorderMode()">
     </p-button>
+    
+    <ng-container *appHasPermission="'FAQs'">
+      <p-button 
+        *ngIf="reorderMode"
+        pTooltip="Save Order" 
+        icon="pi pi-save" 
+        [raised]="true" 
+        severity="success" 
+        (click)="saveOrder()">
+      </p-button>
+    </ng-container>
+    
+    
 
     <!-- Save Order Button - only show if the user has write permission -->
     <p-button *ngIf="reorderMode && hasWritePermission('FAQs')" 
@@ -94,10 +119,10 @@
             </div>
           </th>
           <th style="width: 20%; text-align: center;">
-            <div style="display: flex; justify-content: center; align-items: center;">
+            <div *appHasPermission="'FAQs'" style="display: flex; justify-content: center; align-items: center;">
               Actions
             </div>
-          </th>
+          </th>          
         </tr>
       </ng-template>
 
@@ -112,20 +137,31 @@
           <td>
             <div class="button-container" style="display: flex; justify-content: center; gap: 0.5rem;">
               <!-- Edit Button - only show if the user has write permission -->
-              <p-button *ngIf="hasWritePermission('FAQs')" 
-                pTooltip="Edit" (click)="showEditDialog(faq)" icon="pi pi-pencil" [text]="true" [plain]="true"></p-button>
+              <p-button *appHasPermission="'FAQs'" 
+                pTooltip="Edit" 
+                (click)="showEditDialog(faq)" 
+                icon="pi pi-pencil" 
+                [text]="true" 
+                [plain]="true">
+              </p-button>
               
               <!-- Delete Button - only show if the user has write permission -->
-              <p-button *ngIf="hasWritePermission('FAQs')" 
-                pTooltip="Delete" (click)="deleteFaq(faq)" icon="pi pi-trash" [text]="true" [plain]="true"></p-button> 
+              <p-button *appHasPermission="'FAQs'" 
+                pTooltip="Delete" 
+                (click)="deleteFaq(faq)" 
+                icon="pi pi-trash" 
+                [text]="true" 
+                [plain]="true">
+              </p-button> 
             </div>
+            
           </td>
         </tr>
       </ng-template>
 
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="5">No Program found.</td>
+          <td colspan="5">No FAQs found.</td>
         </tr>
       </ng-template>
     </p-table>
