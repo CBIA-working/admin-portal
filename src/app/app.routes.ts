@@ -24,12 +24,13 @@ import { RoleManagementComponent } from './role-management/role-management.compo
 import { AssignRoleComponent } from './role-management/assign-role/assign-role.component';
 import { PortalUserComponent } from './Admin-support/portal-user/portal-user.component';
 import { AssignedStudentsComponent } from './Admin-support/portal-user/assigned-students/assigned-students.component';
-
+import { NotificationComponent } from './notification/notification.component';
 
 export const routes: Routes = [
   { path: 'login', component:LoginComponent},
   { path: 'portalUser', component: PortalUserComponent,canActivate: [AuthGuard] },
   { path: 'assignedStudents', component: AssignedStudentsComponent,canActivate: [AuthGuard] },
+  { path: 'notification', component: NotificationComponent,canActivate: [AuthGuard] },
   { path: 'roles', component: RoleManagementComponent,canActivate: [AuthGuard] },
   { path: 'assign-roles', component: AssignRoleComponent,canActivate: [AuthGuard] },
   { path: 'home', component: HomeComponent,canActivate: [AuthGuard] },

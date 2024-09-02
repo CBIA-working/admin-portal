@@ -112,6 +112,14 @@ export class HeaderComponent implements OnInit {
         command: () => this.reloadPage('/assignedStudents')
       });
     }
+    else if (path === '/notification') {
+      this.items.push({ 
+        label: 'Send Notification', 
+        escape: false, 
+        routerLink: '/notification',
+        command: () => this.reloadPage('/notification')
+      });
+    }
     else if (path === '/accomodations') {
       this.items.push({ 
         label: 'Accommodations', 

@@ -18,6 +18,7 @@ export class NavigationsService {
         { path: '/assign-roles', title: 'Assign Role', icon: 'fa fa-user-cog' }
       ]
     },
+    { path: '/notification',title: 'Send Notification', icon: 'pi pi-bell'  },
     { path: '/managestudent', title: 'Manage Students', icon: 'pi pi-users' },
     { path: '/Programs', title: 'Programs', icon: 'fa fa-graduation-cap' },
     { path: '/culturalevents', title: 'Cultural Events', icon: 'fa fa-calendar-alt' },
