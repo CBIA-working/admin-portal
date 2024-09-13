@@ -375,5 +375,9 @@ updateSeenStatus(messageIds: number[]): Observable<any> {
   const url = `${this.BASE_URL}/updateSeenStatus`;
   return this.http.post<any>(url, { messageIds });
 }
+sendNotification(notificationData: any): Observable<any> {
+  const url = `${this.BASE_URL}/sendNotification`;  // URL for the sendNotification endpoint
+  return this.http.post<any>(url, notificationData);
+}
 }
 
